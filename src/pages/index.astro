@@ -1,0 +1,642 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroSection from '../components/HeroSection.astro';
+import DecisionWizard from '../components/DecisionWizard.astro';
+import IspLatencyMatrix from '../components/IspLatencyMatrix.astro';
+import ComparisonTable from '../components/ComparisonTable.astro';
+import AirportCard from '../components/AirportCard.astro';
+import Sidebar from '../components/Sidebar.astro';
+import airportsData from '../data/airports.json';
+import { SITE_CONFIG } from '../consts';
+import {
+  AlertTriangle,
+  Flame,
+  Tv,
+  Wallet,
+  Gift,
+  ArrowRight,
+  ShieldAlert,
+  Sparkles,
+  CheckCircle2,
+  HelpCircle,
+  FileCheck,
+  ShieldCheck,
+  Activity,
+  Layers,
+  Folder,
+  Tag,
+  Calendar,
+  Eye,
+  ExternalLink,
+} from 'lucide-astro';
+
+// Filter categories
+const categories = [
+  { id: 'all', name: '全部机场', icon: Flame },
+  { id: 'streaming', name: '流媒体解锁专线', icon: Tv },
+  { id: 'budget', name: '高性价比平价', icon: Wallet },
+  { id: 'free', name: '免费 / 试用', icon: Gift },
+];
+
+const warningAirports = airportsData.filter((a) => a.isWarning || a.status === 'risk');
+
+// 5 篇核心深度推荐长文 (每篇约 2000~3000 字，高热搜长尾词与高权重集群)
+const featuredArticles = [
+  {
+    id: 'rankings',
+    badge: { text: 'TOP 1', bg: 'bg-amber-500 text-slate-950' },
+    folder: 'blog/机场推荐',
+    tags: ['科学上网', 'VPN评测', '机场推荐', '专线榜单'],
+    date: '2026-11-11',
+    status: '热度累计中 · 今日升级',
+    title: '2026年翻墙机场推荐评测 | 稳定便宜VPN机场排行榜 (高性价比科学上网工具长期更新)',
+    slug: '/blog/2026-best-vpn-airport-recommendation-rankings',
+    summary: [
+      '这份 <strong>2026 年翻墙机场推荐排行榜</strong> 汇总套餐价格、流量倍率、物理线路架构、多端客户端支持、使用场景与资金安全提示，帮助你在数百家服务商中精准锁定最适合自己的高速出海工具。自费订阅匿名压测，拒绝商业恰饭虚标。',
+      '覆盖电信 28ms、联通 32ms、移动 25ms 晚高峰全链路真实丢包率与 4K 秒开性能。运营时间较短或只有单次体验资料的机场明确标注风险，区分宣传信息与长期千兆实测。'
+    ],
+    checklistTitle: '本文适合以下人群：',
+    checklist: [
+      '想找稳定不过墙物理专线的新手',
+      '想找月付 ¥7 ~ ¥15 的便宜高性价比用户',
+      '需要看 Netflix / 4K YouTube 的追剧党',
+      '使用 Clash Verge / Sing-box / Shadowrocket 的用户',
+      '需要住宅原生 IP 稳定访问 ChatGPT / Claude 的用户',
+      '需要备用应急节点以防断流的用户'
+    ],
+    primaryBtn: { text: '阅读完整 3000 字深度评测', href: '/blog/2026-best-vpn-airport-recommendation-rankings' },
+    secondaryBtn: { text: '直达 No.1 专线 (闪电鼠主推)', href: '/go/shandianshu' },
+    note: '本文将持续更新 2026年最新翻墙机场推荐榜'
+  },
+  {
+    id: 'budget',
+    badge: { text: '平价战神', bg: 'bg-emerald-500 text-white' },
+    folder: 'blog/平价机场',
+    tags: ['便宜机场', '平价梯子', '月付7元起', '不限时按量'],
+    date: '2026-11-11',
+    status: '月付避险 · 晚高峰千兆',
+    title: '2026 便宜好用机场推荐：月付 7~15 元平价高性价比机场与不限时按量梯子盘点',
+    slug: '/blog/cheap-budget-airports-recommendation-2026',
+    summary: [
+      '专为学生党、学术查资料、轻度办公与追剧用户打造。深度拆解“1元机场”与“9.9包年杀猪盘”背后的商业陷阱，传授如何用最少预算获取极致稳定的物理专线节点。',
+      '严格遴选支持月付、单价 7~15 元的良心真专线，以及不过期、按实际流量扣费的备用神仙梯子。花最少的钱享受千兆速度，资金零风险。'
+    ],
+    checklistTitle: '本文适合以下人群：',
+    checklist: [
+      '预算有限、不想每月承担高额开销的学生与轻度用户',
+      '查阅 GitHub / Google 学术偶尔翻墙的科研开发者',
+      '坚决拒绝年付、只愿意月付 ¥7~¥15 避险的谨慎用户',
+      '需要多买一个不限时套餐作为主线故障备用的极客',
+      '对晚高峰 1080P/4K 高清流畅度有底线要求的视频观众',
+      '寻找光年梯 (¥7/月)、大佬云 (¥8/月)、闪电鼠 (¥8/月) 上车通道的用户'
+    ],
+    primaryBtn: { text: '阅读完整 2500 字平价指南', href: '/blog/cheap-budget-airports-recommendation-2026' },
+    secondaryBtn: { text: '直达平价专线 No.1 (闪电鼠 ¥8/月)', href: '/go/shandianshu' },
+    note: '平价专区持续维护 · 拒绝年付杀猪盘'
+  },
+  {
+    id: 'dedicated',
+    badge: { text: '极速专线', bg: 'bg-sky-600 text-white' },
+    folder: 'blog/专线横评',
+    tags: ['IEPL专线', 'IPLC专线', '晚高峰千兆', '4K/8K秒开', '抗封锁'],
+    date: '2026-11-11',
+    status: '120+ 探针 0 丢包',
+    title: '2026 高速稳定 IEPL/IPLC 专线机场推荐：晚高峰千兆不限速、4K/8K秒开与抗封锁神器',
+    slug: '/blog/high-speed-iepl-dedicated-line-airports',
+    summary: [
+      '为什么普通公网中继白天几十兆、一到晚上八九点就卡成 PPT？本文深度剖析跨国物理内网专线（IEPL / IPLC）底层传输机制，揭秘“过境不过墙”的抗封锁降维打击能力。',
+      '实测对比全网主流真专线晚高峰 1000Mbps~2000Mbps 极限压测表现，传授一键识破拿普通中继冒充专线的欺诈行径，实测推荐纯内网不过墙的高速第一梯队。'
+    ],
+    checklistTitle: '本文适合以下人群：',
+    checklist: [
+      '晚高峰对 YouTube 4K/8K 秒开、外网联机低延迟极度敏感的玩家',
+      '逢重大网络管控敏感期经常遭遇节点全线飘红掉线的商务人士',
+      '家中具备 500M~1000M 物理千兆宽带且追求跑满极限的极客',
+      '依赖跨国海量数据同步、Docker 镜像拉取与代码推送的程序员',
+      '需要多入口 BGP 智能容灾与多地域专线备份的跨国企业团队',
+      '寻找神行加速 (IEPL极速)、速界 (IPLC专线) 等纯专线首选的用户'
+    ],
+    primaryBtn: { text: '阅读完整 2200 字专线横评', href: '/blog/high-speed-iepl-dedicated-line-airports' },
+    secondaryBtn: { text: '直达 IEPL 极速专线 (闪电鼠)', href: '/go/shandianshu' },
+    note: '基于全国 120+ 分布式探针晚高峰真机实测'
+  },
+  {
+    id: 'ai-residential',
+    badge: { text: 'AI防封', bg: 'bg-purple-600 text-white' },
+    folder: 'blog/原生住宅',
+    tags: ['原生住宅IP', '双ISP', 'ChatGPT-4o', 'Claude 3.5', 'TikTok', '防封号'],
+    date: '2026-11-11',
+    status: 'OpenAI 风控实测通过',
+    title: '2026 原生住宅 IP 机场推荐：ChatGPT-4o / Claude 3.5 / TikTok / 跨境电商专用防封专线指南',
+    slug: '/blog/native-residential-ip-chatgpt-tiktok-airports',
+    summary: [
+      '进入 2026 年，单纯“翻过 GFW”已经远远不够。OpenAI、Claude、TikTok 与海外电商平台搭建起严密的欺诈风控引擎（Fraud Score），大量机房广播 IP 频繁遭遇 Access Denied 1020 报错与惨遭封号。',
+      '深入拆解原生住宅双 ISP 家宽 IP 的防风控底层逻辑，实测推荐低欺诈值纯净专线，让你的 ChatGPT-4o 语音、Claude Pro 编写、TikTok 0播放破局与跨境店铺运维稳如泰山。'
+    ],
+    checklistTitle: '本文适合以下人群：',
+    checklist: [
+      '频繁遇到 ChatGPT Access Denied 1020 / Oops 报错的用户',
+      '充值了 Claude Pro、Cursor 会员极其担心被官方无情封号的开发者',
+      '运营 TikTok 账号短视频长期 0 播放、需要本土真实家宽环境的博主',
+      '登录海外亚马逊、eBay、Stripe、PayPal 涉及资金结算的跨境卖家',
+      '寻找纯正原生双 ISP、低欺诈值纯净机房专线的专业团队',
+      '推荐使用闪电鼠、大佬云、榴莲云等具备原生家宽轮换节点的机场'
+    ],
+    primaryBtn: { text: '阅读完整 2000 字防封指南', href: '/blog/native-residential-ip-chatgpt-tiktok-airports' },
+    secondaryBtn: { text: '直达原生住宅 IP 首推 (闪电鼠)', href: '/go/shandianshu' },
+    note: '针对 OpenAI / Anthropic 2026 最新反欺诈引擎调优'
+  },
+  {
+    id: 'beginner-safety',
+    badge: { text: '新手必读', bg: 'bg-rose-600 text-white' },
+    folder: 'blog/新手入门',
+    tags: ['新手配置', 'Clash教程', 'Shadowrocket', '规则分流', '防跑路', '资金安全'],
+    date: '2026-11-11',
+    status: '避坑防骗 实操宝典',
+    title: '2026 科学上网机场新手入门全攻略：主流客户端配置、规则分流教程与防跑路资金避险指南',
+    slug: '/blog/beginner-setup-anti-runaway-complete-guide',
+    summary: [
+      '专为零基础小白打造的从零起步保姆级全攻略。涵盖 Windows、Mac、iOS、Android 四大操作系统主流客户端（Clash Verge Rev、Sing-box、小火箭）一键订阅与图形化配置。',
+      '手把手教学规则分流与 TUN 虚拟网卡开启，确保国内流量直连不扣费、国外流量秒级代理；同时独家归纳机场跑路 6 大前兆与资金避险 5 大黄金铁律，守护你的钱包安全。'
+    ],
+    checklistTitle: '本文适合以下人群：',
+    checklist: [
+      '刚接触翻墙科学上网、不知道如何选择和配置客户端的新手小白',
+      '在电脑端需要全局代理或 TUN 模式接管终端命令行与游戏的用户',
+      '苹果 iPhone / iPad 不知道如何获取外区 Shadowrocket 小火箭的用户',
+      '想搞懂“规则分流”原理、避免翻墙节点浪费国内流量的用户',
+      '担心买到不良商家、想学会识别机场卷款跑路前兆的投资者',
+      '需要一站式客户端配置与靠谱月付专线上车方案的用户'
+    ],
+    primaryBtn: { text: '阅读完整 2200 字新手教程', href: '/blog/beginner-setup-anti-runaway-complete-guide' },
+    secondaryBtn: { text: '下载全平台客户端', href: '/clients' },
+    note: '零基础 3 分钟极速上手'
+  }
+];
+---
+
+<BaseLayout
+  title={`${SITE_CONFIG.name} - 2026顶级VPN/机场评测与流媒体专线推荐导航`}
+  description="专注2026全网优质SS/Trojan/Hysteria2/VLESS机场深度实测。提供晚高峰千兆测速、4K流媒体/ChatGPT解锁检测、专属优惠码、跑路风险预警与全平台客户端下载。"
+>
+  <!-- Top Live Network Status Ticker -->
+  <div class="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-surface-900 py-2 px-4 text-xs">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-slate-600 dark:text-slate-300">
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar whitespace-nowrap">
+        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 font-bold text-[11px] border border-emerald-200 dark:border-emerald-500/30">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          探针实时在线
+        </span>
+        <span class="text-slate-300 dark:text-slate-700">|</span>
+        <span>电信晚高峰: <strong class="text-slate-900 dark:text-white font-mono font-bold">28ms</strong> (948Mbps)</span>
+        <span class="text-slate-300 dark:text-slate-700">•</span>
+        <span>联通9929: <strong class="text-slate-900 dark:text-white font-mono font-bold">32ms</strong> (912Mbps)</span>
+        <span class="text-slate-300 dark:text-slate-700">•</span>
+        <span>移动CMI: <strong class="text-slate-900 dark:text-white font-mono font-bold">25ms</strong> (980Mbps)</span>
+        <span class="text-slate-300 dark:text-slate-700">•</span>
+        <span class="text-slate-500">监测节点: 120+ 处</span>
+      </div>
+
+      <div class="hidden sm:flex items-center gap-3 text-[11px] text-slate-500 dark:text-slate-400">
+        <span class="flex items-center gap-1 font-medium">
+          <ShieldCheck class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-500" />
+          自费匿名订阅 · 拒绝商业虚标
+        </span>
+        <span>•</span>
+        <span>更新于: 今日 21:00 晚高峰实测</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Portal Layout: 2 Columns (Matching YouYou classic blog framework) -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Left Column: Main Content Stream (70% width) -->
+      <div class="lg:col-span-8 space-y-8">
+        
+        <!-- Pinned Article 1: 核心推荐大文章卡片 (Matching Screenshot Top Card) -->
+        {featuredArticles.slice(0, 1).map((article) => (
+          <article class="p-6 sm:p-7 rounded-3xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:border-amber-400/80 transition-all">
+            <!-- Top Meta Bar -->
+            <div class="flex flex-wrap items-center gap-2 mb-2.5">
+              <span class={`px-2 py-0.5 rounded text-[11px] font-black uppercase ${article.badge.bg}`}>
+                {article.badge.text}
+              </span>
+              <span class="text-xs text-slate-400 flex items-center gap-1">
+                <Folder class="w-3 h-3 text-slate-400" />
+                <span>{article.folder}</span>
+              </span>
+              <div class="flex items-center gap-1 text-[11px]">
+                {article.tags.map((tag) => (
+                  <span class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <span class="text-xs text-slate-400 flex items-center gap-1 ml-auto">
+                <Calendar class="w-3 h-3 text-slate-400" />
+                <span>{article.date}</span>
+              </span>
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-200 dark:border-sky-500/20">
+                <Eye class="w-3 h-3" />
+                <span>{article.status}</span>
+              </span>
+            </div>
+
+            <!-- Title -->
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight leading-snug hover:text-indigo-600 dark:hover:text-sky-400 transition-colors">
+              <a href={article.slug}>
+                {article.title}
+              </a>
+            </h2>
+
+            <!-- Content Paragraphs -->
+            <div class="mt-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed space-y-2.5">
+              {article.summary.map((para) => (
+                <p set:html={para} />
+              ))}
+            </div>
+
+            <!-- Target Audience Checklist -->
+            <div class="my-4 p-4 rounded-2xl bg-slate-50 dark:bg-surface-950 border border-slate-200/80 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300 space-y-1.5">
+              <span class="font-bold text-slate-900 dark:text-white block mb-1">{article.checklistTitle}</span>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                {article.checklist.map((item) => (
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-emerald-500 font-bold">✓</span>
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <!-- Bottom Action Buttons -->
+            <div class="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 dark:border-slate-800 text-xs">
+              <div class="flex flex-wrap items-center gap-2">
+                <a
+                  href={article.primaryBtn.href}
+                  class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors shadow-sm"
+                >
+                  <span>{article.primaryBtn.text}</span>
+                  <ArrowRight class="w-3.5 h-3.5" />
+                </a>
+                <a
+                  href={article.secondaryBtn.href}
+                  target={article.secondaryBtn.href.startsWith('/go/') ? '_blank' : undefined}
+                  rel={article.secondaryBtn.href.startsWith('/go/') ? 'nofollow sponsored noopener noreferrer' : undefined}
+                  class="inline-flex items-center gap-1 px-3.5 py-2 rounded-xl font-semibold text-slate-700 dark:text-slate-200 bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-500/30 hover:bg-amber-100 dark:hover:bg-amber-500/20 transition-colors"
+                >
+                  <span>{article.secondaryBtn.text}</span>
+                  {article.secondaryBtn.href.startsWith('/go/') ? (
+                    <ExternalLink class="w-3.5 h-3.5" />
+                  ) : (
+                    <ArrowRight class="w-3.5 h-3.5" />
+                  )}
+                </a>
+              </div>
+
+              <span class="text-slate-400 text-[11px]">{article.note}</span>
+            </div>
+          </article>
+        ))}
+
+        <!-- 跑路预警醒目提示框 (Alert Notice) -->
+        {warningAirports.length > 0 && (
+          <div class="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-rose-800 dark:text-rose-300 shadow-sm">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-rose-600 text-white flex items-center justify-center shrink-0">
+                <AlertTriangle class="w-4 h-4 animate-pulse" />
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] font-black uppercase px-1.5 py-0.5 rounded bg-rose-600 text-white">
+                    跑路预警通知
+                  </span>
+                  <span class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">监测到 {warningAirports.length} 家机场出现异常失联与跑路风险</span>
+                </div>
+                <p class="text-[11px] text-rose-700 dark:text-rose-300/80 mt-0.5">
+                  近期有用户反馈部分低价年付机场无法连通、管理失联。切勿大额充值年付，保障资金安全！
+                </p>
+              </div>
+            </div>
+
+            <a
+              href="/warnings"
+              class="shrink-0 inline-flex items-center gap-1 px-3.5 py-1.5 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 transition-colors shadow-sm self-start sm:self-auto"
+            >
+              <span>查看避坑列表</span>
+              <ArrowRight class="w-3 h-3" />
+            </a>
+          </div>
+        )}
+
+        <!-- 4 篇高权重长尾词深度推荐文章 (Articles 2, 3, 4, 5 Matching Image 2 / Image 10 Style) -->
+        {featuredArticles.slice(1).map((article) => (
+          <article class="p-6 sm:p-7 rounded-3xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:border-amber-400/80 transition-all">
+            <!-- Top Meta Bar -->
+            <div class="flex flex-wrap items-center gap-2 mb-2.5">
+              <span class={`px-2 py-0.5 rounded text-[11px] font-black uppercase ${article.badge.bg}`}>
+                {article.badge.text}
+              </span>
+              <span class="text-xs text-slate-400 flex items-center gap-1">
+                <Folder class="w-3 h-3 text-slate-400" />
+                <span>{article.folder}</span>
+              </span>
+              <div class="flex items-center gap-1 text-[11px]">
+                {article.tags.map((tag) => (
+                  <span class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <span class="text-xs text-slate-400 flex items-center gap-1 ml-auto">
+                <Calendar class="w-3 h-3 text-slate-400" />
+                <span>{article.date}</span>
+              </span>
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-200 dark:border-sky-500/20">
+                <Eye class="w-3 h-3" />
+                <span>{article.status}</span>
+              </span>
+            </div>
+
+            <!-- Title -->
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight leading-snug hover:text-indigo-600 dark:hover:text-sky-400 transition-colors">
+              <a href={article.slug}>
+                {article.title}
+              </a>
+            </h2>
+
+            <!-- Content Paragraphs -->
+            <div class="mt-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed space-y-2.5">
+              {article.summary.map((para) => (
+                <p set:html={para} />
+              ))}
+            </div>
+
+            <!-- Target Audience Checklist -->
+            <div class="my-4 p-4 rounded-2xl bg-slate-50 dark:bg-surface-950 border border-slate-200/80 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300 space-y-1.5">
+              <span class="font-bold text-slate-900 dark:text-white block mb-1">{article.checklistTitle}</span>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                {article.checklist.map((item) => (
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-emerald-500 font-bold">✓</span>
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <!-- Bottom Action Buttons -->
+            <div class="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 dark:border-slate-800 text-xs">
+              <div class="flex flex-wrap items-center gap-2">
+                <a
+                  href={article.primaryBtn.href}
+                  class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors shadow-sm"
+                >
+                  <span>{article.primaryBtn.text}</span>
+                  <ArrowRight class="w-3.5 h-3.5" />
+                </a>
+                <a
+                  href={article.secondaryBtn.href}
+                  target={article.secondaryBtn.href.startsWith('/go/') ? '_blank' : undefined}
+                  rel={article.secondaryBtn.href.startsWith('/go/') ? 'nofollow sponsored noopener noreferrer' : undefined}
+                  class="inline-flex items-center gap-1 px-3.5 py-2 rounded-xl font-semibold text-slate-700 dark:text-slate-200 bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-500/30 hover:bg-amber-100 dark:hover:bg-amber-500/20 transition-colors"
+                >
+                  <span>{article.secondaryBtn.text}</span>
+                  {article.secondaryBtn.href.startsWith('/go/') ? (
+                    <ExternalLink class="w-3.5 h-3.5" />
+                  ) : (
+                    <ArrowRight class="w-3.5 h-3.5" />
+                  )}
+                </a>
+              </div>
+
+              <span class="text-slate-400 text-[11px]">{article.note}</span>
+            </div>
+          </article>
+        ))}
+
+        <!-- Pinned Article 2: 智能选机匹配引擎与动态测速模拟 (CRO Wizard & Matrix) -->
+        <article class="p-6 sm:p-7 rounded-3xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div class="flex flex-wrap items-center gap-2 mb-2">
+            <span class="px-2 py-0.5 rounded text-[11px] font-black uppercase bg-indigo-600 text-white">
+              交互工具
+            </span>
+            <span class="text-xs text-slate-400">blog/选机向导</span>
+            <span class="text-xs text-slate-400 ml-auto">今日已匹配 1,420+ 次</span>
+          </div>
+
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+            全网最全推荐！2026翻墙机场性能与价格对比：哪家最稳？哪家最便宜？
+          </h2>
+          <p class="mt-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+            不要着急入手，多对比，所有机场汇总都在这里面。面对市面上众多机场服务，如何选择稳定、速度快且性价比高的机场成为关键问题。
+          </p>
+
+          <!-- 嵌入 30 秒选机向导 -->
+          <div class="mt-6">
+            <DecisionWizard />
+          </div>
+
+          <!-- 嵌入 三网测速模拟 -->
+          <div class="mt-6">
+            <IspLatencyMatrix />
+          </div>
+        </article>
+
+        <!-- 机场推荐核心模块 (锚点定位：#airports-section) -->
+        <section id="airports-section" class="scroll-mt-24 pt-4">
+          <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-50 dark:bg-indigo-500/20 text-indigo-700 dark:text-sky-300 border border-indigo-200 dark:border-indigo-500/30">
+                  AIRPORT MATRIX 2026
+                </span>
+              </div>
+              <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight mt-1.5">
+                2026 稳定机场推荐与测速排行榜
+              </h2>
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
+                实时汇总全网主流服务商，支持流媒体解锁专线、高性价比及免费签到机场切换
+              </p>
+            </div>
+
+            <a
+              href="/warnings"
+              class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold text-rose-700 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 hover:bg-rose-100 transition-colors self-start md:self-auto"
+            >
+              <ShieldAlert class="w-4 h-4 text-rose-600 dark:text-rose-500" />
+              <span>停运排查名单 ({warningAirports.length})</span>
+            </a>
+          </div>
+
+          <!-- 分类标签切换栏 (Category Filter Tabs) -->
+          <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-2 mb-6 border-b border-slate-200 dark:border-slate-800">
+            {categories.map((cat) => (
+              <button
+                type="button"
+                data-category={cat.id}
+                class={`category-tab flex items-center gap-2 px-4 py-2 rounded-2xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                  cat.id === 'all'
+                    ? 'bg-indigo-600 text-white shadow-sm'
+                    : 'bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800'
+                }`}
+              >
+                <cat.icon class="w-4 h-4" />
+                <span>{cat.name}</span>
+              </button>
+            ))}
+          </div>
+
+          <!-- 推荐卡片列表 (Airport Cards Grid) -->
+          <div id="airports-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {airportsData.map((airport) => (
+              <AirportCard airport={airport} />
+            ))}
+          </div>
+        </section>
+
+        <!-- EEAT 测评标准与测试方法论 -->
+        <section class="p-6 sm:p-8 rounded-3xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div class="max-w-3xl mb-6">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30 mb-2">
+              <FileCheck class="w-4 h-4 text-emerald-600" />
+              <span>METHODOLOGY & TESTING STANDARDS</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+              我们的评测标准与自动化探针架构
+            </h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              坚持“100% 自费匿名订阅、拒绝商业恰饭干扰”，用真实代码与物理真机探针说话。
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div class="p-4 rounded-2xl bg-slate-50 dark:bg-surface-950 border border-slate-200/80 dark:border-slate-800">
+              <span class="font-mono text-indigo-600 font-bold block mb-1">01 / 三网千兆高峰压测</span>
+              <p class="text-slate-500 dark:text-slate-400 leading-relaxed">
+                探针部署在广州电信、上海联通、北京移动机房，每晚 20:30~22:30 高峰期持续轮巡测速并记录抖动与断流。
+              </p>
+            </div>
+            <div class="p-4 rounded-2xl bg-slate-50 dark:bg-surface-950 border border-slate-200/80 dark:border-slate-800">
+              <span class="font-mono text-sky-600 font-bold block mb-1">02 / 流媒体与 AI 解锁库</span>
+              <p class="text-slate-500 dark:text-slate-400 leading-relaxed">
+                自动化脚本定时验证 Netflix 非自制剧、Disney+ 4K HDR、OpenAI ChatGPT 原生住宅 IP 解锁率。
+              </p>
+            </div>
+            <div class="p-4 rounded-2xl bg-slate-50 dark:bg-surface-950 border border-slate-200/80 dark:border-slate-800">
+              <span class="font-mono text-amber-600 font-bold block mb-1">03 / 拓扑与路由抓包分析</span>
+              <p class="text-slate-500 dark:text-slate-400 leading-relaxed">
+                通过 MTR / Traceroute 分析真实过境路由，区分公网隧道直连、中继中转与真正不过墙的 IEPL 纯内网专线。
+              </p>
+            </div>
+            <div class="p-4 rounded-2xl bg-slate-50 dark:bg-surface-950 border border-slate-200/80 dark:border-slate-800">
+              <span class="font-mono text-rose-600 font-bold block mb-1">04 / 7×24H 跑路失联监控</span>
+              <p class="text-slate-500 dark:text-slate-400 leading-relaxed">
+                监控服务商官网连通性、Telegram 交流群活跃度、用户充值反馈，异常时第一时间触发预警。
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 常见疑问权威解答 (FAQ) -->
+        <section class="p-6 sm:p-8 rounded-3xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div class="mb-6">
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+              <HelpCircle class="w-5 h-5 text-indigo-600" />
+              <span>机场选购常见问题与避坑要点</span>
+            </h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              解答用户在选购、日常使用与协议配置中最关心的核心疑问
+            </p>
+          </div>
+
+          <div class="space-y-4 text-xs sm:text-sm">
+            <div class="p-4 rounded-2xl bg-slate-50 dark:bg-surface-950 border border-slate-200/80 dark:border-slate-800">
+              <h3 class="font-bold text-slate-900 dark:text-white">Q1. 专线机场 (IEPL/IPLC) 和普通中转机场有什么区别？</h3>
+              <p class="text-slate-600 dark:text-slate-400 mt-1.5 leading-relaxed text-xs">
+                IEPL（国际以太网专线）走的是跨国海底光缆内网直连，数据完全不经过公网 GFW 审查，晚高峰不降速、零丢包，逢敏感期稳定如常；而普通中转是借公网服务器中转，依然受 GFW 封锁干扰。
+              </p>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-slate-50 dark:bg-surface-950 border border-slate-200/80 dark:border-slate-800">
+              <h3 class="font-bold text-slate-900 dark:text-white">Q2. 为什么登录 ChatGPT / Claude 会提示 Access Denied 或被封号？</h3>
+              <p class="text-slate-600 dark:text-slate-400 mt-1.5 leading-relaxed text-xs">
+                OpenAI 和 Anthropic 对机房数据中心广播 IP（Data Center IP）风控极其严苛。如果成千上万人共用同一个机房 IP，就会被系统判定为高风险滥用。推荐选择具备“住宅原生双 ISP”轮换节点的机场（如闪电鼠、大佬云）。
+              </p>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-slate-50 dark:bg-surface-950 border border-slate-200/80 dark:border-slate-800">
+              <h3 class="font-bold text-slate-900 dark:text-white">Q3. 为什么千万不要贪便宜购买“一年20元”的超低价年付机场？</h3>
+              <p class="text-slate-600 dark:text-slate-400 mt-1.5 leading-relaxed text-xs">
+                物理专线机房带宽成本高昂。低价年付机场多为黑产超卖或击鼓传花模式，收取一批年费后因无力支付服务器账单而突然关站跑路。强烈建议新手按月付或季付体验。
+              </p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Right Column: Sidebar (30% width, sticky) -->
+      <div class="lg:col-span-4 sticky top-20">
+        <Sidebar />
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Lower Section: 全宽核心参数与晚高峰测速对比大表 (Full Width 1200px - 独立占满全宽，无需横向滚动！) -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+    <ComparisonTable airports={airportsData} />
+  </div>
+</BaseLayout>
+
+<script>
+  function setupCategoryFiltering() {
+    const tabs = document.querySelectorAll<HTMLButtonElement>('.category-tab');
+    const cards = document.querySelectorAll<HTMLElement>('.airport-card');
+
+    function filterByCat(catId: string) {
+      tabs.forEach((tab) => {
+        const isCurrent = tab.getAttribute('data-category') === catId;
+        if (isCurrent) {
+          tab.classList.remove('bg-slate-100', 'dark:bg-slate-900', 'text-slate-700', 'dark:text-slate-300');
+          tab.classList.add('bg-indigo-600', 'text-white', 'shadow-sm');
+        } else {
+          tab.classList.remove('bg-indigo-600', 'text-white', 'shadow-sm');
+          tab.classList.add('bg-slate-100', 'dark:bg-slate-900', 'text-slate-700', 'dark:text-slate-300');
+        }
+      });
+
+      cards.forEach((card) => {
+        const cats: string[] = JSON.parse(card.getAttribute('data-categories') || '["all"]');
+        if (catId === 'all' || cats.includes(catId)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const cat = tab.getAttribute('data-category') || 'all';
+        filterByCat(cat);
+      });
+    });
+
+    // Check trigger from navbar links
+    document.querySelectorAll('[data-filter-trigger]').forEach((el) => {
+      el.addEventListener('click', (e) => {
+        const triggerCat = el.getAttribute('data-filter-trigger');
+        if (triggerCat) {
+          filterByCat(triggerCat);
+        }
+      });
+    });
+  }
+
+  setupCategoryFiltering();
+  document.addEventListener('astro:page-load', setupCategoryFiltering);
+</script>

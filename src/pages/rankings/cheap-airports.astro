@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import AirportCard from '../../components/AirportCard.astro';
+import { getCollection } from 'astro:content';
+import { SITE_CONFIG } from '../../consts';
+
+const airports = await getCollection('airports');
+const budgetAirports = airports
+  .filter((a) => a.data.startingPrice <= 20 || a.data.category.includes('budget'))
+  .sort((a, b) => a.data.startingPrice - b.data.startingPrice);
+
+const breadcrumbItems = [
+  { name: '免费/平价', href: '/rankings/cheap-airports' },
+];
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: '2026便宜高性价比平价机场推荐榜',
+  description: '月付低至12-15元起的高性价比机场推荐，支持按量计费不限时，学生党与轻度办公优选。',
+  itemListElement: budgetAirports.map((airport, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    url: `${SITE_CONFIG.siteUrl}/airports/${airport.slug}`,
+    name: airport.data.name,
+  })),
+};
+---
+
+<BaseLayout
+  title={`2026便宜高性价比机场推荐：月付15元起与不限时按量计费 - ${SITE_CONFIG.name}`}
+  description="便宜好用的机场有哪些？精选2026全网优质平价机场推荐，月付低至12元-15元起，涵盖纯IEPL专线、大流量按量计费与独家折扣优惠码。拒绝劣质超卖跑路！"
+  schema={itemListSchema}
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <Breadcrumbs items={breadcrumbItems} />
+
+    <!-- Topic Hero -->
+    <div class="my-8 text-center max-w-3xl mx-auto">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs font-semibold mb-4">
+        <span>💰 预算有限也能享受优质专线 · 拒绝超卖垃圾</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight">
+        2026 便宜高性价比平价机场推荐
+      </h1>
+      <p class="mt-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+        谁说好专线一定昂贵？我们通过实测筛选出单价亲民（月付低至 7~15 元起）、同时承诺不虚标带宽、不偷跑流量、且支持按月付款的良心平民战神服务商。
+      </p>
+    </div>
+
+    <!-- Cards List -->
+    <div class="my-10">
+      <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mb-6">
+        平价性价比机场精选列表（按起步价格由低到高）
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {budgetAirports.map((airport) => (
+          <AirportCard airport={airport} />
+        ))}
+      </div>
+    </div>
+  </div>
+</BaseLayout>

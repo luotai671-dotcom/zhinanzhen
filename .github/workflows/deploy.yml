@@ -1,0 +1,37 @@
+name: Build & IndexNow Push
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Project
+        run: npm run build
+
+      - name: Verify IndexNow Verification Key File
+        run: |
+          test -f dist/41889b18d1b395e76872a144ecb15050.txt
+          echo "IndexNow Key File verified in dist/"
+
+      - name: Submit URLs to IndexNow
+        run: node scripts/indexnow-submit.cjs
+

@@ -1,0 +1,99 @@
+---
+import SEOHead from '../components/SEOHead.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import SearchModal from '../components/SearchModal.astro';
+import '../styles/global.css';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  canonicalUrl?: string;
+  type?: 'website' | 'article' | 'product';
+  publishedTime?: Date;
+  modifiedTime?: Date;
+  schema?: Record<string, any> | Array<Record<string, any>>;
+  noindex?: boolean;
+}
+
+const { ...props } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN" class="scroll-smooth">
+  <head>
+    <SEOHead {...props} />
+    <!-- Prevent Theme Flash: Default to Daytime (Light) Mode -->
+    <script is:inline>
+      try {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch (e) {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+  </head>
+  <body class="bg-slate-50/70 dark:bg-surface-950 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-600 selection:text-white transition-colors duration-200">
+    <Navbar />
+    <main class="flex-grow">
+      <slot />
+    </main>
+    <Footer />
+    <SearchModal />
+
+    <!-- Global Coupon Copy Toast & Handler -->
+    <div
+      id="global-toast"
+      class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-slate-900 text-white border border-emerald-500 shadow-2xl text-xs font-medium"
+    >
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span id="global-toast-msg">优惠码已复制！正在为您前往官网...</span>
+    </div>
+
+    <script>
+      function initCouponButtons() {
+        const buttons = document.querySelectorAll<HTMLButtonElement>('.copy-coupon-btn');
+        const toast = document.getElementById('global-toast');
+        const toastMsg = document.getElementById('global-toast-msg');
+
+        buttons.forEach((btn) => {
+          btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const code = btn.getAttribute('data-coupon');
+            const discount = btn.getAttribute('data-discount') || '';
+
+            if (code) {
+              try {
+                await navigator.clipboard.writeText(code);
+                
+                // Show toast
+                if (toast && toastMsg) {
+                  toastMsg.textContent = `已复制优惠码 [${code}] (${discount})，享受专属立减！`;
+                  toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+                  toast.classList.add('translate-y-0', 'opacity-100');
+
+                  setTimeout(() => {
+                    toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+                    toast.classList.remove('translate-y-0', 'opacity-100');
+                  }, 2800);
+                }
+              } catch (err) {
+                console.error('Clipboard copy failed:', err);
+              }
+            }
+          });
+        });
+      }
+
+      initCouponButtons();
+      document.addEventListener('astro:page-load', initCouponButtons);
+    </script>
+  </body>
+</html>

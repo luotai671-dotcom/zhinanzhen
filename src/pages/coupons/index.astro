@@ -1,0 +1,231 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { Sparkles, Tag, Gift, Copy, ExternalLink, Clock } from 'lucide-astro';
+
+const breadcrumbItems = [
+  { name: '福利中心', href: '/coupons' },
+];
+
+const coupons = [
+  {
+    airportName: '闪电鼠 (2026年度主推)',
+    logo: '⚡',
+    code: 'sd88',
+    discount: '专属立减特惠',
+    expiry: '2026-12-31',
+    scope: '月付8元起步及长周期套餐通用',
+    affiliateUrl: '/go/shandianshu',
+    highlight: '全站年度核心主推，纯IEPL内网专线',
+  },
+  {
+    airportName: '大佬云 (老牌IEPL高口碑)',
+    logo: '👑',
+    code: 'dly88',
+    discount: '专属折扣立减',
+    expiry: '2026-12-31',
+    scope: '全套餐适用，8元月付超值上车',
+    affiliateUrl: '/go/dalaoyun',
+    highlight: '老牌实力专线，全流媒体与ChatGPT解锁',
+  },
+  {
+    airportName: '榴莲云 (极速追剧专线)',
+    logo: '🍈',
+    code: 'll88',
+    discount: '专属立减优惠',
+    expiry: '2026-12-31',
+    scope: '月付及年付套餐通用',
+    affiliateUrl: '/go/liulianyun',
+    highlight: '双ISP原生住宅IP，4K/8K拖拽秒开',
+  },
+  {
+    airportName: '神行加速 (游戏电竞低延迟)',
+    logo: '🚀',
+    code: 'sx0077',
+    discount: '专属电竞优惠码',
+    expiry: '2026-12-31',
+    scope: '月付15元起，纯IEPL专线',
+    affiliateUrl: '/go/shenxing',
+    highlight: '毫秒级响应，游戏电竞与出海办公必备',
+  },
+  {
+    airportName: '云界线 (全IEPL千兆大带宽)',
+    logo: '☁️',
+    code: 'yjx888',
+    discount: '专属88折优惠',
+    expiry: '2026-12-31',
+    scope: '全场通用',
+    affiliateUrl: '/go/yunjiexian',
+    highlight: '全IEPL高速隧道，跨境无缝互联',
+  },
+  {
+    airportName: '环球梯 (平价专线战神)',
+    logo: '🌍',
+    code: 'hq66',
+    discount: '专属立减优惠',
+    expiry: '2026-12-31',
+    scope: '8元月付起步套餐通用',
+    affiliateUrl: '/go/huanqiuti',
+    highlight: '内网专线+IEPL双重保障，性价比神机',
+  },
+  {
+    airportName: '极连云 (商务出海专线)',
+    logo: '🔗',
+    code: 'jly888',
+    discount: '专属优惠码',
+    expiry: '2026-12-31',
+    scope: '全套餐可用',
+    affiliateUrl: '/go/jilianyun',
+    highlight: '高可用骨干网，大带宽冗余防掉线',
+  },
+  {
+    airportName: '光速云 (纯正IPLC专线)',
+    logo: '⚡',
+    code: 'GSY888',
+    discount: '专属优惠立减',
+    expiry: '2026-12-31',
+    scope: '月付15元起，纯正IPLC内网专线',
+    affiliateUrl: '/go/guangshuyun',
+    highlight: '深圳-香港/上海-东京纯内网光纤直连，零过墙审查',
+  },
+  {
+    airportName: '光年梯 (7元平民战神)',
+    logo: '🚀',
+    code: 'GNT2026',
+    discount: '专属立减特惠',
+    expiry: '2026-12-31',
+    scope: '全网最低7元起步月付套餐通用',
+    affiliateUrl: '/go/guangnianti',
+    highlight: '纯正IEPL专线，随用随充无套路月付',
+  },
+  {
+    airportName: '边缘节点 (Anycast多线调度)',
+    logo: '🌐',
+    code: 'xk808',
+    discount: '专属8折特惠',
+    expiry: '2026-12-31',
+    scope: '全周期通用',
+    affiliateUrl: '/go/edgenova',
+    highlight: '边缘计算多点分布，就近接入',
+  },
+  {
+    airportName: '速界 (IPLC顶级专线)',
+    logo: '⚡',
+    code: 'sujie80',
+    discount: '专属8折立减码',
+    expiry: '2026-12-31',
+    scope: '全套餐可用',
+    affiliateUrl: '/go/sujie',
+    highlight: '优质IPLC内网专线，晚高峰零丢包',
+  },
+];
+---
+
+<BaseLayout
+  title="福利中心：限时折扣码与免费签到活动 - 机场指南针"
+  description="汇集2026全网优质机场独家优惠券、折扣码、免费白嫖试用活动及签到领流量教程，领券直达立减！"
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <Breadcrumbs items={breadcrumbItems} />
+
+    <!-- Hero Header -->
+    <div class="my-8 text-center max-w-3xl mx-auto">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-300 border border-amber-200 dark:border-amber-500/20 mb-3">
+        <Sparkles class="w-4 h-4 text-amber-500" />
+        <span>EXCLUSIVE COUPONS & FREE NODES</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight">
+        福利中心与限时折扣码
+      </h1>
+      <p class="mt-3 text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+        本站独家合作优惠券，下单结账输入即享专属立减。所有优惠码均经过实测校验，保证 100% 可用。
+      </p>
+    </div>
+
+    <!-- 优惠券网格 -->
+    <section class="my-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+      {coupons.map((c) => (
+        <div class="p-6 rounded-3xl glass-card border border-slate-200 dark:border-slate-800 flex flex-col justify-between hover:border-amber-500/50 transition-all">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <span class="text-2xl">{c.logo}</span>
+                <h3 class="text-lg font-black text-slate-900 dark:text-white">{c.airportName}</h3>
+              </div>
+              <span class="px-2.5 py-1 rounded-xl text-xs font-black bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                {c.discount}
+              </span>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-amber-500/5 border border-amber-500/20 flex items-center justify-between gap-2 mb-3">
+              <div>
+                <span class="text-[10px] text-slate-400 block">独家立减优惠码</span>
+                <span class="font-mono text-base font-extrabold text-amber-600 dark:text-amber-400 tracking-wider">
+                  {c.code}
+                </span>
+              </div>
+              
+              <button
+                type="button"
+                class="copy-coupon-btn inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs hover:bg-amber-400 transition-colors cursor-pointer"
+                data-coupon={c.code}
+                data-discount={c.discount}
+              >
+                <Copy class="w-3.5 h-3.5" />
+                <span>复制</span>
+              </button>
+            </div>
+
+            <p class="text-xs text-slate-600 dark:text-slate-300 font-medium">
+              💡 {c.highlight}
+            </p>
+            <p class="text-[11px] text-slate-400 mt-1">
+              适用范围：{c.scope}
+            </p>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+            <span class="flex items-center gap-1 text-slate-400">
+              <Clock class="w-3.5 h-3.5" />
+              <span>有效期至 {c.expiry}</span>
+            </span>
+            <a
+              href={c.affiliateUrl}
+              target="_blank"
+              rel="nofollow sponsored noopener noreferrer"
+              class="inline-flex items-center gap-1 font-bold text-indigo-600 dark:text-sky-400 hover:underline"
+            >
+              <span>前往使用</span>
+              <ExternalLink class="w-3.5 h-3.5" />
+            </a>
+          </div>
+        </div>
+      ))}
+    </section>
+
+    <!-- 免费白嫖与签到活动指南 -->
+    <section class="my-16 p-8 rounded-3xl bg-gradient-to-r from-indigo-50 dark:from-surface-900 to-sky-50 dark:to-slate-900 border border-indigo-200 dark:border-slate-800">
+      <div class="max-w-3xl">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-600 text-white mb-3">
+          <Gift class="w-4 h-4" />
+          <span>免费白嫖机制说明</span>
+        </div>
+        <h2 class="text-2xl font-black text-slate-900 dark:text-white mb-3">
+          如何获取完全免费的应急节点与试用流量？
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+          许多优质机场针对新注册用户提供免费体验策略（例如注册赠送 5G~10G 流量，或每日在网页后台签到抽奖获取 1G~5G 免费专线流量）。对于只是轻度查阅学术资料、收取邮件的用户，完全可以零成本长期使用。
+        </p>
+        <a
+          href="/rankings/cheap-airports"
+          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs text-white bg-indigo-600 hover:bg-indigo-500 shadow-md transition-all"
+        >
+          <span>查看当前可用的免费/试用机场列表</span>
+          <ExternalLink class="w-3.5 h-3.5" />
+        </a>
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>
+

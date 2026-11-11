@@ -1,0 +1,583 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { getCollection } from 'astro:content';
+import { 
+  BookOpen, 
+  Zap, 
+  Shield, 
+  HelpCircle, 
+  ArrowRight, 
+  CheckCircle2, 
+  ChevronDown, 
+  Sparkles, 
+  Layers, 
+  Globe,
+  ListOrdered,
+  Bookmark,
+  ChevronRight,
+  ArrowUp,
+  Copy,
+  ExternalLink,
+  Search
+} from 'lucide-astro';
+
+const breadcrumbItems = [
+  { name: '知识百科', href: '/wiki' },
+];
+
+// 动态获取所有知识库与评测文章（包含10篇高SEO长尾词集群文章）
+const allArticles = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+);
+
+const protocols = [
+  {
+    id: 'proto-hysteria2',
+    name: 'Hysteria 2',
+    badge: '极速抗弱网',
+    desc: '基于修改版 QUIC (UDP) 协议开发，拥有自研拥塞控制算法，在丢包率高达 15% 的校园网或恶劣移动网络下依然能够跑满千兆带宽。',
+  },
+  {
+    id: 'proto-vless',
+    name: 'VLESS (XTLS / Reality)',
+    badge: '强抗封锁',
+    desc: 'Xray 核心新一代轻量协议，去除冗余握手，搭配 Reality 技术借用海外大型知名网站的 TLS 证书进行流量伪装，阻断概率极低。',
+  },
+  {
+    id: 'proto-tuic',
+    name: 'TUIC v5',
+    badge: '低延迟游戏',
+    desc: '基于标准 QUIC 开发的高性能代理协议，减少三次握手时延，在外服联机对战（Steam/APEX）中表现出极佳的 Ping 响应速度。',
+  },
+  {
+    id: 'proto-shadowsocks',
+    name: 'Shadowsocks (AEAD)',
+    badge: '生态最成熟',
+    desc: '经久不衰的经典对称加密协议，内存占用极低，几乎全网 100% 的代理客户端均原生支持，配合 IEPL 内网专线可发挥最佳性能。',
+  },
+];
+
+// 20 个关于机场推荐的高热搜高频 FAQ
+const faqs = [
+  {
+    id: 'faq-1',
+    q: '1. 什么是科学上网“机场”？它和传统商业 VPN（如 ExpressVPN、NordVPN）有什么本质区别？',
+    a: '“机场”是中文社区对基于 Shadowsocks、V2Ray/VLESS、Trojan、Hysteria2 等协议提供多节点代理订阅服务的统称。与传统国外商业 VPN 相比，机场的核心优势在于：针对中国大陆特殊的 GFW 审查机制进行了专门的混淆伪装与内网专线优化（如 IEPL/IPLC），且支持按域名与 IP 进行规则分流（国内流量直连、国外流量走代理），在连接速度、延迟和抗封锁能力上远胜传统 VPN。'
+  },
+  {
+    id: 'faq-2',
+    q: '2. 为什么机场推荐大家都强烈建议“按月付费”，坚决抵制大额年付？',
+    a: '跨境网络服务面临不可预测的政策与机房物理风险。按月付费能把用户的试错与资金损失上限牢牢控制在一杯奶茶钱内；而所谓“大额年付”或“永久套餐”往往是黑心站长在跑路前夕发起的资金盘收割陷阱。正规健康运营的机场（如闪电鼠、大佬云）均提供极具诚意的低门槛月付（低至 8 元/月）。'
+  },
+  {
+    id: 'faq-3',
+    q: '3. 什么是 IEPL 专线和 IPLC 专线？为什么它们在晚高峰完全不卡？',
+    a: 'IEPL（国际以太网专线）和 IPLC（国际私有租用线路）是运营商端到端的跨国内网点对点物理专用链路。它们的数据传输完全不走公网国际出口、完全不经过 GFW 防火墙检测，因此在敏感时期和每天 20:00~23:00 晚高峰期间，丢包率常年稳定在 0.1% 以下，是高可用科学上网的第一梯队架构。'
+  },
+  {
+    id: 'faq-4',
+    q: '4. 为什么访问 ChatGPT / Claude 总是频繁提示“Access Denied 1020”或 IP 封锁？',
+    a: 'OpenAI 与 Anthropic 对访问 IP 实施了严格的反作弊风控。绝大多数廉价机场使用的是商业数据中心机房 IP（Data Center IP），容易被平台识别并批量拉黑。只有使用欺诈分低、纯净度高的“原生住宅双 ISP IP”节点，才能彻底免除验证码与 1020 报错。'
+  },
+  {
+    id: 'faq-5',
+    q: '5. 什么是原生住宅 IP（双 ISP）？为什么做跨境电商和 TikTok 必须用它？',
+    a: '原生住宅 IP 是指由海外本土电信运营商（如美国 AT&T、Verizon、Comcast 等）分配给当地家庭宽带的真实住宅 IP，在风控库中标记为双 ISP。亚马逊、PayPal 与 TikTok 对机房 IP 会实施降权限流（如 TikTok 0 播放），而原生住宅 IP 能伪装出真实的本土真实人类网络指纹，确保店铺与账号资产安全。'
+  },
+  {
+    id: 'faq-6',
+    q: '6. 中国电信、中国联通和中国移动宽带在挑选机场时有什么不同策略？',
+    a: '电信 163 骨干网晚高峰极度拥挤，必须优先选用 IEPL 纯内网专线；联通出口较充裕，连接华北/华东 BGP 入口时延极佳；移动跨网访问电信机房易产生结算丢包，必须选用具备移动 CMI 独立入口或 Anycast 就近接入调度的机场。'
+  },
+  {
+    id: 'faq-7',
+    q: '7. 为什么同一家机场在白天测速几百兆，一到晚上八九点晚高峰就严重断流？',
+    a: '这通常是由于两点：一是机场采用了廉价公网中继线路，晚高峰遭遇运营商国际出口 QoS 强制限速；二是机场超卖严重，白天用户错峰尚可维持，晚高峰数百人同时看视频挤爆了共享专线带宽。选择骨干带宽充裕的头部品牌即可避免此问题。'
+  },
+  {
+    id: 'faq-8',
+    q: '8. 机场标称的“千兆峰值速率”是真的吗？如何识别假专线和虚标带宽？',
+    a: '很多廉价机场宣称千兆，实则是几百人共享的突发公网峰值。真专线可通过三个特征识别：1. 敏感时期依然秒级连通不全红；2. 客户端连续 Ping 节点 100 次，抖动方差小于 1ms；3. 晚高峰单线程下载能稳定跑满 4K 甚至 8K 视频码率。'
+  },
+  {
+    id: 'faq-9',
+    q: '9. 什么是客户端的 TUN 模式？为什么打游戏或用 Cursor / AI 工具必须开启 TUN？',
+    a: '系统普通代理（System Proxy）仅接管遵从系统代理设置的浏览器软件，而很多桌面软件（如 Cursor、ChatGPT 客户端、Steam 游戏、终端命令行）会绕过系统代理直连。TUN 模式会在本地创建虚拟网卡，强制捕获操作系统的全部三层 IP 流量，实现彻底全局代理。'
+  },
+  {
+    id: 'faq-10',
+    q: '10. 2026 年新手小白最推荐哪个客户端？Windows、Mac、iOS 和 Android 怎么选？',
+    a: 'Windows 首选 **Clash Verge Rev**（现代界面、内置 TUN 模式）；macOS 推荐 **Clash Verge Rev** 或 **Surge**；iOS / iPad 必备 **Shadowrocket (小火箭)**（买断制低价神作）；Android 推荐 **Clash Meta for Android** 或 **Sing-box**。'
+  },
+  {
+    id: 'faq-11',
+    q: '11. 为什么市面上有的超低价机场（如 1 元机场、9.9 包年）容易在 1~3 个月内跑路？',
+    a: '物理专线带宽成本每月高达数万元。1元或9.9包年的定价根本无法覆盖服务器机房电费，属于典型的击鼓传花庞氏模型——站长通过极低门槛引流收割一批年费后直接拔线注销域名，换壳再开下一家，业内称之为“快闪杀猪盘”。'
+  },
+  {
+    id: 'faq-12',
+    q: '12. 一个机场订阅支持多少台设备同时在线？可以跟朋友合租共享同一个账号吗？',
+    a: '优质机场通常允许 3~5 台设备同时在线，部分大厂甚至不限制设备数（只限制总流量配额）。但切勿过多账号合租，因为多地公网 IP 同时高频并发可能触发服务商的防盗链与账号风控机制导致封禁。'
+  },
+  {
+    id: 'faq-13',
+    q: '13. 用高质量 IEPL 专线打 Steam、APEX 或外服游戏，能替代传统游戏加速器吗？',
+    a: '完全可以！只要该专线支持 UDP 转发并开启了 **Full Cone NAT（全锥型 NAT）**，其物理专线直连日韩或香港的延迟（15~35ms）和稳定性甚至优于部分公网转发的商业加速器，还能同时顺畅访问 Discord 语音和海外攻略社区。'
+  },
+  {
+    id: 'faq-14',
+    q: '14. 什么是协议阻断？VLESS、Hysteria 2、TUIC 和 Shadowsocks 谁的抗封锁能力最强？',
+    a: '协议阻断是防火墙通过深度包检测（DPI）识别代理协议指纹并予以阻断的技术。当前抗阻断梯队中：**VLESS (XTLS / Reality)** 借用真实大厂 TLS 证书伪装度最高；**Hysteria 2** 依托暴力拥塞控制抗弱网与恶劣丢包最强；而传统 Shadowsocks 必须依托纯 IEPL 内网专线才能保持高稳定性。'
+  },
+  {
+    id: 'faq-15',
+    q: '15. 手机（iPhone / Android）使用代理客户端耗电快吗？如何优化手机端省电设置？',
+    a: '如果开启全局代理且频繁进行网络探针测速，会唤醒后台基带导致电量加速消耗。建议优化：1. 开启“规则分流（Rule）”模式，国内微信、淘宝直连不经过代理；2. 将节点连通性自动检测间隔调整为 15 分钟或以上；3. 优先选用轻量级 VLESS 节点。'
+  },
+  {
+    id: 'faq-16',
+    q: '16. 遇到机场突然打不开、所有节点全部超时全红（Ping 不通）应该如何排查？',
+    a: '自查 4 步法：1. 检查电脑/手机本地系统时间是否与网络时间精准同步（时间偏差超 60 秒会导致 TLS 握手失败）；2. 登录官网检查套餐流量是否耗尽或到期；3. 在客户端中右键点击订阅“更新配置”，拉取最新可用节点；4. 若确认机场失联，立即切换备用平价专线。'
+  },
+  {
+    id: 'faq-17',
+    q: '17. 如何在事前识别出一家机场即将跑路的前兆信号？',
+    a: '跑路前夕通常有 4 大异动：1. 突然推出违背常理的“骨折级双年付/终身套餐”；2. 官方 Telegram 交流群开启全员禁言或解散；3. 突然取消按月付款，仅支持年付；4. 工单系统瘫痪超过 48 小时无人应答。'
+  },
+  {
+    id: 'faq-18',
+    q: '18. 机场套餐里的“每月流量重置”是怎么算的？本月没用完的流量会自动顺延吗？',
+    a: '绝大多数周期性套餐（月付/季付/年付）的流量是“按月定额重置”，以你的购买结算日为基准（如每月 15 号重置一次），当月未使用的流量会自动清零，不予顺延；若需永久不清零流量，需购买专门的“不限时按量计费（Reset-free）”流量包。'
+  },
+  {
+    id: 'faq-19',
+    q: '19. 为什么看 Netflix（奈飞）或 Disney+ 会出现“您似乎在使用代理”或只能看自制剧？',
+    a: 'Netflix 会比对用户连接 IP 是否属于商业机房。如果节点没有部署原生住宅 IP 或专属 DNS 流媒体解锁技术，就会被限制仅可播放 Netflix 拥有全球版权的自制剧。选用如闪电鼠、榴莲云等标明“全流媒体解锁”的专线节点即可秒开当地所有版权影视。'
+  },
+  {
+    id: 'faq-20',
+    q: '20. 2026 年最稳健的科学上网配置策略是什么？如何搭建“1 主 + 1 备”双保险？',
+    a: '最佳实践是搭建异构双机场：主力选用技术底子过硬的旗舰专线（如 **闪电鼠**，月付 8 元，IEPL 内网专线保障日常工作与 AI 极速响应）；备用选用一个月付 7~8 元的平价备用专线（如 **光年梯** 7元/月 或 **环球梯** 8元/月）。两家分属不同的机房入口，无论是敏感期还是突发维护，两秒内无缝切换，实现 365 天 100% 不失联。'
+  }
+];
+
+// 生成结构化数据 FAQPage Schema 提升搜索引擎权重与 Rich Snippet
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map((item) => ({
+    "@type": "Question",
+    "name": item.q,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.a
+    }
+  }))
+};
+---
+
+<BaseLayout
+  title="科学上网知识百科与高热搜机场选购指南 - 机场指南针"
+  description="全网最全科学上网知识百科：收录10+篇高质量主题长尾词评测集群、主流协议原理剖析与2026高频热搜20大机场选购FAQ问答。"
+  schema={faqSchema}
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <Breadcrumbs items={breadcrumbItems} />
+
+    <!-- Hero Header -->
+    <div class="my-8 text-center max-w-3xl mx-auto">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-300 border border-sky-200 dark:border-sky-800 mb-3">
+        <BookOpen class="w-4 h-4" />
+        <span>KNOWLEDGE BASE & PROTOCOLS</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight">
+        科学上网知识百科与协议解析
+      </h1>
+      <p class="mt-3 text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+        拒绝生涩难懂的技术黑话，从协议底层原理、抗封锁机制到晚高峰测速方法，帮你快速成为懂行极客。
+      </p>
+
+      <!-- Mobile Quick Jump Bar (lg:hidden 窄屏快速跳转胶囊) -->
+      <div class="lg:hidden flex items-center justify-center gap-2 mt-6 overflow-x-auto pb-1 text-xs font-bold">
+        <a href="#protocols-section" class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-slate-700 whitespace-nowrap">
+          ⚡ 主流协议
+        </a>
+        <a href="#articles-section" class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-slate-700 whitespace-nowrap">
+          📚 评测文章集群 ({allArticles.length})
+        </a>
+        <a href="#faq-section" class="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-slate-700 whitespace-nowrap">
+          ❓ 20大核心FAQ
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Grid Layout: Left Main Content + Right Sticky Sidebar -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start my-8">
+      
+      <!-- Left Column: Main Body Content (8 cols on lg, 9 cols on xl) -->
+      <main class="lg:col-span-8 xl:col-span-9 space-y-16">
+        
+        <!-- 板块一：主流代理协议深度拆解 -->
+        <section id="protocols-section" class="scroll-mt-24">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+              <Zap class="w-5 h-5 text-amber-500" />
+              <span>主流代理协议深度拆解 (2026 前沿)</span>
+            </h2>
+            <span class="text-xs text-slate-400">底层机制横向比对</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {protocols.map((p) => (
+              <div id={p.id} class="p-6 rounded-3xl glass-card border border-slate-200 dark:border-slate-800 scroll-mt-24 hover:border-amber-400/50 transition-all">
+                <div class="flex items-center justify-between mb-3">
+                  <h3 class="text-lg font-bold text-slate-900 dark:text-white">{p.name}</h3>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-brand-500/20 text-indigo-600 dark:text-brand-300 border border-indigo-200 dark:border-brand-500/30">
+                    {p.badge}
+                  </span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  {p.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <!-- 板块二：精选教程与长尾词文章集群列表 -->
+        <section id="articles-section" class="scroll-mt-24">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
+            <div>
+              <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+                <Layers class="w-5 h-5 text-sky-500" />
+                <span>核心评测长尾词与进阶实操文章集群</span>
+              </h2>
+              <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+                涵盖三网运营商测速、AI 住宅原生 IP、北上广深地理拓扑、电竞低延迟及外贸出海专项指南。
+              </p>
+            </div>
+            <span class="text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 self-start sm:self-auto shrink-0">
+              已收录 {allArticles.length} 篇权威长文
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+            {allArticles.map((art) => (
+              <a
+                href={`/blog/${art.slug}`}
+                class="p-5 rounded-3xl glass-card border border-slate-200 dark:border-slate-800 hover:border-sky-500/50 transition-all hover:-translate-y-1 flex flex-col justify-between group"
+              >
+                <div>
+                  <div class="flex items-center justify-between gap-2 mb-3">
+                    <span class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-300 border border-sky-100 dark:border-sky-900/40">
+                      {art.data.category}
+                    </span>
+                    <span class="text-[11px] text-slate-400">⏱️ {art.data.readingTime}</span>
+                  </div>
+                  <h3 class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-sky-500 transition-colors line-clamp-2 leading-snug">
+                    {art.data.title}
+                  </h3>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 line-clamp-3 leading-relaxed">
+                    {art.data.description}
+                  </p>
+                </div>
+                
+                <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-sky-500">
+                  <span class="text-[11px] font-normal text-slate-400">{art.data.pubDate.toISOString().split('T')[0]}</span>
+                  <span class="inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                    <span>阅读全文</span>
+                    <ArrowRight class="w-3.5 h-3.5" />
+                  </span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <!-- 板块三：20 个关于机场推荐的高热搜高频 FAQ 深度问答 -->
+        <section id="faq-section" class="scroll-mt-24">
+          <div class="mb-8">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 mb-2">
+              <HelpCircle class="w-4 h-4" />
+              <span>TOP 20 FREQUENTLY ASKED QUESTIONS</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+              2026 全网高热搜机场选购与使用核心 FAQ（20 大黄金问答）
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+              汇集全网各大技术社区（V2EX / 知乎 / Telegram）高频提问，权威解析专线原理、防跑路策略与避坑技巧。
+            </p>
+          </div>
+
+          <div class="space-y-4">
+            {faqs.map((faq) => (
+              <div id={faq.id} class="p-6 rounded-3xl glass-card border border-slate-200/90 dark:border-slate-800 scroll-mt-24 hover:border-indigo-400/50 transition-all">
+                <div class="flex items-start gap-3 mb-2.5">
+                  <span class="w-6 h-6 rounded-lg bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">
+                    Q
+                  </span>
+                  <h3 class="text-sm font-bold text-slate-900 dark:text-white leading-snug">
+                    {faq.q}
+                  </h3>
+                </div>
+                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed pl-9 border-l-2 border-indigo-500/20 ml-3">
+                  {faq.a}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+      </main>
+
+      <!-- Right Column: Sticky Sidebar (4 cols on lg, 3 cols on xl) -->
+      <aside class="hidden lg:block lg:col-span-4 xl:col-span-3 sticky top-20 space-y-5">
+        
+        <!-- Sidebar Card 1: 本页内容 (On This Page Table of Contents) -->
+        <div class="rounded-3xl glass-card border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+          <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-100 dark:border-slate-800">
+            <div class="flex items-center gap-2 text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider">
+              <ListOrdered class="w-4 h-4 text-indigo-600 dark:text-sky-400" />
+              <span>本页内容目录</span>
+            </div>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-sky-400">
+              快速导航
+            </span>
+          </div>
+
+          <!-- TOC Links Tree with ScrollSpy -->
+          <nav class="space-y-1 text-xs" id="wiki-toc">
+            
+            <!-- 1. 协议解析 -->
+            <div>
+              <a
+                href="#protocols-section"
+                class="toc-link flex items-center justify-between py-1.5 px-2.5 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-bold transition-colors"
+              >
+                <span class="flex items-center gap-1.5">
+                  <Zap class="w-3.5 h-3.5 text-amber-500" />
+                  <span>主流代理协议深度拆解</span>
+                </span>
+                <ChevronRight class="w-3 h-3 text-slate-400" />
+              </a>
+              <div class="pl-5 pr-1 py-1 space-y-0.5 border-l-2 border-slate-200 dark:border-slate-800 ml-3 my-0.5">
+                <a href="#proto-hysteria2" class="toc-link block py-1 text-[11px] text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-sky-400 transition-colors">
+                  • Hysteria 2 (极速抗弱网)
+                </a>
+                <a href="#proto-vless" class="toc-link block py-1 text-[11px] text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-sky-400 transition-colors">
+                  • VLESS / Reality (强抗封锁)
+                </a>
+                <a href="#proto-tuic" class="toc-link block py-1 text-[11px] text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-sky-400 transition-colors">
+                  • TUIC v5 (低延迟游戏)
+                </a>
+                <a href="#proto-shadowsocks" class="toc-link block py-1 text-[11px] text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-sky-400 transition-colors">
+                  • Shadowsocks (经典轻量)
+                </a>
+              </div>
+            </div>
+
+            <!-- 2. 文章集群 -->
+            <div class="pt-2">
+              <a
+                href="#articles-section"
+                class="toc-link flex items-center justify-between py-1.5 px-2.5 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-bold transition-colors"
+              >
+                <span class="flex items-center gap-1.5">
+                  <Layers class="w-3.5 h-3.5 text-sky-500" />
+                  <span>核心评测长文集群 ({allArticles.length})</span>
+                </span>
+                <ChevronRight class="w-3 h-3 text-slate-400" />
+              </a>
+              <div class="pl-5 pr-1 py-1 space-y-0.5 border-l-2 border-slate-200 dark:border-slate-800 ml-3 my-0.5">
+                <a href="/blog/telecom-unicom-mobile-best-airports" class="block py-0.5 text-[11px] text-slate-500 dark:text-slate-400 hover:text-sky-500 transition-colors truncate">
+                  • 三网宽带低延迟专线实测
+                </a>
+                <a href="/blog/iepl-vs-iplc-dedicated-line-guide" class="block py-0.5 text-[11px] text-slate-500 dark:text-slate-400 hover:text-sky-500 transition-colors truncate">
+                  • IEPL 与 IPLC 专线深度对比
+                </a>
+                <a href="/blog/chatgpt-claude-ai-native-residential-ip-airports" class="block py-0.5 text-[11px] text-slate-500 dark:text-slate-400 hover:text-sky-500 transition-colors truncate">
+                  • ChatGPT/Claude 原生住宅IP
+                </a>
+                <a href="/blog/student-budget-cheap-airports-ranking" class="block py-0.5 text-[11px] text-slate-500 dark:text-slate-400 hover:text-sky-500 transition-colors truncate">
+                  • 学生党 10 元以内平价推荐
+                </a>
+                <a href="/blog/mac-ios-windows-android-cross-platform-airports" class="block py-0.5 text-[11px] text-slate-500 dark:text-slate-400 hover:text-sky-500 transition-colors truncate">
+                  • 多设备跨平台一键订阅避坑
+                </a>
+                <a href="/blog/4k-8k-netflix-youtube-streaming-airports" class="block py-0.5 text-[11px] text-slate-500 dark:text-slate-400 hover:text-sky-500 transition-colors truncate">
+                  • 4K/8K 极致秒开与流媒体解锁
+                </a>
+                <a href="/blog/beijing-shanghai-guangzhou-geo-airports" class="block py-0.5 text-[11px] text-slate-500 dark:text-slate-400 hover:text-sky-500 transition-colors truncate">
+                  • 北上广深地域入口出海拓扑
+                </a>
+                <a href="/blog/foreign-trade-cross-border-ecommerce-airports" class="block py-0.5 text-[11px] text-slate-500 dark:text-slate-400 hover:text-sky-500 transition-colors truncate">
+                  • 外贸跨境与 TikTok 运营专线
+                </a>
+                <a href="/blog/gaming-steam-apex-low-latency-airports" class="block py-0.5 text-[11px] text-slate-500 dark:text-slate-400 hover:text-sky-500 transition-colors truncate">
+                  • 外服联机与 Steam 游戏加速
+                </a>
+                <a href="/blog/monthly-pay-anti-runaway-safe-airports" class="block py-0.5 text-[11px] text-slate-500 dark:text-slate-400 hover:text-sky-500 transition-colors truncate">
+                  • 坚持月付拒绝年付避险指南
+                </a>
+              </div>
+            </div>
+
+            <!-- 3. 20 大 FAQ -->
+            <div class="pt-2">
+              <a
+                href="#faq-section"
+                class="toc-link flex items-center justify-between py-1.5 px-2.5 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-bold transition-colors"
+              >
+                <span class="flex items-center gap-1.5">
+                  <HelpCircle class="w-3.5 h-3.5 text-indigo-500" />
+                  <span>20 大黄金核心 FAQ</span>
+                </span>
+                <ChevronRight class="w-3 h-3 text-slate-400" />
+              </a>
+              <div class="pl-5 pr-1 py-1 space-y-0.5 border-l-2 border-slate-200 dark:border-slate-800 ml-3 my-0.5">
+                <a href="#faq-1" class="toc-link block py-0.5 text-[11px] text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-sky-400 transition-colors truncate">
+                  • Q1. 机场与传统VPN本质区别
+                </a>
+                <a href="#faq-2" class="toc-link block py-0.5 text-[11px] text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-sky-400 transition-colors truncate">
+                  • Q2. 为什么一定要坚持月付
+                </a>
+                <a href="#faq-3" class="toc-link block py-0.5 text-[11px] text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-sky-400 transition-colors truncate">
+                  • Q3. IEPL/IPLC 晚高峰不卡原理
+                </a>
+                <a href="#faq-4" class="toc-link block py-0.5 text-[11px] text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-sky-400 transition-colors truncate">
+                  • Q4. ChatGPT 1020 报错解决
+                </a>
+                <a href="#faq-5" class="toc-link block py-0.5 text-[11px] text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-sky-400 transition-colors truncate">
+                  • Q5. 原生住宅双ISP关键作用
+                </a>
+                <a href="#faq-8" class="toc-link block py-0.5 text-[11px] text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-sky-400 transition-colors truncate">
+                  • Q8. 识别假专线与虚标带宽
+                </a>
+                <a href="#faq-9" class="toc-link block py-0.5 text-[11px] text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-sky-400 transition-colors truncate">
+                  • Q9. 客户端 TUN 模式开启时机
+                </a>
+                <a href="#faq-20" class="toc-link block py-0.5 text-[11px] text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-sky-400 transition-colors truncate">
+                  • Q20. 1主1备双保险搭建策略
+                </a>
+              </div>
+            </div>
+
+          </nav>
+        </div>
+
+        <!-- Sidebar Card 2: 旗舰专线主推卡片 (闪电鼠) -->
+        <div class="rounded-3xl p-5 bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-950 text-white shadow-xl border border-indigo-500/30 relative overflow-hidden">
+          <div class="absolute -right-4 -top-4 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl pointer-events-none"></div>
+          
+          <div class="flex items-center justify-between mb-2">
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-400 text-slate-950">
+              ★ 2026 旗舰首推
+            </span>
+            <span class="text-xs font-bold text-emerald-400">¥8 / 月起</span>
+          </div>
+
+          <h3 class="text-lg font-black tracking-tight text-white mb-1">
+            闪电鼠
+          </h3>
+          <p class="text-[11px] text-slate-300 leading-relaxed mb-4">
+            IEPL+内网双专线 · 晚高峰实测 1980Mbps / 21ms · VLESS 协议 · 4K秒开与原生住宅IP。
+          </p>
+
+          <div class="p-2.5 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 mb-3 flex items-center justify-between text-xs">
+            <span class="text-slate-300 text-[11px]">专属券码：</span>
+            <button
+              type="button"
+              class="copy-coupon-btn inline-flex items-center gap-1 font-mono font-bold text-amber-300 hover:text-amber-200 cursor-pointer"
+              data-coupon="sd88"
+              title="点击复制优惠码"
+            >
+              <span>sd88</span>
+              <Copy class="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          <a
+            href="/go/shandianshu"
+            target="_blank"
+            rel="nofollow sponsored noopener noreferrer"
+            class="w-full inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white font-bold text-xs shadow-lg shadow-indigo-500/30 transition-all"
+          >
+            <span>直达官网开通</span>
+            <ExternalLink class="w-3.5 h-3.5" />
+          </a>
+        </div>
+
+        <!-- Sidebar Card 3: 快捷操作辅助 -->
+        <div class="rounded-2xl glass-card border border-slate-200 dark:border-slate-800 p-3.5 flex items-center justify-between text-xs font-semibold">
+          <button
+            type="button"
+            class="search-modal-trigger flex items-center gap-1.5 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-sky-400 cursor-pointer"
+          >
+            <Search class="w-3.5 h-3.5" />
+            <span>搜索评测</span>
+          </button>
+
+          <button
+            type="button"
+            id="back-to-top-btn"
+            class="flex items-center gap-1 text-slate-500 hover:text-indigo-600 dark:hover:text-sky-400 cursor-pointer transition-colors"
+          >
+            <span>返回顶部</span>
+            <ArrowUp class="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+      </aside>
+
+    </div>
+
+  </div>
+</BaseLayout>
+
+<script>
+  // 侧边栏 ScrollSpy (滚动高亮与定位)
+  function initWikiScrollSpy() {
+    const sections = document.querySelectorAll('section[id], div[id^="proto-"], div[id^="faq-"]');
+    const tocLinks = document.querySelectorAll('.toc-link');
+    const backToTopBtn = document.getElementById('back-to-top-btn');
+
+    // 返回顶部平滑滚动
+    backToTopBtn?.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // 滚动高亮监听
+    function onScroll() {
+      const scrollPos = window.scrollY + 130;
+      let currentSectionId = '';
+
+      sections.forEach((sec) => {
+        const el = sec as HTMLElement;
+        const top = el.offsetTop;
+        const height = el.offsetHeight;
+        if (scrollPos >= top && scrollPos < top + height) {
+          currentSectionId = el.getAttribute('id') || '';
+        }
+      });
+
+      if (currentSectionId) {
+        tocLinks.forEach((link) => {
+          const href = link.getAttribute('href');
+          if (href === '#' + currentSectionId) {
+            link.classList.add('text-indigo-600', 'dark:text-sky-400', 'font-black', 'bg-indigo-50/80', 'dark:bg-indigo-950/50');
+            link.classList.remove('text-slate-500', 'dark:text-slate-400', 'text-slate-700', 'dark:text-slate-300');
+          } else {
+            link.classList.remove('text-indigo-600', 'dark:text-sky-400', 'font-black', 'bg-indigo-50/80', 'dark:bg-indigo-950/50');
+          }
+        });
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  initWikiScrollSpy();
+  document.addEventListener('astro:page-load', initWikiScrollSpy);
+</script>

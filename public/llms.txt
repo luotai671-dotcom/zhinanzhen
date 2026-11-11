@@ -1,0 +1,49 @@
+# 机场指南针 (AirportCompass)
+> 2026顶级科学上网机场评测与专线导航知识库。专注客观独立的技术性能测试、晚高峰千兆带宽压测、ChatGPT/Claude 原生住宅 IP 解锁矩阵及优惠情报。
+
+- Website: https://jichangcompass.com
+- Main Topics: 科学上网, 机场推荐, IEPL专线, IPLC, ChatGPT原生解锁, 4K/8K流媒体, Clash Verge配置, Sing-box
+
+## 2026 年度顶级机场推荐精选矩阵
+
+1. [TAG Internet (TAG机场)](https://jichangcompass.com/airports/tag-internet):
+   - 综合排名: Top 1 (评分 9.9/10)
+   - 线路架构: 腾讯AIA / IEPL纯内网专线
+   - 核心特色: 全球覆盖最广，90+国家地区原生住宅IP，全节点ChatGPT/Claude免风控解锁，晚高峰8K秒开。
+   - 起价: ¥166/季起 (独家优惠码: COMPASS2026 享 9 折)
+
+2. [WgetCloud (原纵横云)](https://jichangcompass.com/airports/wgetcloud):
+   - 综合排名: Top 2 (评分 9.8/10)
+   - 线路架构: 华为云/腾讯云/阿里云三网智能BGP多线接入动态容灾 + IEPL
+   - 核心特色: 金融级高可用架构，晚高峰零抖动，自研一键傻瓜式客户端，适合商务办公与跨境会议。
+   - 起价: ¥49/月起 (优惠码: WGET88 享 8.8 折)
+
+3. [快狗云 (KuaiGou Cloud)](https://jichangcompass.com/airports/kuaigou-cloud):
+   - 综合排名: Top 3 (评分 9.6/10)
+   - 线路架构: 纯IEPL内网专线
+   - 核心特色: 全网极致性价比，低至15元/月，支持高并发Hysteria2协议与不限时按量计费套餐，学生党首选。
+   - 起价: ¥15/月起 (优惠码: KGNEW2026 享 8 折)
+
+4. [飞鸟云 (FlyingBird)](https://jichangcompass.com/airports/flyingbird):
+   - 综合排名: Top 4 (评分 9.5/10)
+   - 线路架构: 广港/沪日IEPL专线
+   - 核心特色: 4K/8K超清流媒体与视频边缘CDN优化，Netflix/Disney+全绿秒开。
+   - 起价: ¥20/月起
+
+5. [悠悠云 (Yuyu Cloud)](https://jichangcompass.com/airports/yuyu-cloud):
+   - 综合排名: Top 5 (评分 9.4/10)
+   - 线路架构: 全线 Hysteria 2 / TUIC v5 专线
+   - 核心特色: 弱网抗丢包神器，外服游戏电竞加速低延迟，移动网络优化。
+   - 起价: ¥18/月起
+
+6. [喵奈云 (Miaona Cloud)](https://jichangcompass.com/airports/miaona-cloud):
+   - 综合排名: Top 6 (评分 9.3/10)
+   - 线路架构: BGP双程中继
+   - 核心特色: 永久有效不限时按量计费套餐，防失联备用首选。
+   - 起价: ¥12/月起
+
+## 必读核心教程与指南
+- [2026年机场选购终极指南](https://jichangcompass.com/blog/2026-airport-selection-guide): IEPL专线、IPLC、BGP中继与直连节点本质差异。
+- [Clash Verge Rev 2026 新手配置教程](https://jichangcompass.com/blog/clash-verge-rev-tutorial): TUN模式与规则分流。
+- [ChatGPT 报 Access Denied 彻底解决指南](https://jichangcompass.com/blog/chatgpt-access-denied-fix): 原生节点与DNS防污染设置。
+

@@ -1,0 +1,207 @@
+---
+import {
+  Globe,
+  ExternalLink,
+  FileText,
+  Copy,
+  AlertOctagon,
+  Zap,
+} from 'lucide-astro';
+
+export interface Props {
+  airport: any;
+}
+
+const { airport: raw } = Astro.props;
+
+// Normalization adapter: seamless support for both airports.json and Content Collections
+const airport = raw.data ? {
+  id: raw.slug,
+  name: raw.data.name,
+  logo: '✈️',
+  tagline: raw.data.tagline,
+  category: raw.data.category?.[0] || 'all',
+  categories: raw.data.category || ['all'],
+  tags: raw.data.tags || [],
+  nodeCoverage: raw.data.nodesCount || '50+ 节点',
+  priceRange: `¥${raw.data.startingPrice} / ${raw.data.billingPeriod}`,
+  startingPrice: raw.data.startingPrice,
+  billingPeriod: raw.data.billingPeriod,
+  affiliateUrl: `/go/${raw.data.affiliateSlug}`,
+  reviewUrl: `/airports/${raw.slug}`,
+  rating: raw.data.rating,
+  status: 'normal',
+  isWarning: false,
+  warningMessage: '',
+  protocols: raw.data.protocols || [],
+  speedPeak: raw.data.speedPeak,
+  coupon: raw.data.coupon,
+  description: raw.data.tagline,
+} : raw;
+
+const isRisk = airport.isWarning || airport.status === 'risk';
+const tags: string[] = airport.tags || [];
+const categories: string[] = airport.categories || [airport.category || 'all'];
+---
+
+<article
+  class={`relative rounded-3xl p-6 transition-all duration-300 airport-card ${
+    isRisk
+      ? 'bg-rose-50/90 dark:bg-rose-950/20 border-2 border-rose-500/80 shadow-rose-500/10'
+      : 'bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-800 hover:border-indigo-500 hover:-translate-y-1 shadow-sm hover:shadow-xl'
+  }`}
+  data-categories={JSON.stringify(categories)}
+  data-price={airport.startingPrice || 0}
+>
+  <!-- 跑路预警醒目提示框 (Banner / Badge) -->
+  {isRisk && (
+    <div class="mb-4 p-3 rounded-2xl bg-rose-600 text-white text-xs font-bold flex items-start gap-2.5 shadow-md">
+      <AlertOctagon class="w-5 h-5 shrink-0 text-white animate-bounce" />
+      <div>
+        <span class="block text-sm font-black tracking-wide">⚠️ 严重跑路风险预警！</span>
+        <span class="text-xs opacity-90 block mt-0.5 leading-relaxed">
+          {airport.warningMessage || '该机场已被系统探针标记为失联风险，切勿充值长周期套餐！'}
+        </span>
+      </div>
+    </div>
+  )}
+
+  <!-- Top Header: Logo, Name, Rating & Status -->
+  <div class="flex items-start justify-between gap-3 pb-4 border-b border-slate-200 dark:border-slate-800">
+    <div class="flex items-center gap-3.5">
+      <!-- Logo 占位 -->
+      <div class={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0 border ${
+        isRisk
+          ? 'bg-rose-100 dark:bg-rose-900/40 border-rose-300 dark:border-rose-700'
+          : 'bg-indigo-50 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700'
+      }`}>
+        {airport.logo || '✈️'}
+      </div>
+
+      <div>
+        <div class="flex items-center gap-2">
+          <h3 class="text-xl font-black text-slate-900 dark:text-white tracking-tight">
+            {airport.name}
+          </h3>
+          {isRisk ? (
+            <span class="px-2 py-0.5 rounded text-[10px] font-black bg-rose-500 text-white">
+              风险排查
+            </span>
+          ) : (
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              正常运营
+            </span>
+          )}
+        </div>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">
+          {airport.tagline || airport.description}
+        </p>
+      </div>
+    </div>
+
+    <!-- Rating Badge -->
+    {airport.rating && (
+      <div class={`flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-black shrink-0 ${
+        isRisk
+          ? 'bg-rose-100 dark:bg-rose-900/60 text-rose-600 dark:text-rose-300'
+          : 'bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20'
+      }`}>
+        <span>★</span>
+        <span>{airport.rating.toFixed(1)}</span>
+      </div>
+    )}
+  </div>
+
+  <!-- 特色标签 (Tags) -->
+  <div class="flex flex-wrap gap-1.5 my-3.5">
+    {tags.map((tag: string) => (
+      <span class={`px-2.5 py-1 rounded-lg text-xs font-semibold ${
+        tag.includes('预警') || tag.includes('跑路')
+          ? 'bg-rose-500 text-white'
+          : tag.includes('IEPL') || tag.includes('专线')
+          ? 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800'
+          : tag.includes('4K') || tag.includes('流媒体')
+          ? 'bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800'
+          : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+      }`}>
+        {tag}
+      </span>
+    ))}
+  </div>
+
+  <!-- 节点覆盖 & 性能指标 Grid -->
+  <div class="grid grid-cols-2 gap-3 my-4 p-3.5 rounded-2xl bg-slate-50 dark:bg-surface-900/80 border border-slate-200 dark:border-slate-800 text-xs">
+    <div class="flex items-center gap-2">
+      <Globe class="w-4 h-4 text-sky-500 shrink-0" />
+      <div>
+        <span class="text-[11px] text-slate-400 block">节点覆盖</span>
+        <span class="font-bold text-slate-800 dark:text-slate-200">{airport.nodeCoverage}</span>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <Zap class="w-4 h-4 text-amber-500 shrink-0" />
+      <div>
+        <span class="text-[11px] text-slate-400 block">晚高峰峰值速率</span>
+        <span class="font-bold text-slate-800 dark:text-slate-200">{airport.speedPeak || '1000+ Mbps'}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 价格区间 & 优惠券 -->
+  <div class="flex items-baseline justify-between gap-2 mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80">
+    <div>
+      <span class="text-[11px] text-slate-400 block">价格区间</span>
+      <span class="text-lg font-black text-slate-900 dark:text-white">
+        {airport.priceRange}
+      </span>
+    </div>
+
+    <!-- 优惠券一键复制 -->
+    {airport.coupon && (
+      <button
+        type="button"
+        class="copy-coupon-btn inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50 dark:bg-amber-500/10 hover:bg-amber-100 dark:hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/30 text-xs font-mono font-bold transition-all cursor-pointer"
+        data-coupon={airport.coupon.code}
+        data-discount={airport.coupon.discount}
+        title="点击复制优惠码"
+      >
+        <Copy class="w-3.5 h-3.5" />
+        <span>{airport.coupon.code}</span>
+        <span class="text-[10px] opacity-75">({airport.coupon.discount})</span>
+      </button>
+    )}
+  </div>
+
+  <!-- 操作按钮：详细评测链接 与 直达官网按钮 (带 Affiliate 推广位占位) -->
+  <div class="grid grid-cols-2 gap-3 mt-4">
+    <a
+      href={airport.reviewUrl}
+      class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+    >
+      <FileText class="w-3.5 h-3.5" />
+      <span>详细评测</span>
+    </a>
+
+    {isRisk ? (
+      <a
+        href="/warnings"
+        class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 transition-colors shadow-sm"
+      >
+        <AlertOctagon class="w-3.5 h-3.5" />
+        <span>查看风险详情</span>
+      </a>
+    ) : (
+      <a
+        href={airport.affiliateUrl}
+        target="_blank"
+        rel="nofollow sponsored noopener noreferrer"
+        class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-indigo-600 via-indigo-500 to-sky-500 hover:from-indigo-500 hover:to-sky-400 shadow-md hover:shadow-lg transition-all active:scale-95"
+      >
+        <span>直达官网</span>
+        <ExternalLink class="w-3.5 h-3.5" />
+      </a>
+    )}
+  </div>
+</article>

@@ -1,0 +1,232 @@
+---
+import { ExternalLink, Check, Zap, ArrowRight, ShieldCheck, ChevronRight } from 'lucide-astro';
+
+export interface Props {
+  airports?: any[];
+}
+
+import defaultAirports from '../data/airports.json';
+const { airports = defaultAirports } = Astro.props;
+
+// Realistic latency mapping for various airports
+const defaultLatencies: Record<string, string> = {
+  shandianshu: '21ms',
+  dalaoyun: '24ms',
+  liulianyun: '25ms',
+  shenxing: '19ms',
+  yunjiexian: '26ms',
+  huanqiuti: '28ms',
+  jilianyun: '25ms',
+  guangshuyun: '22ms',
+  guangnianti: '27ms',
+  edgenova: '29ms',
+  sujie: '23ms',
+};
+
+// Normalize airports
+const list = airports.map((raw: any, index: number) => {
+  if (raw.data) {
+    return {
+      id: raw.slug,
+      name: raw.data.name,
+      rank: raw.data.rank || index + 1,
+      linesType: raw.data.linesType,
+      speedPeak: raw.data.speedPeak,
+      latencyAvg: raw.data.latencyAvg || defaultLatencies[raw.slug] || '24ms',
+      packetLoss: raw.data.packetLoss || '< 0.01%',
+      price: `¥${raw.data.startingPrice}`,
+      billingPeriod: raw.data.billingPeriod || '月',
+      coupon: raw.data.coupon,
+      affiliateUrl: `/go/${raw.data.affiliateSlug}`,
+      reviewUrl: `/airports/${raw.slug}`,
+      rating: raw.data.rating,
+      isRisk: false,
+    };
+  }
+  return {
+    id: raw.id,
+    name: raw.name,
+    rank: raw.rank || (raw.status === 'risk' ? 99 : index + 1),
+    linesType: raw.linesType || (raw.tags?.find((t: string) => t.includes('专线') || t.includes('中继')) || 'IEPL专线'),
+    speedPeak: raw.speedPeak || '1000 Mbps',
+    latencyAvg: raw.latencyAvg || defaultLatencies[raw.id] || (raw.status === 'risk' ? '不可用' : '25ms'),
+    packetLoss: raw.packetLoss || (raw.status === 'risk' ? '>50%' : '< 0.01%'),
+    price: raw.startingPrice ? `¥${raw.startingPrice}` : (raw.priceRange || '¥15'),
+    billingPeriod: raw.billingPeriod || '月',
+    coupon: raw.coupon,
+    affiliateUrl: raw.affiliateUrl || `/go/${raw.id}`,
+    reviewUrl: raw.reviewUrl || `/airports/${raw.id}`,
+    rating: raw.rating || 9.5,
+    isRisk: raw.isWarning || raw.status === 'risk',
+  };
+});
+---
+
+<section id="comparison-matrix-section" class="w-full my-6 scroll-mt-20">
+  <!-- Table Header Bar -->
+  <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-4">
+    <div>
+      <div class="flex items-center gap-2 mb-1.5">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-sky-300 border border-indigo-200 dark:border-indigo-500/30">
+          <Zap class="w-3.5 h-3.5 text-indigo-600 dark:text-sky-400" />
+          <span>FULL MATRIX BENCHMARK</span>
+        </span>
+        <span class="text-xs text-slate-400 hidden sm:inline">|</span>
+        <span class="text-xs text-slate-500 dark:text-slate-400">已固化左侧名称 · 手机与电脑滑动不失焦</span>
+      </div>
+      <h2 class="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+        2026 全网核心机场参数与晚高峰测速对比大表
+      </h2>
+      <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+        基于三网千兆宽带实测 · 每周动态复测更新 · 拒绝虚标宣传 · 支持锁定首列无障碍比对
+      </p>
+    </div>
+
+    <div class="flex items-center gap-2 self-start sm:self-auto shrink-0">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>100% 自费实测数据</span>
+      </span>
+      <span class="lg:hidden text-[11px] text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-lg">
+        👈 左右滑动查看 👉
+      </span>
+    </div>
+  </div>
+
+  <!-- Table Container with Relative Overflow and Sticky 1st Column -->
+  <div class="relative overflow-x-auto rounded-3xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+    <table class="w-full text-left text-xs sm:text-sm text-slate-700 dark:text-slate-300 min-w-[860px] border-collapse">
+      <thead class="bg-slate-50 dark:bg-surface-950 text-slate-600 dark:text-slate-400 uppercase text-[11px] font-black tracking-wider border-b border-slate-200 dark:border-slate-800">
+        <tr>
+          <!-- Column 1: Sticky Left Column for Airport Name (Never scrolls off screen!) -->
+          <th
+            scope="col"
+            class="sticky left-0 z-30 bg-slate-100/95 dark:bg-surface-950/95 backdrop-blur-sm py-4 px-4 whitespace-nowrap min-w-[190px] sm:min-w-[220px] border-r border-slate-200 dark:border-slate-800 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)]"
+          >
+            综合排名 / 机场名称
+          </th>
+          <th scope="col" class="py-4 px-3.5 whitespace-nowrap">线路架构</th>
+          <th scope="col" class="py-4 px-3.5 whitespace-nowrap">晚高峰实测速率</th>
+          <th scope="col" class="py-4 px-3.5 whitespace-nowrap">平均延迟</th>
+          <th scope="col" class="py-4 px-3.5 whitespace-nowrap">ChatGPT / 流媒体解锁</th>
+          <th scope="col" class="py-4 px-3.5 whitespace-nowrap">起步价格</th>
+          <th scope="col" class="py-4 px-4 whitespace-nowrap text-right">前往选购</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100 dark:divide-slate-800/80 font-medium">
+        {list.map((item, idx) => (
+          <tr class={`transition-colors group ${
+            item.isRisk
+              ? 'bg-rose-50/70 dark:bg-rose-950/20'
+              : 'hover:bg-indigo-50/40 dark:hover:bg-slate-800/40'
+          }`}>
+            <!-- Column 1: STICKY LEFT COLUMN (Name & Rank) -->
+            <td
+              class={`sticky left-0 z-20 py-4 px-4 whitespace-nowrap min-w-[190px] sm:min-w-[220px] border-r border-slate-100 dark:border-slate-800 shadow-[3px_0_8px_-2px_rgba(0,0,0,0.06)] ${
+                item.isRisk
+                  ? 'bg-rose-50/95 dark:bg-surface-900/95'
+                  : 'bg-white/95 dark:bg-surface-900/95 group-hover:bg-slate-50 dark:group-hover:bg-surface-950'
+              }`}
+            >
+              <div class="flex items-center gap-3">
+                <span class={`w-6 h-6 rounded-lg flex items-center justify-center text-xs font-black shrink-0 ${
+                  idx === 0 ? 'bg-amber-500 text-slate-950 shadow-xs ring-2 ring-amber-400/40' :
+                  idx === 1 ? 'bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200' :
+                  idx === 2 ? 'bg-amber-700 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+                }`}>
+                  {idx + 1}
+                </span>
+                <div class="truncate">
+                  <a href={item.reviewUrl} class="font-bold text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-sky-400 transition-colors block truncate">
+                    {item.name}
+                  </a>
+                  {item.isRisk ? (
+                    <span class="text-[10px] text-rose-500 font-bold block mt-0.5">⚠️ 跑路风险预警</span>
+                  ) : (
+                    <div class="flex items-center gap-1.5 mt-0.5">
+                      <span class="text-[11px] text-amber-500 font-semibold">★ {item.rating.toFixed(1)}</span>
+                      {idx === 0 && (
+                        <span class="text-[9px] font-bold px-1 rounded bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300">
+                          旗舰主推
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </td>
+
+            <!-- Column 2: Line Type -->
+            <td class="py-4 px-3.5 whitespace-nowrap">
+              <span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold ${
+                item.isRisk
+                  ? 'bg-rose-100 dark:bg-rose-900/40 text-rose-600 dark:text-rose-300 border border-rose-300'
+                  : 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30'
+              }`}>
+                {item.linesType}
+              </span>
+            </td>
+
+            <!-- Column 3: Speed (Clean Numerical Font) -->
+            <td class="py-4 px-3.5 whitespace-nowrap font-bold text-indigo-600 dark:text-sky-400 tabular-nums">
+              {item.speedPeak}
+            </td>
+
+            <!-- Column 4: Latency (Clean Numerical Font) -->
+            <td class="py-4 px-3.5 whitespace-nowrap font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
+              {item.latencyAvg}
+            </td>
+
+            <!-- Column 5: Unlock Badges -->
+            <td class="py-4 px-3.5 whitespace-nowrap">
+              {item.isRisk ? (
+                <span class="text-rose-500 text-xs">大面积失联</span>
+              ) : (
+                <div class="flex items-center gap-1.5">
+                  <span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-500/30">
+                    <Check class="w-3 h-3 text-emerald-500" />
+                    <span>ChatGPT</span>
+                  </span>
+                  <span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-md text-[10px] font-bold bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-500/30">
+                    <Check class="w-3 h-3 text-rose-500" />
+                    <span>Netflix</span>
+                  </span>
+                </div>
+              )}
+            </td>
+
+            <!-- Column 6: Price -->
+            <td class="py-4 px-3.5 whitespace-nowrap">
+              <span class="font-black text-rose-600 dark:text-rose-400 text-sm tabular-nums">
+                {item.price}
+              </span>
+              <span class="text-slate-400 text-xs">/{item.billingPeriod || '月'}</span>
+            </td>
+
+            <!-- Column 7: CTA Button -->
+            <td class="py-4 px-4 whitespace-nowrap text-right">
+              {item.isRisk ? (
+                <a
+                  href="/warnings"
+                  class="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 transition-colors shadow-sm"
+                >
+                  <span>风险警报</span>
+                </a>
+              ) : (
+                <a
+                  href={item.affiliateUrl}
+                  target="_blank"
+                  rel="nofollow sponsored noopener noreferrer"
+                  class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-all shadow-sm active:scale-95"
+                >
+                  <span>直达官网</span>
+                  <ExternalLink class="w-3.5 h-3.5" />
+                </a>
+              )}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</section>

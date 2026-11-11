@@ -1,0 +1,118 @@
+---
+import { SITE_CONFIG } from '../consts';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  canonicalUrl?: string;
+  type?: 'website' | 'article' | 'product';
+  publishedTime?: Date;
+  modifiedTime?: Date;
+  schema?: Record<string, any> | Array<Record<string, any>>;
+  noindex?: boolean;
+}
+
+const {
+  title = SITE_CONFIG.defaultTitle,
+  description = SITE_CONFIG.defaultDescription,
+  image = `${SITE_CONFIG.siteUrl}/og-image.png`,
+  canonicalUrl = Astro.url.href,
+  type = 'website',
+  publishedTime,
+  modifiedTime,
+  schema,
+  noindex = false,
+} = Astro.props;
+
+const siteTitle = title.includes(SITE_CONFIG.name) ? title : `${title}${SITE_CONFIG.titleSuffix}`;
+
+// Base Schema.org: WebSite + Organization
+const baseSchemas: Array<Record<string, any>> = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE_CONFIG.name,
+    alternateName: SITE_CONFIG.englishName,
+    url: SITE_CONFIG.siteUrl,
+    description: SITE_CONFIG.defaultDescription,
+    inLanguage: SITE_CONFIG.defaultLanguage,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${SITE_CONFIG.siteUrl}/?q={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: SITE_CONFIG.name,
+    url: SITE_CONFIG.siteUrl,
+    logo: SITE_CONFIG.publisher.logo,
+    sameAs: [
+      SITE_CONFIG.social.telegramChannel,
+      SITE_CONFIG.social.twitter,
+      SITE_CONFIG.social.github,
+    ],
+  },
+];
+
+const allSchemas = schema
+  ? [...baseSchemas, ...(Array.isArray(schema) ? schema : [schema])]
+  : baseSchemas;
+---
+
+<!-- Global Metadata -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta name="generator" content={Astro.generator} />
+
+<!-- Primary Meta Tags -->
+<title>{siteTitle}</title>
+<meta name="title" content={siteTitle} />
+<meta name="description" content={description} />
+<meta name="keywords" content={SITE_CONFIG.keywords.join(', ')} />
+<meta name="author" content={SITE_CONFIG.author.name} />
+<meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"} />
+<meta name="googlebot" content={noindex ? "noindex, nofollow" : "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"} />
+<meta name="bingbot" content={noindex ? "noindex, nofollow" : "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"} />
+
+<!-- Canonical URL -->
+<link rel="canonical" href={canonicalUrl} />
+
+<!-- Alternate / Language -->
+<link rel="alternate" hreflang="zh-CN" href={canonicalUrl} />
+<link rel="alternate" hreflang="x-default" href={canonicalUrl} />
+<link rel="alternate" type="application/rss+xml" title={`${SITE_CONFIG.name} RSS 订阅`} href="/rss.xml" />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content={type} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:title" content={siteTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={image} />
+<meta property="og:site_name" content={SITE_CONFIG.name} />
+<meta property="og:locale" content="zh_CN" />
+{publishedTime && <meta property="article:published_time" content={publishedTime.toISOString()} />}
+{modifiedTime && <meta property="article:modified_time" content={modifiedTime.toISOString()} />}
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={canonicalUrl} />
+<meta name="twitter:title" content={siteTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={image} />
+<meta name="twitter:creator" content="@jichangcompass" />
+<meta name="twitter:site" content="@jichangcompass" />
+
+<!-- GEO & AI Agent Discovery Headers -->
+<meta name="subject" content="机场推荐, 科学上网, 网络加速, IEPL专线评测" />
+<meta name="rating" content="general" />
+<meta name="target" content="all" />
+
+<!-- Structured Data (JSON-LD) for Google & Bing -->
+{allSchemas.map((s) => (
+  <script type="application/ld+json" set:html={JSON.stringify(s)} />
+))}
+

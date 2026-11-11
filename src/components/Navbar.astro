@@ -1,0 +1,327 @@
+---
+import {
+  Compass,
+  ChevronDown,
+  Tv,
+  Wallet,
+  Gift,
+  BookOpen,
+  Download,
+  AlertTriangle,
+  Sun,
+  Moon,
+  Menu,
+  X,
+  Sparkles,
+  Search,
+  Send,
+  FileText,
+  Home,
+  Flame,
+} from 'lucide-astro';
+---
+
+<header class="sticky top-0 z-50 w-full bg-white dark:bg-surface-950 border-b border-slate-200 dark:border-slate-800 transition-colors duration-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-15 sm:h-16 gap-3">
+      
+      <!-- Left: Brand Logo & Search -->
+      <div class="flex items-center gap-3 sm:gap-5 shrink-0">
+        <!-- Brand Logo -->
+        <a href="/" class="flex items-center gap-2.5 group">
+          <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 p-[2px] shadow-sm">
+            <div class="w-full h-full bg-white dark:bg-surface-950 rounded-[10px] flex items-center justify-center">
+              <Compass class="w-4 h-4 text-indigo-600 dark:text-sky-400 group-hover:rotate-45 transition-transform duration-300" />
+            </div>
+          </div>
+          <div class="flex items-baseline gap-1.5">
+            <span class="text-base sm:text-lg font-black tracking-tight text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-sky-400 transition-colors">
+              机场指南针
+            </span>
+            <span class="text-[9px] font-bold uppercase px-1 rounded bg-slate-100 dark:bg-slate-800 text-slate-500">
+              2026
+            </span>
+          </div>
+        </a>
+
+        <!-- Search Input Pill (Matching: 搜索文档 Ctrl K) -->
+        <button
+          type="button"
+          class="search-modal-trigger hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:border-slate-300 transition-all cursor-pointer text-xs"
+          title="点击搜索或按下 Ctrl+K"
+        >
+          <Search class="w-3.5 h-3.5 text-slate-400" />
+          <span class="text-xs">搜索文档与评测...</span>
+          <kbd class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-200 dark:bg-slate-800 text-slate-500 ml-1">
+            Ctrl K
+          </kbd>
+        </button>
+      </div>
+
+      <!-- Center / Right: Main Menu Links (All clean and uniform, dynamic active state) -->
+      <nav class="hidden lg:flex items-center gap-1 xl:gap-1.5 text-xs font-semibold">
+        
+        <!-- 1. 首页 -->
+        <a
+          href="/"
+          class="nav-item flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+        >
+          <Home class="w-3.5 h-3.5" />
+          <span>首页</span>
+        </a>
+
+        <!-- 2. 机场推荐 -->
+        <a
+          href="/airports"
+          class="nav-item flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+        >
+          <Flame class="w-3.5 h-3.5 text-amber-500" />
+          <span>机场推荐</span>
+        </a>
+
+        <!-- 3. 免费/平价 -->
+        <a
+          href="/rankings/cheap-airports"
+          class="nav-item flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+        >
+          <Gift class="w-3.5 h-3.5 text-emerald-500" />
+          <span>免费/平价</span>
+        </a>
+
+        <!-- 4. 客户端 -->
+        <a
+          href="/clients"
+          class="nav-item flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+        >
+          <Download class="w-3.5 h-3.5 text-sky-500" />
+          <span>客户端</span>
+        </a>
+
+        <!-- 5. 福利中心 -->
+        <a
+          href="/coupons"
+          class="nav-item flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-slate-700 dark:text-slate-300 hover:text-amber-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+        >
+          <Sparkles class="w-3.5 h-3.5 text-amber-500" />
+          <span>福利中心</span>
+        </a>
+
+        <!-- 6. 博客 -->
+        <a
+          href="/blog"
+          class="nav-item flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+        >
+          <FileText class="w-3.5 h-3.5 text-indigo-500" />
+          <span>博客</span>
+        </a>
+
+        <!-- 7. 跑路预警 -->
+        <a
+          href="/warnings"
+          class="nav-item flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
+        >
+          <AlertTriangle class="w-3.5 h-3.5 text-rose-500 animate-pulse" />
+          <span>跑路预警</span>
+        </a>
+
+        <!-- 8. 百科 -->
+        <a
+          href="/wiki"
+          class="nav-item flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+        >
+          <BookOpen class="w-3.5 h-3.5 text-purple-500" />
+          <span>百科</span>
+        </a>
+
+      </nav>
+
+      <!-- Right Action Tools: Search (mobile), Theme Toggle, Telegram -->
+      <div class="flex items-center gap-2">
+        
+        <!-- Mobile Search Trigger -->
+        <button
+          type="button"
+          class="search-modal-trigger md:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+          aria-label="快速搜索"
+        >
+          <Search class="w-4 h-4" />
+        </button>
+
+        <!-- Dark / Light Theme Toggle -->
+        <button
+          id="theme-toggle-btn"
+          type="button"
+          aria-label="切换明暗主题"
+          class="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+        >
+          <Sun class="w-4 h-4 hidden dark:block text-amber-400" />
+          <Moon class="w-4 h-4 block dark:hidden text-slate-700" />
+        </button>
+
+        <!-- Telegram Channel Icon -->
+        <a
+          href="https://t.me/shandianjiaoliu"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:text-sky-500 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors hidden sm:flex"
+          aria-label="Telegram 官方交流群"
+          title="加入 Telegram 官方交流群 (@shandianjiaoliu)"
+        >
+          <Send class="w-4 h-4" />
+        </a>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button
+          id="mobile-nav-toggle"
+          type="button"
+          aria-label="切换移动端导航"
+          class="lg:hidden p-2 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+        >
+          <Menu class="w-5 h-5" id="menu-icon-open" />
+          <X class="w-5 h-5 hidden" id="menu-icon-close" />
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Mobile Dropdown Navigation -->
+  <div id="mobile-nav-menu" class="hidden lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-surface-950/95 px-4 py-4 space-y-2">
+    <div class="pb-2 border-b border-slate-200 dark:border-slate-800 font-bold text-xs text-slate-400 uppercase tracking-wider">
+      网站导航
+    </div>
+    <a href="/" class="mobile-nav-item flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">
+      <Home class="w-4 h-4 text-indigo-500" /> 首页
+    </a>
+    <a href="/airports" class="mobile-nav-item flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">
+      <Flame class="w-4 h-4 text-amber-500" /> 机场推荐
+    </a>
+    <a href="/rankings/cheap-airports" class="mobile-nav-item flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">
+      <Gift class="w-4 h-4 text-emerald-500" /> 免费/平价
+    </a>
+    <a href="/clients" class="mobile-nav-item flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">
+      <Download class="w-4 h-4 text-sky-500" /> 客户端
+    </a>
+    <a href="/coupons" class="mobile-nav-item flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">
+      <Sparkles class="w-4 h-4 text-amber-500" /> 福利中心
+    </a>
+    <a href="/blog" class="mobile-nav-item flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">
+      <FileText class="w-4 h-4 text-indigo-500" /> 博客
+    </a>
+    <a href="/warnings" class="mobile-nav-item flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40">
+      <AlertTriangle class="w-4 h-4 text-rose-500" /> 跑路预警
+    </a>
+    <a href="/wiki" class="mobile-nav-item flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">
+      <BookOpen class="w-4 h-4 text-purple-500" /> 百科
+    </a>
+  </div>
+</header>
+
+<script>
+  // Theme Toggle Logic: Default to Daytime (Light) Mode
+  function initTheme() {
+    const themeBtn = document.getElementById('theme-toggle-btn');
+    const html = document.documentElement;
+
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      html.classList.add('dark');
+    } else {
+      html.classList.remove('dark');
+    }
+
+    themeBtn?.addEventListener('click', () => {
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      } else {
+        html.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+  }
+
+  // Active Navigation Link Highlighting (Works seamlessly on HTTP & file://)
+  function updateActiveNav() {
+    const rawPath = window.location.pathname.replace(/\\/g, '/');
+    const hash = window.location.hash;
+
+    function checkActive(href) {
+      if (!href) return false;
+      if (href === '/' || (href.endsWith('index.html') && !href.includes('/blog') && !href.includes('/clients') && !href.includes('/coupons') && !href.includes('/rankings') && !href.includes('/warnings') && !href.includes('/wiki') && !href.includes('/airports'))) {
+        const isHome = (rawPath === '/' || rawPath.endsWith('/index.html')) && !rawPath.includes('/blog') && !rawPath.includes('/clients') && !rawPath.includes('/coupons') && !rawPath.includes('/rankings') && !rawPath.includes('/warnings') && !rawPath.includes('/wiki') && !rawPath.includes('/airports');
+        return isHome;
+      }
+      if (href.includes('/airports')) return rawPath.includes('/airports');
+      if (href.includes('cheap-airports')) return rawPath.includes('cheap-airports');
+      if (href.includes('/clients')) return rawPath.includes('/clients');
+      if (href.includes('/coupons')) return rawPath.includes('/coupons');
+      if (href.includes('/blog')) return rawPath.includes('/blog');
+      if (href.includes('/warnings')) return rawPath.includes('/warnings');
+      if (href.includes('/wiki')) return rawPath.includes('/wiki');
+      return false;
+    }
+
+    // Update Desktop Nav
+    document.querySelectorAll('.nav-item').forEach((link) => {
+      const href = link.getAttribute('href');
+      const active = checkActive(href);
+      if (active) {
+        link.classList.add('bg-indigo-50', 'dark:bg-indigo-950/60', 'text-indigo-600', 'dark:text-sky-400', 'font-bold');
+        link.classList.remove('text-slate-700', 'dark:text-slate-300');
+      } else {
+        link.classList.remove('bg-indigo-50', 'dark:bg-indigo-950/60', 'text-indigo-600', 'dark:text-sky-400', 'font-bold');
+        if (!link.classList.contains('text-rose-600')) {
+          link.classList.add('text-slate-700', 'dark:text-slate-300');
+        }
+      }
+    });
+
+    // Update Mobile Nav
+    document.querySelectorAll('.mobile-nav-item').forEach((link) => {
+      const href = link.getAttribute('href');
+      const active = checkActive(href);
+      if (active) {
+        link.classList.add('bg-indigo-50', 'dark:bg-indigo-950/60', 'text-indigo-600', 'dark:text-sky-400', 'font-bold');
+        link.classList.remove('text-slate-800', 'dark:text-slate-200');
+      } else {
+        link.classList.remove('bg-indigo-50', 'dark:bg-indigo-950/60', 'text-indigo-600', 'dark:text-sky-400', 'font-bold');
+        if (!link.classList.contains('text-rose-600')) {
+          link.classList.add('text-slate-800', 'dark:text-slate-200');
+        }
+      }
+    });
+  }
+
+  // Mobile Menu Logic
+  function initMobileMenu() {
+    const toggleBtn = document.getElementById('mobile-nav-toggle');
+    const menu = document.getElementById('mobile-nav-menu');
+    const iconOpen = document.getElementById('menu-icon-open');
+    const iconClose = document.getElementById('menu-icon-close');
+
+    toggleBtn?.addEventListener('click', () => {
+      const isHidden = menu?.classList.toggle('hidden');
+      if (isHidden) {
+        iconOpen?.classList.remove('hidden');
+        iconClose?.classList.add('hidden');
+      } else {
+        iconOpen?.classList.add('hidden');
+        iconClose?.classList.remove('hidden');
+      }
+    });
+  }
+
+  initTheme();
+  initMobileMenu();
+  updateActiveNav();
+
+  window.addEventListener('hashchange', updateActiveNav);
+  window.addEventListener('popstate', updateActiveNav);
+  document.addEventListener('astro:page-load', () => {
+    initTheme();
+    initMobileMenu();
+    updateActiveNav();
+  });
+</script>

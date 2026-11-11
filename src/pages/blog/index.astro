@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { getCollection } from 'astro:content';
+import { SITE_CONFIG } from '../../consts';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+);
+
+const breadcrumbItems = [
+  { name: '教程与指南', href: '/blog' },
+];
+---
+
+<BaseLayout
+  title={`科学上网客户端教程与避坑指南 - ${SITE_CONFIG.name}`}
+  description="提供最新Clash Verge Rev新手配置教程、Sing-box分流设置、IEPL专线原理解析、ChatGPT解锁技巧与防跑路避坑指南。"
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <Breadcrumbs items={breadcrumbItems} />
+
+    <div class="my-8 text-center max-w-3xl mx-auto">
+      <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-sky-400">
+        TECHNICAL GUIDES & TUTORIALS
+      </span>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight mt-2">
+        科学上网知识库与配置教程
+      </h1>
+      <p class="mt-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+        手把手保姆级教程，涵盖主流客户端规则分流、TUN模式开启、DNS防泄漏与流媒体AI防封锁攻略。
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-12">
+      {posts.map((post) => (
+        <article class="rounded-3xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-800 shadow-sm p-6 flex flex-col justify-between hover:border-indigo-400 hover:shadow-md transition-all hover:-translate-y-1">
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <span class="px-2.5 py-0.5 rounded text-[10px] font-semibold bg-indigo-50 dark:bg-brand-500/10 text-indigo-700 dark:text-brand-300 border border-indigo-200 dark:border-brand-500/20">
+                {post.data.category}
+              </span>
+              <span class="text-[11px] text-slate-400">⏱️ {post.data.readingTime}</span>
+            </div>
+            
+            <h2 class="text-lg font-bold text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-sky-300 transition-colors line-clamp-2">
+              <a href={`/blog/${post.slug}`}>
+                {post.data.title}
+              </a>
+            </h2>
+            
+            <p class="text-xs text-slate-600 dark:text-slate-400 mt-2 line-clamp-3 leading-relaxed">
+              {post.data.description}
+            </p>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-slate-400">{post.data.pubDate.toISOString().split('T')[0]}</span>
+            <a href={`/blog/${post.slug}`} class="font-bold text-indigo-600 dark:text-sky-400 hover:underline">
+              阅读全文 →
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

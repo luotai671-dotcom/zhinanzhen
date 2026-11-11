@@ -1,0 +1,234 @@
+[
+  {
+    "id": "shandianshu",
+    "name": "闪电鼠",
+    "rank": 1,
+    "isFeatured": true,
+    "affiliateUrl": "/go/shandianshu",
+    "coupon": "sd88",
+    "startingPrice": 8,
+    "linesType": "IEPL+内网专线",
+    "protocols": [
+      "VLESS"
+    ],
+    "tags": [
+      "主推首选",
+      "IEPL+内网专线",
+      "VLESS",
+      "月付8元起",
+      "4K秒开",
+      "原生住宅IP"
+    ],
+    "affiliateTargetUrl": "https://chenpin.shandianshuaff.com/#/?code=m28TvPVX"
+  },
+  {
+    "id": "dalaoyun",
+    "name": "大佬云",
+    "rank": 2,
+    "isFeatured": false,
+    "affiliateUrl": "/go/dalaoyun",
+    "coupon": "dly88",
+    "startingPrice": 8,
+    "linesType": "IEPL",
+    "protocols": [
+      "VLESS"
+    ],
+    "tags": [
+      "高口碑推荐",
+      "IEPL",
+      "VLESS",
+      "月付8元起",
+      "全流媒体解锁"
+    ],
+    "affiliateTargetUrl": "https://chenpin01.dalaoyunaff.com/#/?code=GQ6CL6Km"
+  },
+  {
+    "id": "liulianyun",
+    "name": "榴莲云",
+    "rank": 3,
+    "isFeatured": false,
+    "affiliateUrl": "/go/liulianyun",
+    "coupon": "ll88",
+    "startingPrice": 8,
+    "linesType": "IEPL",
+    "protocols": [
+      "VLESS"
+    ],
+    "tags": [
+      "IEPL",
+      "VLESS",
+      "月付8元起",
+      "超清4K",
+      "原生住宅IP"
+    ],
+    "affiliateTargetUrl": "https://chenpingan.liulianyunaff.com/#/?code=7pdjs9zt"
+  },
+  {
+    "id": "shenxing",
+    "name": "神行加速",
+    "rank": 4,
+    "isFeatured": false,
+    "affiliateUrl": "/go/shenxing",
+    "coupon": "sx0077",
+    "startingPrice": 15,
+    "linesType": "IEPL",
+    "protocols": [
+      "VLESS"
+    ],
+    "tags": [
+      "IEPL",
+      "VLESS",
+      "月付15元",
+      "电竞低延迟",
+      "ChatGPT解锁"
+    ],
+    "affiliateTargetUrl": "https://chenpingan01.shenxingaff.com/#/?code=RZ48f9wP"
+  },
+  {
+    "id": "yunjiexian",
+    "name": "云界线",
+    "rank": 5,
+    "isFeatured": false,
+    "affiliateUrl": "/go/yunjiexian",
+    "coupon": "yjx888",
+    "startingPrice": 15,
+    "linesType": "IEPL",
+    "protocols": [
+      "VLESS"
+    ],
+    "tags": [
+      "IEPL",
+      "VLESS",
+      "月付15元",
+      "全流媒体",
+      "大带宽"
+    ],
+    "affiliateTargetUrl": "https://chenpinga.yunjiexianaff.com/#/?code=rTCMGvQT"
+  },
+  {
+    "id": "huanqiuti",
+    "name": "环球梯",
+    "rank": 6,
+    "isFeatured": false,
+    "affiliateUrl": "/go/huanqiuti",
+    "coupon": "hq66",
+    "startingPrice": 8,
+    "linesType": "内网专线+IEPL",
+    "protocols": [
+      "VLESS"
+    ],
+    "tags": [
+      "内网专线+IEPL",
+      "VLESS",
+      "月付8元起",
+      "性价比神机",
+      "稳定连通"
+    ],
+    "affiliateTargetUrl": "https://chenpingan01.huanqiutiaff.com/#/?code=FGCcYdFo"
+  },
+  {
+    "id": "jilianyun",
+    "name": "极连云",
+    "rank": 7,
+    "isFeatured": false,
+    "affiliateUrl": "/go/jilianyun",
+    "coupon": "jly888",
+    "startingPrice": 18,
+    "linesType": "IEPL",
+    "protocols": [
+      "VLESS"
+    ],
+    "tags": [
+      "IEPL",
+      "VLESS",
+      "月付18元",
+      "商务出海",
+      "低抖动"
+    ],
+    "affiliateTargetUrl": "https://haozevpn.jlyvipaff.com/#/?code=6h2TMD5b"
+  },
+  {
+    "id": "guangshuyun",
+    "name": "光速云",
+    "rank": 8,
+    "isFeatured": false,
+    "affiliateUrl": "/go/guangshuyun",
+    "coupon": "",
+    "startingPrice": 15,
+    "linesType": "IPLC 专线",
+    "protocols": [
+      "VLESS"
+    ],
+    "tags": [
+      "IPLC 专线",
+      "VLESS",
+      "月付15元",
+      "千兆狂飙",
+      "极速响应"
+    ],
+    "affiliateTargetUrl": "https://hu8jnfv.gsyvipaff.com/#/?code=vELLETdq"
+  },
+  {
+    "id": "guangnianti",
+    "name": "光年梯",
+    "rank": 9,
+    "isFeatured": false,
+    "affiliateUrl": "/go/guangnianti",
+    "coupon": "",
+    "startingPrice": 7,
+    "linesType": "IEPL",
+    "protocols": [
+      "VLESS"
+    ],
+    "tags": [
+      "月付7元起",
+      "IEPL",
+      "VLESS",
+      "平民战神",
+      "入门首选"
+    ],
+    "affiliateTargetUrl": "https://gnt001.gntvipaff.cc/#/?code=rN3ybxa7"
+  },
+  {
+    "id": "edgenova",
+    "name": "边缘节点",
+    "rank": 10,
+    "isFeatured": false,
+    "affiliateUrl": "/go/edgenova",
+    "coupon": "xk808",
+    "startingPrice": 22,
+    "linesType": "VLESS",
+    "protocols": [
+      "VLESS"
+    ],
+    "tags": [
+      "边缘专线",
+      "VLESS",
+      "月付22元",
+      "Anycast多线",
+      "稳定商用"
+    ],
+    "affiliateTargetUrl": "https://wep.edgenovaaff.com/#/?code=papME7sh"
+  },
+  {
+    "id": "sujie",
+    "name": "速界",
+    "rank": 11,
+    "isFeatured": false,
+    "affiliateUrl": "/go/sujie",
+    "coupon": "sujie80",
+    "startingPrice": 15,
+    "linesType": "IPLC 专线",
+    "protocols": [
+      "VLESS"
+    ],
+    "tags": [
+      "IPLC 专线",
+      "VLESS",
+      "月付15元",
+      "8折优惠",
+      "晚高峰无卡顿"
+    ],
+    "affiliateTargetUrl": "https://pygllc.speedworldaff.cc/#/?code=ll8LjYBJ"
+  }
+]

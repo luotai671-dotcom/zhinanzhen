@@ -1,0 +1,337 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import AirportCard from '../../components/AirportCard.astro';
+import FilterBar from '../../components/FilterBar.astro';
+import ComparisonTable from '../../components/ComparisonTable.astro';
+import DecisionWizard from '../../components/DecisionWizard.astro';
+import IspLatencyMatrix from '../../components/IspLatencyMatrix.astro';
+import { getCollection } from 'astro:content';
+import { SITE_CONFIG } from '../../consts';
+import { 
+  Flame, 
+  ShieldCheck, 
+  Zap, 
+  Award, 
+  Sparkles, 
+  HelpCircle, 
+  CheckCircle2, 
+  Layers, 
+  Activity, 
+  ArrowRight,
+  Shield,
+  Clock,
+  Compass
+} from 'lucide-astro';
+
+const airports = await getCollection('airports');
+const sortedAirports = [...airports].sort((a, b) => a.data.rank - b.data.rank);
+
+const breadcrumbItems = [
+  { name: '机场推荐', href: '/airports' },
+];
+
+const stats = [
+  { label: '收录核心服务商', value: '11', unit: '家深度实测', note: '拒绝任何虚标跑路盘' },
+  { label: '综合主推首选', value: '闪电鼠', unit: '', note: 'IEPL+内网专线 ¥8/月' },
+  { label: '晚高峰峰值实测', value: '1980', unit: 'Mbps', note: '三网千兆油管4K秒开' },
+  { label: '最低起步月付', value: '¥7~8', unit: '/月起', note: '坚持月付超低试错成本' },
+];
+
+// 5 大硬核评测维度
+const evaluationDimensions = [
+  {
+    step: '01',
+    title: '专线物理架构与过境不过墙机制',
+    desc: '第一梯队必须采用纯正 IEPL 或 IPLC 国际内网专线。数据从国内 BGP 入口内网直通海外落地机，100% 绕开 GFW 深度包检测，确保敏感时期不全红断流。',
+    tag: '骨干网络',
+  },
+  {
+    step: '02',
+    title: '晚高峰 20:00~23:00 速率与丢包压测',
+    desc: '拒绝白天测试的“纸面带宽”。我们连续多日在全网拥堵最高峰时期进行单线程与多线程测速，丢包率须低于 0.1%，油管 4K 缓冲速度须稳定跑满。',
+    tag: '真机实测',
+  },
+  {
+    step: '03',
+    title: '原生住宅双 ISP IP 纯净度检测',
+    desc: '针对 ChatGPT-4o、Claude 3.5、TikTok、Netflix 非自制剧实施深度风控测试。落地节点必须拥有低欺诈值（Fraud Score < 10），彻底杜绝 1020 拦截。',
+    tag: 'AI与流媒体',
+  },
+  {
+    step: '04',
+    title: '前沿轻量协议支持与多端生态',
+    desc: '全面拥抱新一代抗封锁 VLESS (Reality) 与抗弱网 Hysteria 2 协议，完美适配 Clash Verge Rev、Shadowrocket (小火箭)、Sing-box 等多平台客户端。',
+    tag: '协议前沿',
+  },
+  {
+    step: '05',
+    title: '坚持支持月付与商业财务可持续性',
+    desc: '坚决剔除强制要求年付或大额充值的商家。所有入选品牌均须支持灵活的按月付费（低至 7~8 元/月），从商业本质上规避商家卷款跑路的风险。',
+    tag: '资金避险',
+  },
+];
+
+// 新手快速上手指南 3 步法
+const quickStartSteps = [
+  {
+    num: '1',
+    title: '挑选心仪机场与月付方案',
+    desc: '根据您的核心场景（办公、追剧、AI 或学生平价），选购 7~8 元起步的按月付费套餐，输入专属优惠码立即享受专属折扣。',
+  },
+  {
+    num: '2',
+    title: '下载对应平台的开源客户端',
+    desc: '前往本站「客户端」专区，下载 Windows / Mac 推荐的 Clash Verge Rev，或 iPhone / iPad 推荐的 Shadowrocket (小火箭)。',
+  },
+  {
+    num: '3',
+    title: '一键导入订阅并开启系统代理',
+    desc: '在机场后台点击“一键导入订阅”或复制订阅链接至客户端，选择延迟最低的专线节点（如香港、日本），开启代理即可畅游全球。',
+  },
+];
+
+// 核心 FAQ
+const airportFaqs = [
+  {
+    q: '为什么强烈建议新手在选购机场时优先选择“按月付款”？',
+    a: '跨境网络服务受国际光缆、上游机房政策等客观因素影响较大。按月付款可以让您以一杯奶茶钱（约 7~8 元）极低成本试错。一旦遇到网络突发波动，您随时可以自由更换，彻底杜绝被“年付跑路”套牢的风险。'
+  },
+  {
+    q: 'IEPL 专线与普通公网中继在实际体验上有何明显不同？',
+    a: '普通公网中继依然要通过公网过境，晚高峰遭遇电信联通 QoS 限速容易频繁断流；而 IEPL 专线走的是端到端物理内网通道，完全不经过 GFW，晚高峰丢包率极低，看 4K/8K 视频进度条随意拖动不转圈。'
+  },
+  {
+    q: '什么是原生住宅双 ISP 节点？为什么打游戏或用 ChatGPT 必须选它？',
+    a: '原生住宅 IP 是海外真实家庭宽带 IP。OpenAI、Netflix、TikTok 等平台对商业机房 IP 实施了批量封锁；使用原生住宅双 ISP 节点，平台会将你识别为真实的海外居民上网，免除 Access Denied 报错与验证码烦扰。'
+  },
+  {
+    q: '为什么推荐同时配置“1 个主力专线 + 1 个平价备用专线”？',
+    a: '没有哪家网络能做到 100% 永无机房割接。主力选用如闪电鼠（IEPL 旗舰专线，¥8/月），备用搭配光年梯（¥7/月）或环球梯（¥8/月），异构多重冗余，两秒内无缝切换，确保日常工作和学术研究永不失联。'
+  }
+];
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: '2026全网优质科学上网机场排行榜与精选推荐',
+  description: '收录2026全网优质IEPL内网专线与BGP隧道机场，包含晚高峰千兆测速、原生住宅IP解锁状态及优惠折扣码。',
+  itemListElement: sortedAirports.map((airport, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    url: `${SITE_CONFIG.siteUrl}/airports/${airport.slug}`,
+    name: airport.data.name,
+  })),
+};
+---
+
+<BaseLayout
+  title={`2026 精选科学上网机场推荐与评测排行榜 - ${SITE_CONFIG.name}`}
+  description="2026全网优质科学上网机场推荐：基于电信/联通/移动三网千兆宽带实测，严格按晚高峰测速、稳定性、原生住宅IP及按月付费信誉深度评测，拒绝任何虚标与跑路资金盘。"
+  schema={itemListSchema}
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <Breadcrumbs items={breadcrumbItems} />
+
+    <!-- Hero Header -->
+    <div class="my-8 text-center max-w-3xl mx-auto">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800 mb-3">
+        <Flame class="w-4 h-4 text-amber-500 animate-pulse" />
+        <span>TOP AIRPORTS RECOMMENDATION & RANKINGS</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight">
+        2026 精选科学上网机场推荐
+      </h1>
+      <p class="mt-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+        所有数据均由我们自费购买订阅，在电信/联通/移动三网千兆宽带环境下进行 7×24 小时晚高峰自动化轮巡测试。严格按照稳定性、解锁能力与防跑路信誉客观排序。
+      </p>
+    </div>
+
+    <!-- 4 大核心数据看板 -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 my-8">
+      {stats.map((s) => (
+        <div class="glass-card p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 text-center relative overflow-hidden group hover:border-amber-400/50 transition-all">
+          <div class="text-xs text-slate-500 dark:text-slate-400 font-medium mb-1">{s.label}</div>
+          <div class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+            {s.value}<span class="text-xs font-semibold text-slate-500 ml-1">{s.unit}</span>
+          </div>
+          <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">{s.note}</div>
+        </div>
+      ))}
+    </div>
+
+    <!-- 模块一：智能决策选梯引擎 -->
+    <div class="my-10">
+      <DecisionWizard />
+    </div>
+
+    <!-- 模块二：Filter Control & 精选机场卡片列表 (11家核心品牌) -->
+    <section class="my-12">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+            <Award class="w-5 h-5 text-indigo-500" />
+            <span>2026 精选机场综合排行榜单（TOP 11）</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+            严格按照晚高峰速率、骨干网专线架构、原生住宅 IP 纯净度与按月付费信誉综合评分排序。
+          </p>
+        </div>
+        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 self-start sm:self-auto">
+          全网持续动态复测
+        </span>
+      </div>
+
+      <FilterBar />
+
+      <div id="airports-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
+        {sortedAirports.map((airport) => (
+          <AirportCard airport={airport} />
+        ))}
+      </div>
+    </section>
+
+    <!-- 模块三：全网核心机场参数与晚高峰测速对比大表 -->
+    <section class="my-16">
+      <div class="mb-6">
+        <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+          <Zap class="w-5 h-5 text-amber-500" />
+          <span>全网核心机场参数与晚高峰测速横向对比大表</span>
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+          三网千兆宽带晚高峰实测数据对比，包含线路架构、实测峰值速率、平均往返时延与解锁矩阵。
+        </p>
+      </div>
+
+      <ComparisonTable airports={airports} />
+    </section>
+
+    <!-- 模块四：三网晚高峰丢包与时延动态测速模拟 -->
+    <section class="my-16">
+      <IspLatencyMatrix />
+    </section>
+
+    <!-- 模块五：2026 科学上网机场选购 5 大硬核指标 (EEAT 专家深度解读) -->
+    <section class="my-16">
+      <div class="mb-8">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 mb-2">
+          <Shield class="w-4 h-4" />
+          <span>EEAT EVALUATION STANDARDS</span>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+          我们如何评测机场？2026 选购 5 大硬核评测维度
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+          穿透营销包装，从底层网络物理链路、晚高峰压力衰减与资金安全深度把关。
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {evaluationDimensions.map((dim) => (
+          <div class="p-6 rounded-3xl glass-card border border-slate-200 dark:border-slate-800 flex flex-col justify-between hover:border-indigo-400/50 transition-all">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="w-8 h-8 rounded-xl bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 font-black text-xs flex items-center justify-center border border-indigo-500/20">
+                  {dim.step}
+                </span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                  {dim.tag}
+                </span>
+              </div>
+              <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-2 leading-snug">
+                {dim.title}
+              </h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                {dim.desc}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- 模块六：新手 3 步极速上手出海教程 -->
+    <section class="my-16">
+      <div class="p-8 rounded-3xl bg-gradient-to-br from-indigo-500/10 via-sky-500/5 to-transparent border border-indigo-300/50 dark:border-indigo-900/40">
+        <div class="text-center max-w-2xl mx-auto mb-8">
+          <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-sky-400">
+            QUICK ONBOARDING
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mt-1">
+            新手新手 3 步极速出海配置流程
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+            只需 3 分钟，轻松完成机场订阅开通与客户端规则分流配置。
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {quickStartSteps.map((s) => (
+            <div class="bg-white/80 dark:bg-slate-900/80 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 backdrop-blur-sm flex flex-col justify-between">
+              <div>
+                <div class="w-8 h-8 rounded-full bg-indigo-600 text-white font-black text-xs flex items-center justify-center mb-3 shadow-md shadow-indigo-600/30">
+                  {s.num}
+                </div>
+                <h3 class="font-bold text-sm text-slate-900 dark:text-white mb-2">{s.title}</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{s.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 模块七：常见选购问答 FAQ -->
+    <section class="my-16">
+      <div class="mb-8">
+        <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+          <HelpCircle class="w-5 h-5 text-indigo-500" />
+          <span>机场推荐与选购常见疑问解答</span>
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {airportFaqs.map((faq) => (
+          <div class="p-6 rounded-3xl glass-card border border-slate-200 dark:border-slate-800">
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
+              <span class="text-indigo-600 dark:text-indigo-400 font-black">Q:</span>
+              <span>{faq.q}</span>
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed pl-5 border-l-2 border-indigo-500/30">
+              {faq.a}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- 底部选购建议与自费实测声明 -->
+    <div class="my-16 p-8 rounded-3xl glass-card border border-slate-200 dark:border-slate-800">
+      <div class="flex items-center gap-2 text-indigo-600 dark:text-sky-400 font-bold text-sm mb-3">
+        <ShieldCheck class="w-5 h-5 text-emerald-500" />
+        <span>客观评测原则与新手避坑须知</span>
+      </div>
+      <h3 class="text-lg font-black text-slate-900 dark:text-white mb-2">
+        为什么选择本站推荐的机场服务商？
+      </h3>
+      <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+        科学上网市场鱼龙混杂，超卖、断流、拔线跑路屡见不鲜。本站推荐的 11 家核心品牌均具备正规商业运维团队，全线支持低门槛月付（最低仅需 7~8 元/月）。我们坚决不收录违背物理专线成本的“1元快闪盘”和“9.9永久套餐”。
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs pt-4 border-t border-slate-100 dark:border-slate-800">
+        <div>
+          <span class="font-bold text-slate-900 dark:text-white block mb-1">💡 坚持月付：</span>
+          <span class="text-slate-500 dark:text-slate-400 leading-relaxed">哪怕月付单价稍高两三块钱，也坚决按月续费，将资金避险主动权牢牢掌握在自己手中。</span>
+        </div>
+        <div>
+          <span class="font-bold text-slate-900 dark:text-white block mb-1">⚡ 专线优先：</span>
+          <span class="text-slate-500 dark:text-slate-400 leading-relaxed">日常查资料、看 4K 视频首选 IEPL/IPLC 纯内网专线（如主推闪电鼠），不过 GFW 晚高峰不卡顿。</span>
+        </div>
+        <div>
+          <span class="font-bold text-slate-900 dark:text-white block mb-1">🛡️ 1主1备：</span>
+          <span class="text-slate-500 dark:text-slate-400 leading-relaxed">主力选用旗舰专线，搭配一个月付 7~8 元的平价备用梯子（如光年梯/环球梯），365天绝不失联。</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</BaseLayout>

@@ -1,0 +1,15 @@
+/*
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+
+# Cache static assets for 1 year for 100/100 Google PageSpeed score
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Protect affiliate redirect routes from search engine indexing
+/go/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+  Cache-Control: no-cache, no-store, must-revalidate
+

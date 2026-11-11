@@ -1,0 +1,60 @@
+---
+import { SITE_CONFIG } from '../consts';
+
+export interface BreadcrumbItem {
+  name: string;
+  href: string;
+}
+
+export interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: '首页',
+      item: SITE_CONFIG.siteUrl,
+    },
+    ...items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 2,
+      name: item.name,
+      item: `${SITE_CONFIG.siteUrl}${item.href}`,
+    })),
+  ],
+};
+---
+
+<nav aria-label="面包屑导航" class="my-4 text-xs text-slate-400">
+  <ol class="flex items-center flex-wrap gap-2">
+    <li class="flex items-center gap-2">
+      <a href="/" class="hover:text-white transition-colors">首页</a>
+      <span>/</span>
+    </li>
+    {items.map((item, idx) => {
+      const isLast = idx === items.length - 1;
+      return (
+        <li class="flex items-center gap-2">
+          {isLast ? (
+            <span class="text-slate-200 font-medium" aria-current="page">{item.name}</span>
+          ) : (
+            <>
+              <a href={item.href} class="hover:text-white transition-colors">{item.name}</a>
+              <span>/</span>
+            </>
+          )}
+        </li>
+      );
+    })}
+  </ol>
+</nav>
+
+<script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+

@@ -1,0 +1,143 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import type { CollectionEntry } from 'astro:content';
+import { SITE_CONFIG } from '../consts';
+
+export interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const data = post.data;
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: data.title,
+  description: data.description,
+  author: {
+    '@type': 'Person',
+    name: data.author,
+    url: `${SITE_CONFIG.siteUrl}/about`,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: SITE_CONFIG.publisher.name,
+    logo: {
+      '@type': 'ImageObject',
+      url: SITE_CONFIG.publisher.logo,
+    },
+  },
+  datePublished: data.pubDate.toISOString(),
+  dateModified: (data.updatedDate || data.pubDate).toISOString(),
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': `${SITE_CONFIG.siteUrl}/blog/${post.slug}`,
+  },
+};
+
+const breadcrumbItems = [
+  { name: '教程与指南', href: '/blog' },
+  { name: data.title, href: `/blog/${post.slug}` },
+];
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.description}
+  type="article"
+  publishedTime={data.pubDate}
+  modifiedTime={data.updatedDate}
+  schema={articleSchema}
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <Breadcrumbs items={breadcrumbItems} />
+
+    <!-- Article Header -->
+    <header class="max-w-4xl mx-auto my-8 text-center">
+      <div class="flex items-center justify-center gap-2 mb-4">
+        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-sky-300 border border-indigo-200 dark:border-indigo-500/20">
+          {data.category}
+        </span>
+        <span class="text-xs text-slate-500 dark:text-slate-400">⏱️ 阅读需约 {data.readingTime}</span>
+      </div>
+
+      <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+        {data.title}
+      </h1>
+
+      <p class="mt-4 text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
+        {data.description}
+      </p>
+
+      <div class="mt-6 flex items-center justify-center gap-4 text-xs text-slate-500 dark:text-slate-400">
+        <span>作者：{data.author}</span>
+        <span>•</span>
+        <span>发布日期：{data.pubDate.toISOString().split('T')[0]}</span>
+        {data.updatedDate && (
+          <>
+            <span>•</span>
+            <span class="text-emerald-600 dark:text-emerald-400">更新于：{data.updatedDate.toISOString().split('T')[0]}</span>
+          </>
+        )}
+      </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <div class="max-w-4xl mx-auto my-10">
+      <div class="p-6 sm:p-10 rounded-3xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+        
+        <!-- Post Body -->
+        <article class="prose dark:prose-invert prose-slate max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-indigo-600 dark:prose-a:text-sky-400 hover:prose-a:underline prose-img:rounded-2xl prose-pre:bg-slate-900 prose-pre:border prose-pre:border-slate-800">
+          <slot />
+        </article>
+
+        <!-- Inline High-Converting Affiliate Recommendation Card -->
+        <div class="mt-12 p-6 rounded-2xl bg-indigo-50/80 dark:bg-slate-900 border border-indigo-200 dark:border-indigo-500/30">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-amber-500 text-white">
+                  编辑精选
+                </span>
+                <span class="text-sm font-bold text-slate-900 dark:text-white">2026 稳定抗封锁主力推荐：闪电鼠 (主推)</span>
+              </div>
+              <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">
+                IEPL+纯内网物理专线 · 现代VLESS协议 · 晚高峰1980Mbps秒开 · 原生双ISP住宅IP · 月付低至 ¥8
+              </p>
+            </div>
+            
+            <a
+              href="/go/shandianshu"
+              target="_blank"
+              rel="nofollow sponsored noopener noreferrer"
+              class="shrink-0 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs text-white bg-indigo-600 hover:bg-indigo-700 shadow-md transition-all"
+            >
+              <span>前往直达专属优惠 (券: sd88)</span>
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Author EEAT Credibility Box -->
+        <div class="mt-12 pt-6 border-t border-slate-200 dark:border-slate-800 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-sm">
+            🧭
+          </div>
+          <div class="text-xs">
+            <span class="font-bold text-slate-900 dark:text-white block text-sm">{data.author}</span>
+            <span class="text-slate-500 dark:text-slate-400 leading-relaxed block mt-0.5">
+              专注于跨境专线架构、BGP路由优化与流媒体解锁策略实测。本教程经多系统真机验证，确保步骤有效可用。
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</BaseLayout>

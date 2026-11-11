@@ -1,0 +1,352 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import {
+  Download,
+  Monitor,
+  Smartphone,
+  Terminal,
+  ExternalLink,
+  ShieldCheck,
+  Bot,
+  Sparkles,
+  CheckCircle2,
+  AlertTriangle,
+  Zap,
+  Layers,
+  ArrowRight,
+  Copy,
+  ChevronRight,
+  Cpu,
+  Lock,
+} from 'lucide-astro';
+
+const breadcrumbItems = [
+  { name: '客户端与使用指南', href: '/clients' },
+];
+
+const platforms = [
+  {
+    name: 'Windows',
+    icon: Monitor,
+    clients: [
+      {
+        name: 'Clash Verge Rev',
+        badge: '强烈推荐 · 必选',
+        desc: '接替已停更的 Clash for Windows，基于 Tauri 框架重构，自带中文，原生支持 Mihomo (Clash Meta) 内核与一键 TUN 虚拟网卡模式。',
+        github: 'https://github.com/clash-verge-rev/clash-verge-rev',
+        guide: '/blog/clash-verge-rev-tutorial',
+      },
+      {
+        name: 'Sing-box GUI',
+        badge: '次世代核心',
+        desc: '通用网络工具箱，资源占用极轻，支持规则集自动更新与最新 Hysteria 2 / TUIC / VLESS 协议。',
+        github: 'https://github.com/SagerNet/sing-box',
+        guide: '/blog/ai-tools-client-guide',
+      },
+      {
+        name: 'v2rayN',
+        badge: '经典老牌',
+        desc: 'Windows 平台老牌经典代理软件，支持 Xray 与 Sing-box 双内核切换，功能极其丰富。',
+        github: 'https://github.com/2dust/v2rayN',
+        guide: '/blog/ai-tools-client-guide',
+      },
+    ],
+  },
+  {
+    name: 'macOS',
+    icon: Monitor,
+    clients: [
+      {
+        name: 'Clash Verge Rev (macOS)',
+        badge: '原生支持 M1/M2/M3/M4',
+        desc: '完美兼容 macOS Sonoma 及更高版本，同时提供 Apple Silicon 与 Intel 架构独立编译版本，支持一键 TUN 系统接管。',
+        github: 'https://github.com/clash-verge-rev/clash-verge-rev/releases',
+        guide: '/blog/clash-verge-rev-tutorial',
+      },
+      {
+        name: 'Surge 5 for Mac',
+        badge: '商业旗舰 (收费)',
+        desc: 'macOS 平台最顶级的网络调试与网络穿透神器，性能极致，增强模式 (Enhanced Mode) 极度适合高级开发者与 AI 工程师。',
+        github: 'https://nssurge.com',
+        guide: '/blog/ai-tools-client-guide',
+      },
+    ],
+  },
+  {
+    name: 'iOS / iPadOS',
+    icon: Smartphone,
+    clients: [
+      {
+        name: 'Shadowrocket (小火箭)',
+        badge: '苹果新手必备 · 强烈推荐',
+        desc: '需使用美区 Apple ID 购买（售价 $2.99），支持全协议扫码一键导入，自带「配置」智能分流，完美解锁 ChatGPT 官方 APP。',
+        github: 'https://apps.apple.com/us/app/shadowrocket/id932747118',
+        guide: '/blog/shadowrocket-ios-tutorial',
+      },
+      {
+        name: 'Quantumult X (圈X)',
+        badge: '极客颜值首选',
+        desc: '界面精美现代，支持强大的 JavaScript 脚本覆写、抓包与流媒体自动解锁重定向。',
+        github: 'https://apps.apple.com/us/app/quantumult-x/id1453922889',
+        guide: '/blog/shadowrocket-ios-tutorial',
+      },
+    ],
+  },
+  {
+    name: 'Android',
+    icon: Smartphone,
+    clients: [
+      {
+        name: 'Clash Meta for Android',
+        badge: '安卓主流王牌',
+        desc: '全面支持最新的通用分流规则与全协议内网穿透，支持一键自动订阅更新与分应用代理设置。',
+        github: 'https://github.com/MetaCubeX/ClashMetaForAndroid',
+        guide: '/blog/ai-tools-client-guide',
+      },
+      {
+        name: 'NekoBox for Android',
+        badge: '全协议支持',
+        desc: '基于 Sing-box 核心定制的现代化 Android 客户端，支持一键订阅解析与 Hysteria2 / VLESS 极速载入。',
+        github: 'https://github.com/MatsuriDayo/NekoBoxForAndroid',
+        guide: '/blog/ai-tools-client-guide',
+      },
+    ],
+  },
+];
+
+const aiTools = [
+  {
+    name: 'OpenAI ChatGPT / GPT-4o / Voice',
+    icon: '🤖',
+    status: '美/日/新 原生住宅 IP',
+    forbidden: '严禁香港/俄罗斯节点',
+    desc: '全球顶尖通用大模型，支持 Canvas、联网搜索与超低延迟实时语音对话。',
+    tips: '必须使用纯净住宅双 ISP 节点（如闪电鼠、大佬云美西住宅），避免使用数据中心广播 IP 触发 1020 报错。',
+  },
+  {
+    name: 'Anthropic Claude 3.5 Sonnet',
+    icon: '🧠',
+    status: '固定单一美区/欧区节点',
+    forbidden: '频繁漂移 IP 必封号',
+    desc: '编程写代码、长文本复杂逻辑分析与多步骤思维链领域的绝对王者。',
+    tips: 'Claude 官方风控极严，切勿在几分钟内频繁切换不同国家节点，建议在客户端内针对 claude.ai 单独锁定特定美国专线。',
+  },
+  {
+    name: 'Cursor AI 编程代码编辑器',
+    icon: '💻',
+    status: '必须开启客户端 TUN 模式',
+    forbidden: '普通 HTTP 系统代理无效',
+    desc: '基于 VS Code 深度定制的次世代 AI 代码编辑器，支持 Composer 跨文件自动编写与重构。',
+    tips: 'Cursor 由 Electron 架构打造，其内部终端及 API 补全请求不走常规代理，必须在 Clash Verge Rev 或 Surge 中开启 TUN 虚拟网卡模式。',
+  },
+  {
+    name: 'Midjourney & Discord',
+    icon: '🎨',
+    status: '低延迟日本/新加坡专线',
+    forbidden: '高丢包节点易断连',
+    desc: '商业级高写实 AI 图像与艺术设计生成工具，依托 Discord 社区网关运行。',
+    tips: 'Discord 网关对丢包率极其敏感，推荐使用延迟在 30ms 以内的日本或香港转日本内网专线节点。',
+  },
+];
+---
+
+<BaseLayout
+  title="科学上网客户端下载与全主流 AI 工具保姆级使用教程 - 机场指南针"
+  description="2026全平台科学上网客户端官方下载与使用指南：包含 Clash Verge Rev、Shadowrocket 小火箭、Sing-box、Surge。详细解析 Windows / iOS / macOS 下配置 TUN 模式、分流规则与畅通解锁 ChatGPT、Claude 3.5、Cursor 的防封号技巧。"
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <Breadcrumbs items={breadcrumbItems} />
+
+    <!-- Hero Header -->
+    <div class="my-8 text-center max-w-3xl mx-auto">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-sky-300 border border-indigo-200 dark:border-indigo-800 mb-3">
+        <Download class="w-4 h-4" />
+        <span>OFFICIAL CLIENTS & AI MASTER GUIDE</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight">
+        常用科学上网客户端与 AI 全生态使用指南
+      </h1>
+      <p class="mt-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+        本站收录 Windows、macOS、iOS、Android 全平台开源绿色客户端官方安全下载，并独家整理市面上所有主流 AI 工具（ChatGPT、Claude、Cursor、Midjourney）的防封号专线分流配置方案。
+      </p>
+    </div>
+
+    <!-- 安全保证提示卡片 -->
+    <div class="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300 text-xs flex items-center gap-3 my-6">
+      <ShieldCheck class="w-5 h-5 shrink-0 text-emerald-500" />
+      <div>
+        <span class="font-bold">安全纯净提示：</span>
+        <span>请切勿在不知名网盘、破解论坛或 Telegram 群下载任何二次打包客户端。本站仅提供官方开源 GitHub Releases 与正规 App Store 直达入口，所有链接均校验官方哈希签名。</span>
+      </div>
+    </div>
+
+    <!-- 🤖 核心模块：市面上所有主流 AI 使用方法与避坑专区 -->
+    <section class="my-12 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-indigo-50/60 via-white to-sky-50/60 dark:from-surface-900 dark:via-surface-950 dark:to-surface-900 border border-indigo-100 dark:border-indigo-950 shadow-sm relative overflow-hidden">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-indigo-600 text-white text-xs font-black uppercase tracking-wider mb-2">
+            <Bot class="w-3.5 h-3.5" />
+            <span>2026 AI 生产力专属专区</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+            市面上主流 AI 工具使用配置与防封号指南
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
+            针对 OpenAI、Claude、Cursor 等高风控平台的网络阻断与 Access Denied 报错，一揽子解决环境与分流难题。
+          </p>
+        </div>
+        <a
+          href="/blog/ai-tools-client-guide"
+          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition-all shrink-0"
+        >
+          <span>查看完整 AI 实操长文</span>
+          <ArrowRight class="w-3.5 h-3.5" />
+        </a>
+      </div>
+
+      <!-- AI 工具矩阵卡片 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+        {aiTools.map((ai) => (
+          <div class="p-5 rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-xl">{ai.icon}</span>
+                  <h3 class="text-sm font-bold text-slate-900 dark:text-white">{ai.name}</h3>
+                </div>
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30">
+                  {ai.status}
+                </span>
+              </div>
+              <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-3">
+                {ai.desc}
+              </p>
+            </div>
+            <div class="pt-3 border-t border-slate-100 dark:border-slate-800/60 text-[11px] space-y-1.5">
+              <div class="flex items-center gap-1.5 text-rose-600 dark:text-rose-400 font-semibold">
+                <AlertTriangle class="w-3.5 h-3.5 shrink-0" />
+                <span>风控红线：{ai.forbidden}</span>
+              </div>
+              <div class="text-slate-500 dark:text-slate-400 leading-normal">
+                <span class="font-bold text-slate-700 dark:text-slate-200">配置秘诀：</span>{ai.tips}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- 三大黄金防封号法则 -->
+      <div class="mt-6 p-4 sm:p-5 rounded-2xl bg-amber-50/80 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/40 text-xs text-slate-700 dark:text-slate-300 space-y-2">
+        <div class="font-bold text-amber-800 dark:text-amber-400 flex items-center gap-1.5 text-sm">
+          <Zap class="w-4 h-4" />
+          <span>全平台通用：防封号三大黄金法则（必读）</span>
+        </div>
+        <ol class="list-decimal list-inside space-y-1.5 text-slate-600 dark:text-slate-300 leading-relaxed">
+          <li>
+            <strong>绝对不要使用中国香港（HK）节点访问 ChatGPT 或 Claude</strong>：OpenAI 与 Anthropic 官方对香港地区实行物理阻断，直连必报 <code>Not Available in Your Country</code> 或触发人机验证死循环。请在客户端内选择 <strong>美国 (US)、日本 (JP)、新加坡 (SG) 或台湾 (TW)</strong> 节点。
+          </li>
+          <li>
+            <strong>桌面端使用 Cursor 或终端命令必须开启 TUN 虚拟网卡模式</strong>：浏览器的系统代理无法接管代码编辑器内部的 API 通信。打开 Clash Verge Rev，在设置中开启「TUN 模式」，即可实现系统全应用自动透明代理。
+          </li>
+          <li>
+            <strong>固定高权重原生住宅 IP，严禁频繁异地跨洲漂移</strong>：5分钟前在美国、5分钟后在新加坡，会被 OpenAI 风险引擎判定为多人共享号或恶意抓取，引发批量封号。请在客户端手动锁定一条高质量专线节点（如本站主推的 <a href="/airports/shandianshu" class="text-indigo-600 font-bold hover:underline">闪电鼠</a> 原生住宅专线）。
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 平台列表与下载 -->
+    <div class="space-y-14 my-10">
+      {platforms.map((p) => (
+        <section>
+          <div class="flex items-center justify-between mb-6 border-b border-slate-200 dark:border-slate-800 pb-3">
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2.5">
+              <p.icon class="w-6 h-6 text-indigo-500" />
+              <span>{p.name} 平台客户端与下载</span>
+            </h2>
+            <span class="text-xs text-slate-400 font-medium hidden sm:inline">
+              官方正版源 · 安全认证
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {p.clients.map((c) => (
+              <div class="p-6 rounded-3xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between hover:border-indigo-300 dark:hover:border-indigo-700 transition-all">
+                <div>
+                  <div class="flex items-start justify-between gap-2 mb-2">
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white">{c.name}</h3>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-50 dark:bg-brand-500/20 text-indigo-600 dark:text-brand-300 border border-indigo-200 dark:border-brand-500/30 shrink-0">
+                      {c.badge}
+                    </span>
+                  </div>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                    {c.desc}
+                  </p>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2 text-xs">
+                  <a
+                    href={c.guide}
+                    class="font-bold text-indigo-600 dark:text-sky-400 hover:underline flex items-center gap-1"
+                  >
+                    <span>保姆级教程</span>
+                    <ChevronRight class="w-3.5 h-3.5" />
+                  </a>
+                  <a
+                    href={c.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors shadow-xs"
+                  >
+                    <span>官方下载</span>
+                    <ExternalLink class="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+
+    <!-- 终端命令行一键代理速查代码块 -->
+    <section class="my-12 p-6 sm:p-8 rounded-3xl bg-slate-900 text-slate-200 border border-slate-800 shadow-lg">
+      <div class="flex items-center gap-2 text-indigo-400 text-xs font-bold uppercase tracking-wider mb-2">
+        <Terminal class="w-4 h-4" />
+        <span>DEVELOPER TOOLKIT · 程序员与极客终端代理</span>
+      </div>
+      <h3 class="text-xl sm:text-2xl font-black text-white">
+        Windows / macOS 终端命令行一键挂载代理
+      </h3>
+      <p class="text-xs text-slate-400 mt-1 mb-6">
+        当您使用 Git Clone、npm install、pip install 或运行 Python AI 脚本时，可直接在命令行粘贴以下命令一键打通专线：
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+        <!-- Windows PowerShell -->
+        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800">
+          <div class="flex items-center justify-between text-slate-400 mb-2 font-sans font-bold">
+            <span>Windows (PowerShell)</span>
+            <span class="text-[10px] text-indigo-400">默认端口 7897 / 7890</span>
+          </div>
+          <pre class="overflow-x-auto text-emerald-400 leading-relaxed"><code>$env:HTTP_PROXY="http://127.0.0.1:7897"
+$env:HTTPS_PROXY="http://127.0.0.1:7897"
+curl -I https://api.openai.com</code></pre>
+        </div>
+
+        <!-- macOS / Linux Bash -->
+        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800">
+          <div class="flex items-center justify-between text-slate-400 mb-2 font-sans font-bold">
+            <span>macOS / Linux (Bash / Zsh)</span>
+            <span class="text-[10px] text-indigo-400">终端环境</span>
+          </div>
+          <pre class="overflow-x-auto text-emerald-400 leading-relaxed"><code>export http_proxy="http://127.0.0.1:7897"
+export https_proxy="http://127.0.0.1:7897"
+curl -I https://api.openai.com</code></pre>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>

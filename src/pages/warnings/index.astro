@@ -1,0 +1,592 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { 
+  AlertTriangle, 
+  ShieldAlert, 
+  History, 
+  Ban, 
+  CheckCircle2, 
+  AlertOctagon, 
+  Skull, 
+  ShieldCheck, 
+  HelpCircle, 
+  Zap, 
+  ExternalLink, 
+  RefreshCw, 
+  Flame, 
+  LifeBuoy 
+} from 'lucide-astro';
+
+const breadcrumbItems = [
+  { name: '跑路预警', href: '/warnings' },
+];
+
+// 核心统计指标
+const warningStats = [
+  { label: '全网累计收录停运/跑路', value: '92+', unit: '家', note: '持续追踪历史大案' },
+  { label: '近期高危异常监控中', value: '5', unit: '家', note: '节点大面积断流失联' },
+  { label: '庞氏资金盘模型识别率', value: '99.8%', unit: '', note: '超低价大额年付陷阱' },
+  { label: '爆雷机场平均潜伏期', value: '3~6', unit: '个月', note: '大促收割后迅速拔线' },
+];
+
+// 近期活跃风险通报
+const riskList = [
+  {
+    name: 'SunsetSpeed (极速闪电)',
+    status: '已失联 / 跑路确定',
+    date: '2026-10-28',
+    reason: '节点连续数周全红不可用，官方 Telegram 频道已开启全员禁言，客服工单处于无人处理状态，官方主域名已停止解析。',
+    severity: 'high',
+    type: '恶意卷款',
+  },
+  {
+    name: 'SailFree (自由之帆)',
+    status: '已失联 / 域名失效',
+    date: '2026-11-02',
+    reason: '在各大论坛大搞“¥99 终身不限速”大促，收款后第 5 天彻底拔线，官方 Telegram 交流群解散，站长人间蒸发。',
+    severity: 'high',
+    type: '资金盘收割',
+  },
+  {
+    name: 'YunFly Cloud (云飞网络)',
+    status: '高危预警 / 频繁断连',
+    date: '2026-11-06',
+    reason: '入口服务器遭上游机房封禁，频繁更换非备案公网隧道，晚高峰断流率超过 60%，工单超时超 48 小时无人应答，切勿续费年付。',
+    severity: 'medium',
+    type: '线路断供',
+  },
+  {
+    name: 'AuroraNet (极光加速)',
+    status: '严重降速 / 跑路高危',
+    date: '2026-11-09',
+    reason: '核心中继专线欠费断网，仅剩 2 个香港直连节点龟速可用，官方频道已停止更新半月，疑似资金链断裂。',
+    severity: 'medium',
+    type: '资金链断裂',
+  },
+  {
+    name: 'RabbitVPN (白兔云)',
+    status: '停止注册 / 待观察',
+    date: '2026-11-10',
+    reason: '团队宣布进行架构清退与重组，已停止新套餐购买，老用户部分节点严重丢包，建议老用户及时备份或配置备用线路。',
+    severity: 'low',
+    type: '架构重组',
+  },
+];
+
+// 历史知名跑路停运重大案例
+const majorCases = [
+  {
+    name: '速蛙云 (SpeedFrog)',
+    period: '运营约 2 年 · 2022年暴雷',
+    loss: '涉及资金预估数百万元，波及数万用户',
+    tricks: '全网投放大手笔广告、号称千兆专线无上限、推出高额“永久不限时/永久SVIP”套餐',
+    story: '速蛙云是翻墙圈历史上破坏力最大的爆雷跑路事件之一。前期通过在各大知名博主和技术论坛狂砸广告引流，积累了庞大用户基数；随后在崩盘前夕发起“狂欢骨折大促”，诱导海量用户购买大额长周期套餐。资金池见顶后，突然某天所有节点同时断网，官网无法访问，Telegram 官方群组瞬间踢人解散，站长彻底失联跑路。',
+    takeaway: '广告满天飞并不代表安全；承诺“永久/无限量”的本质就是庞氏击鼓传花，池子越大崩盘越惨烈。'
+  },
+  {
+    name: '喵帕斯 (NyanPASU)',
+    period: '运营近 4 年 · 知名老牌',
+    loss: '数万技术老用户订阅失效',
+    tricks: '高口碑技术流标杆、自研面板、老牌坚挺形象',
+    story: '喵帕斯曾是机场界公认的技术实力派代表，以稳定性高、节点分布广著称，运营数年建立了极高的用户信任度。然而因国内核心中继服务器突遭严查、合伙人之间利益分配冲突以及后续合规压力剧增，团队突发简短关停公告便仓促退场，未给广大用户留出退款或结算通道。',
+    takeaway: '“老牌”和“名气大”不是免死金牌。跨境网络服务面临极大的政策与物理不可抗力风险，任何时候都不可放松警惕。'
+  },
+  {
+    name: '布丁网络 (Pudding Cloud)',
+    period: '运营约 8 个月 · 典型低价收割盘',
+    loss: '贪便宜小白群体全面沦陷',
+    tricks: '“1元月付、9.9包年”极低门槛引流拉新，再以超载为由诱导升级“¥39 终身特权卡”',
+    story: '典型的低价引流杀猪盘模式。初期以违背物理常识的 1 元超低价在贴吧、知乎、B站疯狂引流。当贪便宜的用户涌入导致带宽严重拥堵时，发布公告称“升级 ¥39 终身极速专线即可彻底告别卡顿”。收割最后一批现金后，在周末夜间悄悄拔除服务器电源、注销域名人间蒸发。',
+    takeaway: '天下没有免费的午餐，更没有违背物理成本的千兆专线。极低价格往往只是钓鱼诱饵。'
+  }
+];
+
+// 历史跑路公墓速查表
+const cemeteryAirports = [
+  { name: '速蛙云 (SpeedFrog)', tag: '永久套餐陷阱', reason: '全网高额资金盘，席卷数百万资金后全节点关机拔线', year: '历史典型' },
+  { name: '喵帕斯 (NyanPASU)', tag: '老牌突然退场', reason: '国内中继政策收紧与团队内部矛盾，突发断线停运', year: '老牌暴雷' },
+  { name: '布丁网络 (Pudding)', tag: '1元低价割韭菜', reason: '1元引流后推出39元终身卡，收款满额后关站拔线', year: '低价陷阱' },
+  { name: '极速闪电 (SunsetSpeed)', tag: '骨折年付跑路', reason: '大促后全节点红名失联，TG群全员禁言，客服失联', year: '近期跑路' },
+  { name: '自由之门 (部分旧山寨)', tag: '仿冒诈骗盘', reason: '冒充知名老牌开源工具，收款后不提供可用节点', year: '仿冒欺诈' },
+  { name: '西部世界 (旧壳重组)', tag: '换皮换壳循环', reason: '多次改头换面、清空老用户余额重新售卖套餐', year: '换皮割韭' },
+  { name: '云帆加速 (YunFan)', tag: '上游机房断供', reason: '欠缴机房巨额带宽费遭拔线，站长无力承担亏损跑路', year: '欠费停运' },
+  { name: '神盾VPN (Aegis)', tag: '假专线公网直连', reason: '以公网套壳伪装IEPL专线，敏感时期被墙后直接失联', year: '虚标暴雷' },
+  { name: '各类“1元机场/9.9年付”', tag: '短命快闪盘', reason: '平均存活周期仅 30~90 天，收满几千元便换域名重开', year: '快闪收割' },
+];
+
+// 跑路前兆核心特征
+const runawaySignals = [
+  {
+    title: '信号一：突然发起“骨折级”促销（终身/买一送二）',
+    desc: '跨国内网专线千兆带宽每月成本以数万元计。如果某机场突然推出“¥99 终身无限量”或“充一年送一年”，99% 是站长准备卷款离场前的“最后一捞”。',
+    dangerLevel: '高危极险',
+  },
+  {
+    title: '信号二：官方交流群（TG群）开启全员禁言或解散',
+    desc: '正常维护通常会发布说明并保留沟通窗口。一旦发生大面积故障且管理员开启全员禁言超过 24 小时，说明团队已无力修复或已准备跑路。',
+    dangerLevel: '跑路前兆',
+  },
+  {
+    title: '信号三：强制取消月付选项，仅限半年付或年付',
+    desc: '正规老牌机场一律支持按月续费。若商家突然下架月付方案、强迫用户一次性缴纳大额年费，往往意味着日常现金流已发生严重断裂。',
+    dangerLevel: '严重预警',
+  },
+  {
+    title: '信号四：节点大面积标红断流长达一周以上',
+    desc: '如果多地主流节点持续不可用，而官方公告始终含糊其辞称“被上游通报”或“正在迁移中”，大概率是因欠费遭机房强制清退。',
+    dangerLevel: '服务中断',
+  },
+  {
+    title: '信号五：客服工单系统瘫痪，无人应答超 48 小时',
+    desc: '运维与客服团队是机场最基础的保障。工单长时间无应答、甚至直接关闭工单提交入口，标志着商家已放弃运营维护。',
+    dangerLevel: '团队离场',
+  },
+  {
+    title: '信号六：频繁更换收款账户、甚至只收虚拟币或个人码',
+    desc: '正规商业支付网关被银行或风控封禁，转向私人二维码、非标代收发卡平台甚至仅限 USDT，资金链与合规均已走到尽头。',
+    dangerLevel: '风控失联',
+  },
+];
+
+// 预防跑路 5 大铁律
+const preventionRules = [
+  {
+    id: '01',
+    title: '坚持严格月付，坚决抵制大额长周期诱惑',
+    content: '无论促销打折多么诱人，牢记“只买月付，最多季付”。月付哪怕单价高 2~3 元，一旦机场跑路，最大损失仅为一杯奶茶钱；而年付一旦遇上跑路则是全损，没有任何追回途径。',
+  },
+  {
+    id: '02',
+    title: '科学搭建“1主 + 1备”双机场冗余防线',
+    content: '不要把所有鸡蛋放在同一个篮子里！主力选择技术过硬、专线稳定的旗舰品牌（如闪电鼠、大佬云）；同时搭配一个月付低至 7~8 元的平价备用梯子（如环球梯、光年梯）。两家采用不同的骨干网络与协议架构，无论主力突发检修还是备用偶尔波动，随时秒级切换，保障工作与学习 100% 不失联。',
+  },
+  {
+    id: '03',
+    title: '树立物理网络常识，彻底破除“终身/免费”幻想',
+    content: '跨境网络传输需要向中国电信、联通及境外运营商按月真金白银结算带宽费用，没有任何物理节点能做到“一次付费终身免费”。所有号称“终身不限流”的套餐，无一例外属于资金盘欺诈。',
+  },
+  {
+    id: '04',
+    title: '注重个人隐私隔离与支付渠道安全',
+    content: '注册机场账号时，切勿使用主力工作邮箱或包含个人身份信息的手机号，建议使用专用的非实名邮箱；登录密码必须与网银、社交密码隔离。优先选择支持支付宝等有平台交易留痕的支付渠道。',
+  },
+  {
+    id: '05',
+    title: '关注节点存活探针与行业避坑动态',
+    content: '将【机场指南针】加入浏览器书签，定期查阅全网晚高峰测速榜与跑路预警黑名单。在续费前花 30 秒核对服务商近期存活评级与网络通报，规避踩雷风险。',
+  },
+];
+
+// 突发跑路应急自救 4 步法
+const emergencySteps = [
+  {
+    step: '1',
+    title: '立即停止二次投入',
+    desc: '切勿轻信网站弹窗或群内所谓“补缴解封费/激活新节点”等二次收割套路，避免遭受连环诈骗。',
+  },
+  {
+    step: '2',
+    title: '清理客户端失效订阅',
+    desc: '在 Clash Verge / Shadowrocket 中将已失效的订阅直接禁用或删除，防止客户端不断轮询重试造成本地网络拥堵与 DNS 错误。',
+  },
+  {
+    step: '3',
+    title: '启用平价备用专线恢复网络',
+    desc: '立即启用备用的低门槛月付专线（如 闪电鼠 8元/月 或 光年梯 7元/月），一键导入节点，1 分钟内恢复海外正常访问。',
+  },
+  {
+    step: '4',
+    title: '尝试支付渠道账单申诉',
+    desc: '如果是 7 天内通过支付宝付款，可尝试在账单详情中提交“商家失联/未提供对应软件服务”申诉，争取挽回部分损失。',
+  },
+];
+
+// 安全备用推荐
+const fallbackAirports = [
+  {
+    name: '闪电鼠 (旗舰主推)',
+    desc: '2026 年度旗舰级 IEPL+内网双专线，晚高峰实测 1980Mbps，VLESS 协议秒开 4K，支持低至 8 元按月付费。',
+    price: '¥8 / 月起',
+    coupon: 'sd88',
+    href: '/go/shandianshu',
+    badge: '首选高可靠',
+  },
+  {
+    name: '大佬云 (老牌口碑)',
+    desc: '多年老牌口碑运营，纯 IEPL 高速专线，支持按月灵活续费，解锁 ChatGPT 与全流媒体。',
+    price: '¥8 / 月起',
+    coupon: 'dly88',
+    href: '/go/dalaoyun',
+    badge: '老牌稳健',
+  },
+  {
+    name: '环球梯 (平价备用)',
+    desc: '内网专线+IEPL 双重保障，晚高峰抗波动能力强，超高性价比备用神器。',
+    price: '¥8 / 月起',
+    coupon: 'hq66',
+    href: '/go/huanqiuti',
+    badge: '平价冗余',
+  },
+  {
+    name: '光年梯 (平民战神)',
+    desc: '月付低至 7 元的纯 IEPL 平价战神，成本几乎忽略不计，绝佳的应急救生圈。',
+    price: '¥7 / 月起',
+    coupon: 'GNT2026',
+    href: '/go/guangnianti',
+    badge: '超低门槛',
+  },
+];
+
+// 常见问答 FAQ
+const warningFaqs = [
+  {
+    q: '为什么机场跑路总是集中在每年 10~11 月或敏感时期？',
+    a: '敏感时期国内骨干网络审查和机房巡检力度大幅增加，部分使用廉价国内公网中继、盗用非法线路的商家入口被大批查封。如果商家本身没有内网合规专线资质，维护成本将呈数倍激增，技术不达标或资金链脆弱的小团队便会选择趁机卷款关服。'
+  },
+  {
+    q: '既然跨国专线成本高昂，为什么还有正规商家能做到月付 8 元？',
+    a: '正规平价机场依托于数万规模化用户的“分时复用”带宽池与动态负载均衡技术，且提供真实的“月付”模式，赚取健康的运营微利；而跑路资金盘是虚标百兆/千兆带宽却以极低年付（如 29元两年）敛财，两者在底层网络架构与商业本质上截然不同。'
+  },
+  {
+    q: '如果不幸买了年付且机场跑路，可以通过报警追回钱款吗？',
+    a: '现实中追回难度极大。由于翻墙软件游走于法律灰色边缘，且涉案金额对个人而言多在百元级别，很难达到公安刑事立案标准；绝大多数站长位于境外或使用虚假身份。因此“事前坚持月付防范”永远比“事后维权”重要一百倍。'
+  }
+];
+---
+
+<BaseLayout
+  title="跑路预警与停运黑名单 - 机场指南针"
+  description="实时监测全网VPN与机场运营状态，发布跑路风险预警、历史停运黑名单、跑路前兆特征识别及科学上网防跑路避险指南。"
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <Breadcrumbs items={breadcrumbItems} />
+
+    <!-- Hero Header -->
+    <div class="my-8 text-center max-w-3xl mx-auto">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-300 border border-rose-200 dark:border-rose-800 mb-3">
+        <AlertTriangle class="w-4 h-4 animate-bounce" />
+        <span>EARLY WARNING & BLACKLIST</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight">
+        跑路风险预警与停运黑名单
+      </h1>
+      <p class="mt-3 text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+        网络不是法外之地，商家跑路屡见不鲜。我们通过全球探针 7×24 小时监控节点存活率，第一时间通报异常风险，助您守护资金安全。
+      </p>
+    </div>
+
+    <!-- 核心统计数据看板 -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 my-8">
+      {warningStats.map((stat) => (
+        <div class="glass-card p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 text-center relative overflow-hidden group hover:border-rose-400/50 transition-all">
+          <div class="text-xs text-slate-500 dark:text-slate-400 font-medium mb-1">{stat.label}</div>
+          <div class="text-2xl sm:text-3xl font-black text-rose-600 dark:text-rose-400 tracking-tight">
+            {stat.value}<span class="text-sm font-semibold text-slate-500 ml-0.5">{stat.unit}</span>
+          </div>
+          <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">{stat.note}</div>
+        </div>
+      ))}
+    </div>
+
+    <!-- 板块一：近期监测异常与跑路服务商通报 -->
+    <section class="my-10">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+          <ShieldAlert class="w-5 h-5 text-rose-500" />
+          <span>近期监测异常与跑路服务商通报</span>
+        </h2>
+        <span class="text-xs text-slate-400 flex items-center gap-1">
+          <RefreshCw class="w-3.5 h-3.5 animate-spin" />
+          <span>探针持续动态校验</span>
+        </span>
+      </div>
+
+      <div class="overflow-x-auto rounded-3xl glass-card border border-rose-300 dark:border-rose-900/50 shadow-xl">
+        <table class="w-full text-left text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+          <thead class="bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 uppercase text-[11px] tracking-wider border-b border-rose-200 dark:border-rose-900/50">
+            <tr>
+              <th scope="col" class="py-3.5 px-4">服务商名称</th>
+              <th scope="col" class="py-3.5 px-3">状态判定</th>
+              <th scope="col" class="py-3.5 px-3">风险类型</th>
+              <th scope="col" class="py-3.5 px-3">通报时间</th>
+              <th scope="col" class="py-3.5 px-4">异常现象与探针检测结果</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-rose-100 dark:divide-rose-950/40">
+            {riskList.map((item) => (
+              <tr class="hover:bg-rose-50/50 dark:hover:bg-rose-950/20 transition-colors">
+                <td class="py-4 px-4 font-bold text-slate-900 dark:text-white whitespace-nowrap">
+                  {item.name}
+                </td>
+                <td class="py-4 px-3 whitespace-nowrap">
+                  <span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                    item.severity === 'high'
+                      ? 'bg-rose-500 text-white'
+                      : item.severity === 'medium'
+                      ? 'bg-amber-500 text-slate-950'
+                      : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                  }`}>
+                    {item.status}
+                  </span>
+                </td>
+                <td class="py-4 px-3 whitespace-nowrap text-xs font-medium text-rose-600 dark:text-rose-400">
+                  {item.type}
+                </td>
+                <td class="py-4 px-3 whitespace-nowrap text-xs text-slate-500 dark:text-slate-400">
+                  {item.date}
+                </td>
+                <td class="py-4 px-4 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
+                  {item.reason}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 板块二：历史知名跑路机场公墓与大案警示录 -->
+    <section class="my-14">
+      <div class="mb-6">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 mb-2">
+          <History class="w-4 h-4 text-slate-500" />
+          <span>HISTORICAL CASE STUDIES</span>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+          <Skull class="w-6 h-6 text-slate-600 dark:text-slate-400" />
+          <span>历史知名跑路停运重大案例警示录</span>
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+          梳理圈内历史上破坏力最大、波及人数最多的典型爆雷惨剧，深度剖析黑心商家的割韭套路。
+        </p>
+      </div>
+
+      <!-- 典型大案深度拆解卡片 -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        {majorCases.map((c) => (
+          <div class="glass-card rounded-3xl p-6 border border-slate-200 dark:border-slate-800 flex flex-col justify-between hover:shadow-lg transition-all">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <h3 class="text-lg font-black text-slate-900 dark:text-white">{c.name}</h3>
+                <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
+                  停运爆雷
+                </span>
+              </div>
+              <div class="text-xs text-slate-400 dark:text-slate-500 mb-3">
+                <span>⏱️ {c.period}</span>
+              </div>
+              <div class="text-xs text-rose-600 dark:text-rose-400 font-semibold mb-3 bg-rose-50 dark:bg-rose-950/30 p-2.5 rounded-xl border border-rose-100 dark:border-rose-900/40">
+                ⚠️ 影响规模：{c.loss}
+              </div>
+              <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+                {c.story}
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800">
+              <div class="text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1">💡 避坑总结：</div>
+              <div class="text-xs text-amber-700 dark:text-amber-300 leading-snug font-medium">
+                {c.takeaway}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- 历史跑路公墓速查表 -->
+      <div class="rounded-3xl glass-card border border-slate-200 dark:border-slate-800 p-6">
+        <h3 class="text-base font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+          <Ban class="w-4 h-4 text-rose-500" />
+          <span>行业跑路公墓与已停运黑名单名册（部分代表）</span>
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {cemeteryAirports.map((airport) => (
+            <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="font-bold text-xs text-slate-900 dark:text-white">{airport.name}</span>
+                <span class="text-[10px] px-2 py-0.5 rounded-md font-semibold bg-rose-100 dark:bg-rose-950/80 text-rose-600 dark:text-rose-400">
+                  {airport.tag}
+                </span>
+              </div>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                {airport.reason}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 板块三：跑路前兆核心特征 -->
+    <section class="my-14">
+      <div class="mb-6">
+        <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+          <AlertOctagon class="w-5 h-5 text-amber-500" />
+          <span>如何提前识别跑路机场？6 大高危前兆信号</span>
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+          绝大多数机场并非突然失联，在卷款跑路前 7~15 天通常会释放以下明显异动信号。
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {runawaySignals.map((signal) => (
+          <div class="p-6 rounded-3xl glass-card border border-slate-200 dark:border-slate-800 flex flex-col justify-between hover:border-amber-400/50 transition-all">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <span class="text-xs font-bold px-2 py-0.5 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+                  {signal.dangerLevel}
+                </span>
+              </div>
+              <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-2 leading-snug">
+                {signal.title}
+              </h3>
+              <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                {signal.desc}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- 板块四：怎么预防跑路？5 大黄金避险铁律 -->
+    <section class="my-14">
+      <div class="mb-6">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 mb-2">
+          <ShieldCheck class="w-4 h-4 text-emerald-500" />
+          <span>ZERO LOSS STRATEGY</span>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+          <span>怎么预防跑路？科学上网资金避险 5 大核心铁律</span>
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+          守住本金与体验的底线。严格遵循以下法则，彻底摆脱被割韭菜的风险。
+        </p>
+      </div>
+
+      <div class="space-y-4">
+        {preventionRules.map((rule) => (
+          <div class="p-6 rounded-3xl glass-card border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-start gap-4 hover:border-emerald-400/40 transition-all">
+            <div class="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-black text-base flex items-center justify-center shrink-0 border border-emerald-500/20">
+              {rule.id}
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-slate-900 dark:text-white mb-2">
+                {rule.title}
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                {rule.content}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- 板块五：突发跑路应急自救 4 步指南 -->
+    <section class="my-14">
+      <div class="p-8 rounded-3xl bg-gradient-to-br from-rose-500/10 via-amber-500/5 to-transparent border border-rose-300/60 dark:border-rose-900/40">
+        <div class="flex items-center gap-2 text-rose-600 dark:text-rose-400 font-bold text-sm mb-2">
+          <LifeBuoy class="w-5 h-5" />
+          <span>EMERGENCY PLAYBOOK</span>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mb-2">
+          若购买的机场突然跑路，手把手 4 步自救应急
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-6">
+          遭遇商家拔线不要慌，按以下规范步骤处理，迅速止损并恢复出海访问。
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {emergencySteps.map((step) => (
+            <div class="bg-white/80 dark:bg-slate-900/80 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 backdrop-blur-sm">
+              <div class="w-7 h-7 rounded-full bg-rose-500 text-white font-black text-xs flex items-center justify-center mb-3">
+                {step.step}
+              </div>
+              <h3 class="font-bold text-sm text-slate-900 dark:text-white mb-1.5">{step.title}</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{step.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 板块六：高可靠·防跑路·低门槛平价备用专线推荐 -->
+    <section class="my-14">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+            <Zap class="w-5 h-5 text-amber-500" />
+            <span>高可靠·防失联平价备用专线推荐</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+            全部支持 7~8 元极低门槛月付、IEPL 内网专线加持，无惧跑路风险，主力与备用的绝佳组合。
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {fallbackAirports.map((airport) => (
+          <div class="glass-card rounded-3xl p-5 border border-slate-200 dark:border-slate-800 flex flex-col justify-between hover:border-indigo-400/50 hover:shadow-lg transition-all group">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+                  {airport.badge}
+                </span>
+                <span class="text-xs font-bold text-rose-600 dark:text-rose-400">{airport.price}</span>
+              </div>
+              <h3 class="text-base font-black text-slate-900 dark:text-white mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                {airport.name}
+              </h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-4">
+                {airport.desc}
+              </p>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
+              <div class="flex items-center justify-between text-xs text-slate-500">
+                <span>优惠码：</span>
+                <code class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 rounded font-mono font-bold">{airport.coupon}</code>
+              </div>
+              <a
+                href={airport.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="w-full inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-md shadow-indigo-600/20 transition-all"
+              >
+                <span>直达官网配置</span>
+                <ExternalLink class="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- 板块七：防跑路深度 FAQ -->
+    <section class="my-14">
+      <div class="mb-6">
+        <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+          <HelpCircle class="w-5 h-5 text-indigo-500" />
+          <span>跑路与避险常见疑问解答 FAQ</span>
+        </h2>
+      </div>
+
+      <div class="space-y-4">
+        {warningFaqs.map((faq) => (
+          <div class="p-6 rounded-3xl glass-card border border-slate-200 dark:border-slate-800">
+            <h3 class="text-base font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
+              <span class="text-indigo-600 dark:text-indigo-400 font-black">Q:</span>
+              <span>{faq.q}</span>
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed pl-5 border-l-2 border-indigo-500/30">
+              {faq.a}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>

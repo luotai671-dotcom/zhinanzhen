@@ -1,0 +1,207 @@
+---
+// Interactive 30-Second Airport Decision Wizard (CRO Matchmaker)
+---
+
+<section class="my-10 p-6 sm:p-8 rounded-3xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-6">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-sky-400 border border-indigo-200 dark:border-indigo-500/20 mb-2">
+        <span>⚡ 智能选机匹配引擎</span>
+      </div>
+      <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+        不知道如何挑选？30秒测出最适合你的机场
+      </h2>
+      <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+        根据您的核心用途、宽带运营商与预算，智能算法为您推荐最优线路
+      </p>
+    </div>
+
+    <!-- Wizard Form Steps -->
+    <div id="wizard-container" class="space-y-6">
+      <!-- Step 1: Use Case -->
+      <div class="wizard-step">
+        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-3">
+          1. 您的主要核心使用场景是？
+        </label>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          <button type="button" class="wizard-opt p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-surface-950 text-left transition-all cursor-pointer" data-question="usecase" data-val="chatgpt">
+            <span class="text-lg block mb-1">🤖</span>
+            <span class="text-xs font-bold text-slate-900 dark:text-white block">AI / ChatGPT</span>
+            <span class="text-[10px] text-slate-500 dark:text-slate-400 block mt-0.5">原生住宅IP防封号</span>
+          </button>
+          <button type="button" class="wizard-opt p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-surface-950 text-left transition-all cursor-pointer" data-question="usecase" data-val="streaming">
+            <span class="text-lg block mb-1">🎬</span>
+            <span class="text-xs font-bold text-slate-900 dark:text-white block">4K/8K 追剧</span>
+            <span class="text-[10px] text-slate-500 dark:text-slate-400 block mt-0.5">Netflix/YouTube</span>
+          </button>
+          <button type="button" class="wizard-opt p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-surface-950 text-left transition-all cursor-pointer" data-question="usecase" data-val="gaming">
+            <span class="text-lg block mb-1">🎮</span>
+            <span class="text-xs font-bold text-slate-900 dark:text-white block">外服游戏联机</span>
+            <span class="text-[10px] text-slate-500 dark:text-slate-400 block mt-0.5">超低延迟Hysteria2</span>
+          </button>
+          <button type="button" class="wizard-opt p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-surface-950 text-left transition-all cursor-pointer" data-question="usecase" data-val="budget">
+            <span class="text-lg block mb-1">💰</span>
+            <span class="text-xs font-bold text-slate-900 dark:text-white block">性价比平价</span>
+            <span class="text-[10px] text-slate-500 dark:text-slate-400 block mt-0.5">查资料/学生党</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: ISP -->
+      <div class="wizard-step">
+        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-3">
+          2. 您平时主要使用的网络运营商？
+        </label>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          <button type="button" class="wizard-opt p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-surface-950 text-left transition-all cursor-pointer" data-question="isp" data-val="telecom">
+            <span class="text-xs font-bold text-slate-900 dark:text-white block">中国电信</span>
+            <span class="text-[10px] text-slate-500 dark:text-slate-400 block mt-0.5">推荐深港/沪日IEPL</span>
+          </button>
+          <button type="button" class="wizard-opt p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-surface-950 text-left transition-all cursor-pointer" data-question="isp" data-val="unicom">
+            <span class="text-xs font-bold text-slate-900 dark:text-white block">中国联通</span>
+            <span class="text-[10px] text-slate-500 dark:text-slate-400 block mt-0.5">推荐联通9929/BGP</span>
+          </button>
+          <button type="button" class="wizard-opt p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-surface-950 text-left transition-all cursor-pointer" data-question="isp" data-val="mobile">
+            <span class="text-xs font-bold text-slate-900 dark:text-white block">中国移动</span>
+            <span class="text-[10px] text-slate-500 dark:text-slate-400 block mt-0.5">CMI香港直连/专线</span>
+          </button>
+          <button type="button" class="wizard-opt p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-surface-950 text-left transition-all cursor-pointer" data-question="isp" data-val="campus">
+            <span class="text-xs font-bold text-white block">校园网 / 移动数据</span>
+            <span class="text-[10px] text-slate-500 dark:text-slate-400 block mt-0.5">高并发抗弱网UDP</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Result Box -->
+      <div id="wizard-result" class="hidden mt-6 p-5 rounded-2xl bg-indigo-50/80 dark:bg-surface-950 border border-indigo-200 dark:border-indigo-900/60 shadow-sm transition-all">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-600 text-white">
+                匹配度 99.8%
+              </span>
+              <span class="text-xs text-slate-500 dark:text-slate-400">为您智能计算的最佳推荐方案：</span>
+            </div>
+            <h3 id="result-name" class="text-xl font-extrabold text-slate-900 dark:text-white mt-1">闪电鼠 (主推)</h3>
+            <p id="result-desc" class="text-xs text-slate-600 dark:text-slate-300 mt-1 max-w-lg">
+              2026年度重点主推，纯IEPL物理内网专线，原生双ISP住宅IP，晚高峰1980Mbps秒开，月付仅需8元。
+            </p>
+          </div>
+
+          <div class="flex flex-col sm:items-end gap-2 shrink-0">
+            <div class="flex items-baseline gap-1">
+              <span class="text-xs text-slate-400">起价</span>
+              <span id="result-price" class="text-2xl font-black text-slate-900 dark:text-white">¥8</span>
+              <span id="result-period" class="text-xs text-slate-400">/月</span>
+            </div>
+            <a
+              id="result-link"
+              href="/go/shandianshu"
+              target="_blank"
+              rel="nofollow sponsored noopener noreferrer"
+              class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs text-white bg-indigo-600 hover:bg-indigo-700 shadow-md transition-all active:scale-95"
+            >
+              <span>立即直达享受折扣 (券: sd88)</span>
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function setupWizard() {
+    const options = document.querySelectorAll<HTMLButtonElement>('.wizard-opt');
+    const resultBox = document.getElementById('wizard-result');
+    const resultName = document.getElementById('result-name');
+    const resultDesc = document.getElementById('result-desc');
+    const resultPrice = document.getElementById('result-price');
+    const resultPeriod = document.getElementById('result-period');
+    const resultLink = document.getElementById('result-link') as HTMLAnchorElement | null;
+
+    const selections: Record<string, string> = {
+      usecase: 'chatgpt',
+      isp: 'telecom',
+    };
+
+    const airportDatabase: Record<string, any> = {
+      chatgpt: {
+        name: '闪电鼠 (主推)',
+        desc: '本站2026年度旗舰主推，IEPL纯内网物理专线，双ISP原生住宅IP，ChatGPT/Claude全绿秒解，月付仅需8元。',
+        price: '¥8',
+        period: '/月',
+        link: '/go/shandianshu',
+      },
+      streaming: {
+        name: '大佬云 (老牌高口碑)',
+        desc: '自2020年稳定运营，全线IEPL物理专线直连，Netflix/Disney+ 4K非自制剧秒开，超低门槛8元月付。',
+        price: '¥8',
+        period: '/月',
+        link: '/go/dalaoyun',
+      },
+      gaming: {
+        name: '神行加速 (游戏电竞首选)',
+        desc: '全线顶级IEPL专线，国内入口延时低至19ms，跨国毫秒级响应，外服Steam/暴雪联机零卡顿。',
+        price: '¥15',
+        period: '/月',
+        link: '/go/shenxing',
+      },
+      budget: {
+        name: '环球梯 (平价专线战神)',
+        desc: '内网专线+IEPL双重保障，月付低至8元良心起步，稳定不过GFW，学生党与轻量办公首选。',
+        price: '¥8',
+        period: '/月',
+        link: '/go/huanqiuti',
+      },
+    };
+
+    function updateRecommendation() {
+      const match = airportDatabase[selections.usecase] || airportDatabase.chatgpt;
+      if (resultName) resultName.textContent = match.name;
+      if (resultDesc) resultDesc.textContent = match.desc;
+      if (resultPrice) resultPrice.textContent = match.price;
+      if (resultPeriod) resultPeriod.textContent = match.period;
+      if (resultLink) resultLink.href = match.link;
+
+      if (resultBox) {
+        resultBox.classList.remove('hidden');
+      }
+    }
+
+    options.forEach((opt) => {
+      opt.addEventListener('click', () => {
+        const q = opt.getAttribute('data-question');
+        const val = opt.getAttribute('data-val');
+        if (!q || !val) return;
+
+        // Deselect peers
+        const peers = document.querySelectorAll<HTMLButtonElement>(`.wizard-opt[data-question="${q}"]`);
+        peers.forEach((p) => {
+          p.classList.remove('border-indigo-600', 'bg-indigo-50/80', 'dark:bg-indigo-950/40', 'ring-2', 'ring-indigo-500/20');
+          p.classList.add('border-slate-200', 'dark:border-slate-800', 'bg-slate-50', 'dark:bg-surface-950');
+        });
+
+        // Select current
+        opt.classList.remove('border-slate-200', 'dark:border-slate-800', 'bg-slate-50', 'dark:bg-surface-950');
+        opt.classList.add('border-indigo-600', 'bg-indigo-50/80', 'dark:bg-indigo-950/40', 'ring-2', 'ring-indigo-500/20');
+
+        selections[q] = val;
+        updateRecommendation();
+      });
+    });
+
+    // Initialize with first selection
+    const defaultUsecase = document.querySelector<HTMLButtonElement>('.wizard-opt[data-val="chatgpt"]');
+    const defaultIsp = document.querySelector<HTMLButtonElement>('.wizard-opt[data-val="telecom"]');
+    defaultUsecase?.click();
+    defaultIsp?.click();
+  }
+
+  setupWizard();
+  document.addEventListener('astro:page-load', setupWizard);
+</script>

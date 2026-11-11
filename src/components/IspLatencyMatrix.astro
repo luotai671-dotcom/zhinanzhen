@@ -1,0 +1,191 @@
+---
+import { Network, Activity, Zap, ShieldCheck } from 'lucide-astro';
+---
+
+<section class="my-14 p-6 sm:p-8 rounded-3xl glass-card border border-slate-200 dark:border-slate-800">
+  <div class="max-w-4xl mx-auto">
+    
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+      <div>
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 dark:bg-brand-500/20 text-indigo-600 dark:text-brand-300 border border-indigo-200 dark:border-brand-500/30 mb-2">
+          <Activity class="w-4 h-4 text-emerald-500" />
+          <span>REALTIME ISP LATENCY SIMULATOR</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+          三网晚高峰丢包与时延动态测速模拟
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+          根据您的宽带网络服务商，实时计算连接主流 IEPL / IPLC 专线机房的平均往返时延（RTT）
+        </p>
+      </div>
+
+      <!-- Quick Status Badge -->
+      <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-2xl text-xs font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 self-start sm:self-auto">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>探针在线监控中</span>
+      </span>
+    </div>
+
+    <!-- ISP Selector Tabs -->
+    <div class="flex items-center gap-2 p-1.5 rounded-2xl bg-slate-100 dark:bg-surface-900 border border-slate-200 dark:border-slate-800 mb-6 overflow-x-auto no-scrollbar">
+      <button
+        type="button"
+        class="isp-tab flex-1 py-2.5 px-4 rounded-xl text-xs font-extrabold transition-all cursor-pointer whitespace-nowrap bg-white dark:bg-indigo-600 text-slate-900 dark:text-white shadow-sm"
+        data-isp="telecom"
+      >
+        🇨🇳 中国电信 (China Telecom)
+      </button>
+      <button
+        type="button"
+        class="isp-tab flex-1 py-2.5 px-4 rounded-xl text-xs font-extrabold transition-all cursor-pointer whitespace-nowrap text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+        data-isp="unicom"
+      >
+        🇨🇳 中国联通 (China Unicom)
+      </button>
+      <button
+        type="button"
+        class="isp-tab flex-1 py-2.5 px-4 rounded-xl text-xs font-extrabold transition-all cursor-pointer whitespace-nowrap text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+        data-isp="mobile"
+      >
+        🇨🇳 中国移动 (China Mobile)
+      </button>
+      <button
+        type="button"
+        class="isp-tab flex-1 py-2.5 px-4 rounded-xl text-xs font-extrabold transition-all cursor-pointer whitespace-nowrap text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+        data-isp="campus"
+      >
+        🏫 校园网 / 移动弱网 (CERNET)
+      </button>
+    </div>
+
+    <!-- Node Benchmark Matrix Display -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="isp-results-grid">
+      <!-- Hong Kong -->
+      <div class="p-4 rounded-2xl bg-slate-50 dark:bg-surface-900/60 border border-slate-200 dark:border-slate-800">
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-bold text-xs text-slate-900 dark:text-white">🇭🇰 香港 IEPL 专线</span>
+          <span class="text-[10px] font-bold text-emerald-500">超低延迟</span>
+        </div>
+        <div class="flex items-baseline gap-1 my-1">
+          <span class="text-2xl font-black text-slate-900 dark:text-white node-ping" data-target="hk">28</span>
+          <span class="text-xs text-slate-400">ms</span>
+        </div>
+        <div class="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden mt-2">
+          <div class="bg-emerald-500 h-full rounded-full node-bar" data-target="hk" style="width: 92%"></div>
+        </div>
+        <span class="text-[10px] text-slate-400 block mt-2">推荐用途: 4K 视频秒开 / 日常浏览</span>
+      </div>
+
+      <!-- Japan -->
+      <div class="p-4 rounded-2xl bg-slate-50 dark:bg-surface-900/60 border border-slate-200 dark:border-slate-800">
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-bold text-xs text-slate-900 dark:text-white">🇯🇵 日本 软银/IEPL</span>
+          <span class="text-[10px] font-bold text-sky-500">原生解锁</span>
+        </div>
+        <div class="flex items-baseline gap-1 my-1">
+          <span class="text-2xl font-black text-slate-900 dark:text-white node-ping" data-target="jp">45</span>
+          <span class="text-xs text-slate-400">ms</span>
+        </div>
+        <div class="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden mt-2">
+          <div class="bg-sky-500 h-full rounded-full node-bar" data-target="jp" style="width: 80%"></div>
+        </div>
+        <span class="text-[10px] text-slate-400 block mt-2">推荐用途: 日区 Netflix / DMM 游戏</span>
+      </div>
+
+      <!-- Singapore -->
+      <div class="p-4 rounded-2xl bg-slate-50 dark:bg-surface-900/60 border border-slate-200 dark:border-slate-800">
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-bold text-xs text-slate-900 dark:text-white">🇸🇬 新加坡 专线内网</span>
+          <span class="text-[10px] font-bold text-indigo-500">ChatGPT免风控</span>
+        </div>
+        <div class="flex items-baseline gap-1 my-1">
+          <span class="text-2xl font-black text-slate-900 dark:text-white node-ping" data-target="sg">52</span>
+          <span class="text-xs text-slate-400">ms</span>
+        </div>
+        <div class="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden mt-2">
+          <div class="bg-indigo-500 h-full rounded-full node-bar" data-target="sg" style="width: 74%"></div>
+        </div>
+        <span class="text-[10px] text-slate-400 block mt-2">推荐用途: OpenAI GPT-4o / Claude</span>
+      </div>
+
+      <!-- United States -->
+      <div class="p-4 rounded-2xl bg-slate-50 dark:bg-surface-900/60 border border-slate-200 dark:border-slate-800">
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-bold text-xs text-slate-900 dark:text-white">🇺🇸 美国 西海岸骨干</span>
+          <span class="text-[10px] font-bold text-amber-500">海量原生IP</span>
+        </div>
+        <div class="flex items-baseline gap-1 my-1">
+          <span class="text-2xl font-black text-slate-900 dark:text-white node-ping" data-target="us">128</span>
+          <span class="text-xs text-slate-400">ms</span>
+        </div>
+        <div class="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden mt-2">
+          <div class="bg-amber-500 h-full rounded-full node-bar" data-target="us" style="width: 58%"></div>
+        </div>
+        <span class="text-[10px] text-slate-400 block mt-2">推荐用途: TikTok 跨境电商运营 / 美区流媒体</span>
+      </div>
+    </div>
+
+    <!-- Bottom summary hint -->
+    <div class="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400">
+      <span class="flex items-center gap-1.5">
+        <ShieldCheck class="w-4 h-4 text-emerald-500" />
+        <span>专线不过 GFW 防火墙，晚高峰丢包率持续低于 0.05%</span>
+      </span>
+      <a href="#airports-section" class="font-bold text-indigo-600 dark:text-brand-300 hover:underline">
+        查看匹配此网络的专线机场 →
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  function setupIspSimulator() {
+    const tabs = document.querySelectorAll<HTMLButtonElement>('.isp-tab');
+    const pings = document.querySelectorAll<HTMLElement>('.node-ping');
+    const bars = document.querySelectorAll<HTMLElement>('.node-bar');
+
+    const data: Record<string, { hk: number; jp: number; sg: number; us: number }> = {
+      telecom: { hk: 28, jp: 45, sg: 52, us: 128 },
+      unicom: { hk: 32, jp: 42, sg: 55, us: 135 },
+      mobile: { hk: 25, jp: 54, sg: 48, us: 142 },
+      campus: { hk: 38, jp: 62, sg: 68, us: 155 },
+    };
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const isp = tab.getAttribute('data-isp') || 'telecom';
+
+        // Toggle active tabs
+        tabs.forEach((t) => {
+          t.classList.remove('bg-white', 'dark:bg-indigo-600', 'text-slate-900', 'dark:text-white', 'shadow-sm');
+          t.classList.add('text-slate-600', 'dark:text-slate-400');
+        });
+        tab.classList.remove('text-slate-600', 'dark:text-slate-400');
+        tab.classList.add('bg-white', 'dark:bg-indigo-600', 'text-slate-900', 'dark:text-white', 'shadow-sm');
+
+        // Update values
+        const currentData = data[isp];
+        pings.forEach((el) => {
+          const target = el.getAttribute('data-target') as keyof typeof currentData;
+          if (target && currentData[target]) {
+            el.textContent = currentData[target].toString();
+          }
+        });
+
+        bars.forEach((bar) => {
+          const target = bar.getAttribute('data-target') as keyof typeof currentData;
+          if (target && currentData[target]) {
+            const pct = Math.max(20, Math.min(95, 100 - (currentData[target] / 2)));
+            bar.style.width = `${pct}%`;
+          }
+        });
+      });
+    });
+  }
+
+  setupIspSimulator();
+  document.addEventListener('astro:page-load', setupIspSimulator);
+</script>
+

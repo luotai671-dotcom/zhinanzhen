@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import AirportCard from '../../components/AirportCard.astro';
+import ComparisonTable from '../../components/ComparisonTable.astro';
+import { getCollection } from 'astro:content';
+import { SITE_CONFIG } from '../../consts';
+
+const airports = await getCollection('airports');
+const chatgptAirports = airports
+  .filter((a) => a.data.streamingUnlock.chatgpt || a.data.category.includes('chatgpt'))
+  .sort((a, b) => a.data.rank - b.data.rank);
+
+const breadcrumbItems = [
+  { name: 'ChatGPT/AI解锁专线', href: '/rankings/chatgpt-airports' },
+];
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: '2026 ChatGPT / Claude / Sora 原生住宅IP机场排行榜',
+  description: '解决 Access Denied 报错，精选具备原生双ISP纯净住宅IP与专线分流的AI出海利器。',
+  itemListElement: chatgptAirports.map((airport, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    url: `${SITE_CONFIG.siteUrl}/airports/${airport.slug}`,
+    name: airport.data.name,
+  })),
+};
+---
+
+<BaseLayout
+  title={`2026最适合ChatGPT与Claude的原生住宅IP机场推荐 - ${SITE_CONFIG.name}`}
+  description="ChatGPT老是报错Access Denied？精选2026具备原生双ISP住宅IP、全节点免手机风控的顶级专线机场。完美支持GPT-4o、Claude 3.5 Sonnet、Midjourney与Sora。"
+  schema={itemListSchema}
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <Breadcrumbs items={breadcrumbItems} />
+
+    <!-- Topic Hero -->
+    <div class="my-8 text-center max-w-3xl mx-auto">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 dark:bg-sky-500/10 border border-sky-200 dark:border-sky-500/30 text-sky-700 dark:text-sky-300 text-xs font-semibold mb-4">
+        <span>🤖 全节点纯净原生 IP · 告别 1020 报错</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight">
+        2026 ChatGPT / Claude 原生住宅 IP 机场榜
+      </h1>
+      <p class="mt-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+        随着 OpenAI 与 Anthropic 对机房数据中心 IP 的风控进一步升级，仅有极少数部署了住宅级双 ISP 原生 IP 出口的机场能够实现 100% 稳定对话与 API 调用。以下为持续通过无痕模式验证的优质服务商。
+      </p>
+    </div>
+
+    <!-- Comparison Table -->
+    <ComparisonTable airports={chatgptAirports} />
+
+    <!-- Cards List -->
+    <div class="my-12">
+      <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mb-6">
+        AI 解锁首选机场列表
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {chatgptAirports.map((airport) => (
+          <AirportCard airport={airport} />
+        ))}
+      </div>
+    </div>
+  </div>
+</BaseLayout>

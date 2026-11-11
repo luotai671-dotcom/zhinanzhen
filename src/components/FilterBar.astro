@@ -1,0 +1,114 @@
+---
+import { CATEGORIES } from '../consts';
+
+export interface Props {
+  activeCategory?: string;
+}
+
+const { activeCategory = 'all' } = Astro.props;
+---
+
+<div class="w-full my-8">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-2 rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+    
+    <!-- Filter Pills -->
+    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 px-1" id="filter-container">
+      {CATEGORIES.map((cat) => (
+        <button
+          type="button"
+          data-category={cat.id}
+          class={`filter-tab px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${
+            cat.id === activeCategory
+              ? 'bg-indigo-600 text-white shadow-md'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60'
+          }`}
+        >
+          {cat.name}
+        </button>
+      ))}
+    </div>
+
+    <!-- Live Counter and Sort Controls -->
+    <div class="flex items-center justify-between sm:justify-end gap-3 px-2 text-xs text-slate-500 dark:text-slate-400">
+      <span id="results-count" class="text-slate-700 dark:text-slate-300 font-medium">共 6 家精选</span>
+      <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-1">
+        <label for="sort-select" class="sr-only">排序方式</label>
+        <select id="sort-select" class="bg-transparent text-slate-800 dark:text-slate-200 text-xs focus:outline-none cursor-pointer pr-1">
+          <option value="rank" class="bg-white dark:bg-surface-900 text-slate-800 dark:text-slate-200">按综合排名</option>
+          <option value="price-asc" class="bg-white dark:bg-surface-900 text-slate-800 dark:text-slate-200">按价格: 从低到高</option>
+        </select>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function setupFiltering() {
+    const tabs = document.querySelectorAll<HTMLButtonElement>('.filter-tab');
+    const cards = document.querySelectorAll<HTMLElement>('.airport-card');
+    const countEl = document.getElementById('results-count');
+    const sortSelect = document.getElementById('sort-select') as HTMLSelectElement | null;
+    const cardsContainer = document.getElementById('airports-grid');
+
+    let currentCategory = 'all';
+
+    function applyFilterAndSort() {
+      let visibleCount = 0;
+      const cardList = Array.from(cards);
+
+      // Filter
+      cardList.forEach((card) => {
+        const categories = JSON.parse(card.getAttribute('data-categories') || '[]');
+        const match = currentCategory === 'all' || categories.includes(currentCategory);
+        if (match) {
+          card.style.display = 'block';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Update count display
+      if (countEl) {
+        countEl.textContent = `共 ${visibleCount} 家精选`;
+      }
+
+      // Sort visible cards
+      if (sortSelect && cardsContainer) {
+        const sortType = sortSelect.value;
+        const sorted = cardList.sort((a, b) => {
+          if (sortType === 'price-asc') {
+            const priceA = parseFloat(a.getAttribute('data-price') || '0');
+            const priceB = parseFloat(b.getAttribute('data-price') || '0');
+            return priceA - priceB;
+          } else {
+            const rankA = parseInt(a.getAttribute('data-rank') || '99', 10);
+            const rankB = parseInt(b.getAttribute('data-rank') || '99', 10);
+            return rankA - rankB;
+          }
+        });
+        sorted.forEach((card) => cardsContainer.appendChild(card));
+      }
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        tabs.forEach((t) => {
+          t.classList.remove('bg-indigo-600', 'text-white', 'shadow-md');
+          t.classList.add('text-slate-600', 'dark:text-slate-400', 'hover:bg-slate-100', 'dark:hover:bg-slate-800/60');
+        });
+        tab.classList.remove('text-slate-600', 'dark:text-slate-400', 'hover:bg-slate-100', 'dark:hover:bg-slate-800/60');
+        tab.classList.add('bg-indigo-600', 'text-white', 'shadow-md');
+
+        currentCategory = tab.getAttribute('data-category') || 'all';
+        applyFilterAndSort();
+      });
+    });
+
+    sortSelect?.addEventListener('change', applyFilterAndSort);
+  }
+
+  setupFiltering();
+  document.addEventListener('astro:page-load', setupFiltering);
+</script>

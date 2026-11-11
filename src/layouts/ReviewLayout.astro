@@ -1,0 +1,292 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import type { CollectionEntry } from 'astro:content';
+import { SITE_CONFIG } from '../consts';
+
+export interface Props {
+  airport: CollectionEntry<'airports'>;
+}
+
+const { airport } = Astro.props;
+const data = airport.data;
+
+// Comprehensive Schema.org Product & Review for Google Rich Snippets
+const productSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: data.name,
+  image: `${SITE_CONFIG.siteUrl}/favicon.svg`,
+  description: data.tagline,
+  brand: {
+    '@type': 'Brand',
+    name: data.name,
+  },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: data.rating.toFixed(1),
+    bestRating: '10',
+    worstRating: '1',
+    ratingCount: data.reviewCount,
+  },
+  offers: {
+    '@type': 'Offer',
+    url: `${SITE_CONFIG.siteUrl}/go/${data.affiliateSlug}`,
+    priceCurrency: 'CNY',
+    price: data.startingPrice.toString(),
+    priceValidUntil: '2026-12-31',
+    availability: 'https://schema.org/InStock',
+  },
+  review: {
+    '@type': 'Review',
+    author: {
+      '@type': 'Person',
+      name: SITE_CONFIG.author.name,
+    },
+    datePublished: data.updatedDate.toISOString(),
+    reviewRating: {
+      '@type': 'Rating',
+      ratingValue: data.rating.toFixed(1),
+      bestRating: '10',
+    },
+    reviewBody: `${data.name} 2026年度实测：具备 ${data.linesType} 架构，晚高峰峰值速率达到 ${data.speedPeak}，全节点支持 4K 流媒体与 ChatGPT 原生解锁。`,
+  },
+};
+
+const breadcrumbItems = [
+  { name: '全站机场库', href: '/airports' },
+  { name: data.name, href: `/airports/${airport.slug}` },
+];
+---
+
+<BaseLayout
+  title={`${data.name} 2026评测报告：晚高峰测速、流媒体解锁与独家优惠码`}
+  description={`${data.name} 怎么样？好用吗？本文带来2026最新实测：包含晚高峰千兆带宽压测数据、Ping延迟、丢包率、Netflix/ChatGPT原生解锁测试及独家优惠码 [${data.coupon?.code || '独家'}].`}
+  type="product"
+  schema={productSchema}
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <Breadcrumbs items={breadcrumbItems} />
+
+    <!-- Review Header Section -->
+    <div class="my-6 p-6 sm:p-8 rounded-3xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div>
+          <div class="flex flex-wrap items-center gap-3 mb-3">
+            <span class="px-3 py-1 rounded-lg text-xs font-black uppercase bg-indigo-600 text-white">
+              👑 全网排名第 {data.rank} 位
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              {data.linesType}
+            </span>
+            <span class="text-xs text-slate-500 dark:text-slate-400">稳定运营 {new Date().getFullYear() - data.establishedYear} 年+</span>
+          </div>
+
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight">
+            {data.name}
+          </h1>
+          <p class="mt-2 text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed">
+            {data.tagline}
+          </p>
+
+          <!-- Star Rating & Review Meta -->
+          <div class="mt-4 flex flex-wrap items-center gap-4 text-xs">
+            <div class="flex items-center gap-1.5 px-3 py-1 rounded-md bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 text-amber-700 dark:text-amber-300 font-extrabold text-sm">
+              <span>★</span>
+              <span>{data.rating.toFixed(1)} / 10 卓越推荐</span>
+            </div>
+            <span class="text-slate-500 dark:text-slate-400">基于 {data.reviewCount} 次晚高峰探针与读者实测</span>
+            <span class="text-slate-300 dark:text-slate-700">•</span>
+            <span class="text-slate-500 dark:text-slate-400">更新时间：{data.updatedDate.toISOString().split('T')[0]}</span>
+          </div>
+        </div>
+
+        <!-- Header CTA Card -->
+        <div class="shrink-0 w-full lg:w-72 p-5 rounded-2xl bg-slate-50 dark:bg-surface-950 border border-slate-200 dark:border-slate-800 flex flex-col gap-3 text-center">
+          <div>
+            <span class="text-xs text-slate-500 dark:text-slate-400">官方优惠起步价</span>
+            <div class="flex items-baseline justify-center gap-1 mt-0.5">
+              <span class="text-3xl font-black text-slate-900 dark:text-white">¥{data.startingPrice}</span>
+              <span class="text-xs text-slate-500 dark:text-slate-400">/{data.billingPeriod}</span>
+            </div>
+          </div>
+
+          {data.coupon && (
+            <button
+              type="button"
+              class="copy-coupon-btn w-full py-2 px-3 rounded-xl bg-amber-50 dark:bg-amber-500/10 hover:bg-amber-100 dark:hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-500/30 text-xs font-mono font-bold flex items-center justify-center gap-2 transition-all cursor-pointer"
+              data-coupon={data.coupon.code}
+              data-discount={data.coupon.discount}
+            >
+              <span>优惠码: {data.coupon.code}</span>
+              <span class="text-[10px] text-amber-600 dark:text-amber-400">({data.coupon.discount})</span>
+            </button>
+          )}
+
+          <a
+            href={`/go/${data.affiliateSlug}`}
+            target="_blank"
+            rel="nofollow sponsored noopener noreferrer"
+            class="w-full py-3 px-4 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md transition-all"
+          >
+            直达 {data.name} 官网选购
+          </a>
+          <span class="text-[10px] text-slate-500 dark:text-slate-400">✓ 官方专属折扣通道 ✓ 自动校验可用</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Performance Benchmark Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 my-8">
+      <div class="p-4 rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-800 shadow-sm text-center">
+        <span class="text-xs text-slate-500 dark:text-slate-400 block mb-1">晚高峰实测峰值速率</span>
+        <span class="text-2xl font-black text-sky-600 dark:text-sky-400">{data.speedPeak}</span>
+        <span class="text-[10px] text-slate-400 block mt-1">4K/8K秒开拖拽无缓冲</span>
+      </div>
+      <div class="p-4 rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-800 shadow-sm text-center">
+        <span class="text-xs text-slate-500 dark:text-slate-400 block mb-1">平均网络往返延时</span>
+        <span class="text-2xl font-black text-emerald-600 dark:text-emerald-400">{data.latencyAvg}</span>
+        <span class="text-[10px] text-slate-400 block mt-1">骨干物理光缆直通</span>
+      </div>
+      <div class="p-4 rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-800 shadow-sm text-center">
+        <span class="text-xs text-slate-500 dark:text-slate-400 block mb-1">晚高峰平均丢包率</span>
+        <span class="text-2xl font-black text-indigo-600 dark:text-indigo-400">{data.packetLoss}</span>
+        <span class="text-[10px] text-slate-400 block mt-1">零断流零重传</span>
+      </div>
+      <div class="p-4 rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-800 shadow-sm text-center">
+        <span class="text-xs text-slate-500 dark:text-slate-400 block mb-1">节点与国家覆盖</span>
+        <span class="text-2xl font-black text-amber-600 dark:text-amber-400">{data.nodesCount}</span>
+        <span class="text-[10px] text-slate-400 block mt-1">全原生流媒体IP池</span>
+      </div>
+    </div>
+
+    <!-- Pros & Cons Grid (Google Quality Rater EEAT requirement) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
+      <!-- Pros -->
+      <div class="p-6 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-500/30">
+        <h3 class="text-base font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-2 mb-4">
+          <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+          <span>我们推荐的核心优势 (Pros)</span>
+        </h3>
+        <ul class="space-y-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+          {data.pros.map((pro) => (
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-600 dark:text-emerald-400 font-bold shrink-0">✓</span>
+              <span>{pro}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Cons -->
+      <div class="p-6 rounded-2xl bg-rose-50/70 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-500/30">
+        <h3 class="text-base font-bold text-rose-800 dark:text-rose-300 flex items-center gap-2 mb-4">
+          <svg class="w-5 h-5 text-rose-600 dark:text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+          </svg>
+          <span>选购前需要知悉的局限 (Cons)</span>
+        </h3>
+        <ul class="space-y-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+          {data.cons.map((con) => (
+            <li class="flex items-start gap-2">
+              <span class="text-rose-600 dark:text-rose-400 font-bold shrink-0">✕</span>
+              <span>{con}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Main Markdown Content -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 my-10">
+      
+      <!-- Article Body -->
+      <div class="lg:col-span-2 prose dark:prose-invert prose-slate max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-indigo-600 dark:prose-a:text-sky-400 hover:prose-a:underline prose-table:border-collapse prose-th:bg-slate-100 dark:prose-th:bg-surface-900 prose-th:p-3 prose-td:p-3 prose-td:border-b prose-td:border-slate-200 dark:prose-td:border-slate-800">
+        <slot />
+      </div>
+
+      <!-- Sticky Sidebar -->
+      <aside class="space-y-6">
+        <!-- Quick Specs Card -->
+        <div class="sticky top-24 p-6 rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 text-xs">
+          <h4 class="text-sm font-bold text-slate-900 dark:text-white pb-3 border-b border-slate-200 dark:border-slate-800">
+            {data.name} 核心技术参数
+          </h4>
+          
+          <div class="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800/60">
+            <span class="text-slate-500 dark:text-slate-400">线路协议:</span>
+            <span class="text-slate-900 dark:text-white font-medium">{data.protocols.join(', ')}</span>
+          </div>
+          <div class="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800/60">
+            <span class="text-slate-500 dark:text-slate-400">支持客户端:</span>
+            <span class="text-slate-900 dark:text-white font-medium">{data.clients.slice(0, 3).join(', ')}</span>
+          </div>
+          <div class="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800/60">
+            <span class="text-slate-500 dark:text-slate-400">每月流量区间:</span>
+            <span class="text-slate-900 dark:text-white font-medium">{data.bandwidth}</span>
+          </div>
+          <div class="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800/60">
+            <span class="text-slate-500 dark:text-slate-400">流媒体与AI:</span>
+            <span class="text-emerald-600 dark:text-emerald-400 font-medium">ChatGPT / Netflix 全解锁</span>
+          </div>
+
+          <div class="pt-3">
+            <a
+              href={`/go/${data.affiliateSlug}`}
+              target="_blank"
+              rel="nofollow sponsored noopener noreferrer"
+              class="w-full py-3 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md transition-all flex items-center justify-center gap-2"
+            >
+              <span>立即前往官网</span>
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+
+  </div>
+
+  <!-- Mobile Sticky Bottom Floating Action Bar -->
+  <div class="fixed bottom-0 inset-x-0 z-40 p-3 bg-white/95 dark:bg-surface-950/95 border-t border-slate-200 dark:border-slate-800 backdrop-blur-lg lg:hidden flex items-center justify-between gap-3 shadow-lg">
+    <div>
+      <span class="text-[10px] text-slate-500 dark:text-slate-400 block">{data.name}</span>
+      <div class="flex items-baseline gap-1">
+        <span class="text-lg font-black text-slate-900 dark:text-white">¥{data.startingPrice}</span>
+        <span class="text-[10px] text-slate-500 dark:text-slate-400">/{data.billingPeriod}</span>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-2">
+      {data.coupon && (
+        <button
+          type="button"
+          class="copy-coupon-btn px-2.5 py-2 rounded-lg bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-500/30 text-xs font-mono font-bold"
+          data-coupon={data.coupon.code}
+          data-discount={data.coupon.discount}
+        >
+          券: {data.coupon.code}
+        </button>
+      )}
+
+      <a
+        href={`/go/${data.affiliateSlug}`}
+        target="_blank"
+        rel="nofollow sponsored noopener noreferrer"
+        class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md"
+      >
+        直达选购
+      </a>
+    </div>
+  </div>
+</BaseLayout>

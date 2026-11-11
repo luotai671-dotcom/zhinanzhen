@@ -1,0 +1,16 @@
+# Cloudflare Pages / Netlify 302 Redirects (AFF Isolation)
+# 强制 302 临时重定向，配合 noindex 防止搜索引擎权重传递
+/go/shandianshu     https://chenpin.shandianshuaff.com/#/?code=m28TvPVX     302!
+/go/dalaoyun        https://chenpin01.dalaoyunaff.com/#/?code=GQ6CL6Km      302!
+/go/liulianyun      https://chenpingan.liulianyunaff.com/#/?code=7pdjs9zt   302!
+/go/shenxing        https://chenpingan01.shenxingaff.com/#/?code=RZ48f9wP   302!
+/go/yunjiexian      https://chenpinga.yunjiexianaff.com/#/?code=rTCMGvQT    302!
+/go/huanqiuti       https://chenpingan01.huanqiutiaff.com/#/?code=FGCcYdFo  302!
+/go/jilianyun       https://haozevpn.jlyvipaff.com/#/?code=6h2TMD5b         302!
+/go/guangshuyun     https://hu8jnfv.gsyvipaff.com/#/?code=vELLETdq         302!
+/go/guangnianti     https://gnt001.gntvipaff.cc/#/?code=rN3ybxa7           302!
+/go/edgenova        https://wep.edgenovaaff.com/#/?code=papME7sh            302!
+/go/sujie           https://pygllc.speedworldaff.cc/#/?code=ll8LjYBJ        302!
+
+# 未匹配到的机场标识统一回退到 /go.html 进行客户端解析或安全降级
+/go/:slug           /go.html?id=:slug                                       302

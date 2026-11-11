@@ -1,0 +1,317 @@
+---
+import { SITE_CONFIG } from '../consts';
+import {
+  Compass,
+  Flame,
+  BookOpen,
+  AlertTriangle,
+  Sparkles,
+  ExternalLink,
+  Tag,
+  Folder,
+  FileText,
+  Send,
+  Mail,
+  Rss,
+  CheckCircle2,
+  Copy,
+} from 'lucide-astro';
+
+import airportsData from '../data/airports.json';
+
+const hotAirports = [
+  { rank: 1, name: '闪电鼠: 2026年度旗舰主推 IEPL内网专线', tag: '👑主推', url: '/airports/shandianshu' },
+  { rank: 2, name: '大佬云: 老牌口碑IEPL 8元月付超值上车', tag: '8元月付', url: '/airports/dalaoyun' },
+  { rank: 3, name: '榴莲云: 极速IEPL专线 原生住宅IP解锁', tag: '追剧首选', url: '/airports/liulianyun' },
+  { rank: 4, name: '神行加速: 顶级高速IEPL线路 毫秒级低延迟', tag: '电竞专线', url: '/airports/shenxing' },
+  { rank: 5, name: '云界线: 全IEPL高速隧道 4K秒开不卡顿', tag: '千兆大带宽', url: '/airports/yunjiexian' },
+  { rank: 6, name: '环球梯: 内网专线+IEPL双重保障 超高性价比', tag: '8元战神', url: '/airports/huanqiuti' },
+  { rank: 7, name: '极连云: 高可用IEPL骨干网 商务出海首选', tag: '稳定SLA', url: '/airports/jilianyun' },
+  { rank: 8, name: '光速云: 纯正IPLC内网专线 极速光纤互通', tag: 'IPLC专线', url: '/airports/guangshuyun' },
+  { rank: 9, name: '光年梯: 月付低至7元 纯IEPL平民战神', tag: '7元极低价', url: '/airports/guangnianti' },
+  { rank: 10, name: '边缘节点: Anycast就近接入 商务出海定制', tag: '边缘多线', url: '/airports/edgenova' },
+  { rank: 11, name: '速界: IPLC顶级高速专线 8折立减码', tag: '8折优惠', url: '/airports/sujie' },
+];
+
+// 教程与百科高热度文章精选 (包含导航页百科长尾词集群文章)
+const hotTutorials = [
+  { rank: 1, name: '2026年翻墙机场推荐评测 | 稳定便宜VPN机场排行榜', tag: '👑总榜', url: '/blog/2026-best-vpn-airport-recommendation-rankings' },
+  { rank: 2, name: '2026 便宜好用机场推荐：月付 7~15 元平价高性价比梯子', tag: '平价战神', url: '/blog/cheap-budget-airports-recommendation-2026' },
+  { rank: 3, name: '2026 高速稳定 IEPL/IPLC 专线机场推荐：晚高峰千兆', tag: '极速专线', url: '/blog/high-speed-iepl-dedicated-line-airports' },
+  { rank: 4, name: '2026 原生住宅 IP 机场推荐：ChatGPT-4o / Claude 防封', tag: 'AI防封', url: '/blog/native-residential-ip-chatgpt-tiktok-airports' },
+  { rank: 5, name: '2026 科学上网机场新手入门全攻略：客户端配置与防跑路', tag: '新手必读', url: '/blog/beginner-setup-anti-runaway-complete-guide' },
+  { rank: 6, name: 'Shadowrocket (小火箭) iOS 完整配置与 AI 解锁保姆级指南', tag: 'iOS必备', url: '/blog/shadowrocket-ios-tutorial' },
+  { rank: 7, name: '2026 全主流 AI 工具深度使用与防封指南 (ChatGPT/Cursor)', tag: 'AI神器', url: '/blog/ai-tools-client-guide' },
+  { rank: 8, name: 'Clash Verge Rev 2026 终极保姆级新手配置与分流教程', tag: '客户端', url: '/blog/clash-verge-rev-tutorial' },
+  { rank: 9, name: '2026年机场选购指南：IEPL专线与中转本质区别深度解析', tag: '专线科普', url: '/blog/2026-airport-selection-guide' },
+  { rank: 10, name: 'ChatGPT 报 Access Denied 1020 报错彻底解决指南', tag: 'AI出海', url: '/blog/chatgpt-access-denied-fix' },
+  { rank: 11, name: '外贸与跨境电商专用防封机场推荐 (亚马逊/TikTok)', tag: '跨境出海', url: '/blog/foreign-trade-cross-border-ecommerce-airports' },
+  { rank: 12, name: '2026 电竞低延迟游戏机场推荐 (Steam/APEX/全锥型NAT)', tag: '游戏专线', url: '/blog/gaming-steam-apex-low-latency-airports' },
+  { rank: 13, name: '电信 / 联通 / 移动三网最适配机场选型指南与路由对比', tag: '三网测速', url: '/blog/telecom-unicom-mobile-best-airports' },
+  { rank: 14, name: '4K / 8K 流媒体奈飞 YouTube 极速解锁机场推荐', tag: '4K追剧', url: '/blog/4k-8k-netflix-youtube-streaming-airports' },
+  { rank: 15, name: '如何提前识别跑路机场？4 大黄金防坑资金避险铁律', tag: '避坑预警', url: '/warnings' },
+  { rank: 16, name: '科学上网知识百科与 20 大核心高热搜 FAQ 问答深度拆解', tag: '百科全书', url: '/wiki' },
+];
+---
+
+<aside class="space-y-6">
+  
+  <!-- 1. 博主/站长资料卡片 (Profile / Author Bio Card) -->
+  <div class="rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-800 p-6 text-center shadow-sm">
+    <!-- Avatar / Crest Logo -->
+    <div class="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-tr from-sky-500 via-indigo-600 to-emerald-400 p-[3px] shadow-md group">
+      <div class="w-full h-full bg-white dark:bg-surface-950 rounded-[13px] flex items-center justify-center">
+        <Compass class="w-10 h-10 text-indigo-600 dark:text-sky-400 transition-transform duration-500 group-hover:rotate-45" />
+      </div>
+    </div>
+
+    <!-- Title & Bio -->
+    <h3 class="text-lg font-black text-slate-900 dark:text-white mt-3.5 tracking-tight">
+      {SITE_CONFIG.name}
+    </h3>
+    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed px-2">
+      VPN评测、机场推荐与科学上网教程长期更新 · 7×24H 晚高峰千兆自动化探针监控
+    </p>
+
+    <!-- Social Link Buttons -->
+    <div class="flex items-center justify-center gap-3 mt-3.5">
+      <a
+        href={SITE_CONFIG.social.telegramChannel}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-sky-500 dark:hover:text-sky-400 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center transition-colors"
+        aria-label="Telegram 官方交流群"
+        title="加入 Telegram 官方交流群 (@shandianjiaoliu)"
+      >
+        <Send class="w-4 h-4" />
+      </a>
+      <a
+        href="/rss.xml"
+        class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-amber-500 dark:hover:text-amber-400 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center transition-colors"
+        aria-label="RSS 订阅源"
+        title="RSS 订阅"
+      >
+        <Rss class="w-4 h-4" />
+      </a>
+      <a
+        href="mailto:contact@jichangcompass.com"
+        class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center transition-colors"
+        aria-label="联系我们"
+        title="邮箱反馈"
+      >
+        <Mail class="w-4 h-4" />
+      </a>
+    </div>
+
+    <!-- 3 Quick Nav Pills: 标签 / 分类 / 归档 -->
+    <div class="grid grid-cols-3 gap-2 mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 text-xs">
+      <a href="/airports" class="p-2 rounded-xl bg-slate-50 dark:bg-surface-950 hover:bg-indigo-50 dark:hover:bg-slate-800 transition-colors">
+        <Tag class="w-4 h-4 mx-auto text-indigo-500 mb-1" />
+        <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300 block">标签</span>
+        <span class="text-[10px] text-slate-400">24+</span>
+      </a>
+      <a href="/airports" class="p-2 rounded-xl bg-slate-50 dark:bg-surface-950 hover:bg-indigo-50 dark:hover:bg-slate-800 transition-colors">
+        <Folder class="w-4 h-4 mx-auto text-sky-500 mb-1" />
+        <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300 block">分类</span>
+        <span class="text-[10px] text-slate-400">6 大类</span>
+      </a>
+      <a href="/wiki" class="p-2 rounded-xl bg-slate-50 dark:bg-surface-950 hover:bg-indigo-50 dark:hover:bg-slate-800 transition-colors">
+        <FileText class="w-4 h-4 mx-auto text-emerald-500 mb-1" />
+        <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300 block">归档</span>
+        <span class="text-[10px] text-slate-400">持续更新</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 2. 热门榜单卡片 (Tab 切换：机场热度 / 教程排行) -->
+  <div class="rounded-2xl bg-white dark:bg-surface-900 border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+    <!-- Tabs Header -->
+    <div class="flex items-center gap-4 pb-3 border-b border-slate-100 dark:border-slate-800 text-xs font-bold">
+      <button
+        type="button"
+        id="sidebar-tab-airports"
+        class="sidebar-tab-btn flex items-center gap-1.5 text-indigo-600 dark:text-sky-400 border-b-2 border-indigo-600 dark:border-sky-400 pb-1 -mb-[13px] cursor-pointer"
+      >
+        <Flame class="w-3.5 h-3.5 text-amber-500" />
+        <span>机场热度</span>
+      </button>
+      <button
+        type="button"
+        id="sidebar-tab-tutorials"
+        class="sidebar-tab-btn flex items-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white pb-1 -mb-[13px] cursor-pointer"
+      >
+        <BookOpen class="w-3.5 h-3.5" />
+        <span>教程排行</span>
+      </button>
+    </div>
+
+    <!-- Content 1: 机场热度 List -->
+    <div id="sidebar-list-airports" class="mt-4 space-y-2.5 text-xs">
+      {hotAirports.map((item) => (
+        <a
+          href={item.url}
+          class="flex items-center justify-between gap-2 py-1 px-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors group"
+        >
+          <div class="flex items-center gap-2 overflow-hidden">
+            <span class={`w-4 h-4 rounded flex items-center justify-center text-[10px] font-black shrink-0 ${
+              item.rank === 1 ? 'text-amber-500 font-extrabold' :
+              item.rank === 2 ? 'text-amber-600 font-bold' :
+              item.rank === 3 ? 'text-amber-700 font-bold' :
+              'text-slate-400'
+            }`}>
+              {item.rank}
+            </span>
+            <span class="text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-sky-400 transition-colors truncate">
+              {item.name}
+            </span>
+          </div>
+          <span class={`text-[10px] px-1.5 py-0.5 rounded shrink-0 font-medium ${
+            item.tag.includes('⚠️') ? 'bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400' :
+            item.rank <= 3 ? 'bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400' :
+            'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'
+          }`}>
+            {item.tag}
+          </span>
+        </a>
+      ))}
+    </div>
+
+    <!-- Content 2: 教程排行 List (Hidden by default) -->
+    <div id="sidebar-list-tutorials" class="mt-4 space-y-2.5 text-xs hidden">
+      {hotTutorials.map((item) => (
+        <a
+          href={item.url}
+          class="flex items-center justify-between gap-2 py-1 px-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors group"
+        >
+          <div class="flex items-center gap-2 overflow-hidden">
+            <span class={`w-4 h-4 rounded flex items-center justify-center text-[10px] font-black shrink-0 ${
+              item.rank === 1 ? 'text-amber-500 font-extrabold' :
+              item.rank === 2 ? 'text-amber-600 font-bold' :
+              item.rank === 3 ? 'text-amber-700 font-bold' :
+              'text-slate-400'
+            }`}>
+              {item.rank}
+            </span>
+            <span class="text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-sky-400 transition-colors truncate">
+              {item.name}
+            </span>
+          </div>
+          <span class="text-[10px] px-1.5 py-0.5 rounded shrink-0 font-medium bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+            {item.tag}
+          </span>
+        </a>
+      ))}
+
+      <!-- 百科快速直达按钮 -->
+      <a
+        href="/wiki"
+        class="block text-center py-2 px-3 rounded-xl text-xs font-bold text-indigo-600 dark:text-sky-400 bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition-colors mt-3"
+      >
+        查看全部百科知识与 20 大 FAQ →
+      </a>
+    </div>
+  </div>
+
+  <!-- 3. 跑路预警速报小部件 (Runaway Warning Box) -->
+  <div class="rounded-2xl bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/60 p-4 shadow-sm">
+    <div class="flex items-center gap-2 mb-2 text-rose-700 dark:text-rose-400 font-black text-xs">
+      <AlertTriangle class="w-4 h-4 text-rose-600 animate-pulse" />
+      <span>实时跑路失联排查清单</span>
+    </div>
+    <p class="text-[11px] text-rose-800 dark:text-rose-300/90 leading-relaxed mb-3">
+      检测到部分极低价机场（如 SunsetSpeed）出现长周期失联与 TG 禁言。切勿贪图大额年付！
+    </p>
+    <a
+      href="/warnings"
+      class="block text-center py-2 px-3 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 transition-colors shadow-sm"
+    >
+      查看完整避坑与黑名单 →
+    </a>
+  </div>
+
+  <!-- 4. 独家特惠折扣码速领卡 (Coupons Spotlight) -->
+  <div class="rounded-2xl bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/60 p-4 shadow-sm text-xs">
+    <div class="flex items-center justify-between mb-2">
+      <span class="font-bold text-amber-800 dark:text-amber-300 flex items-center gap-1.5">
+        <Sparkles class="w-3.5 h-3.5 text-amber-600" />
+        <span>独家立减优惠码</span>
+      </span>
+      <span class="text-[10px] text-amber-600 dark:text-amber-400">今日可用</span>
+    </div>
+    
+    <div class="p-2.5 rounded-xl bg-white dark:bg-surface-900 border border-amber-200 dark:border-amber-800/80 flex items-center justify-between gap-2 mb-2">
+      <div>
+        <span class="text-[10px] text-slate-400 block">⚡ 闪电鼠 (主推专属优惠)</span>
+        <span class="font-mono font-bold text-slate-900 dark:text-white">sd88</span>
+      </div>
+      <button
+        type="button"
+        class="copy-coupon-btn p-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-[11px] flex items-center gap-1 cursor-pointer"
+        data-coupon="sd88"
+        data-discount="闪电鼠专属优惠"
+      >
+        <Copy class="w-3 h-3" />
+        <span>复制</span>
+      </button>
+    </div>
+
+    <a href="/coupons" class="text-[11px] font-bold text-amber-700 dark:text-amber-400 hover:underline block text-center mt-2">
+      更多 10+ 机场专属优惠券 →
+    </a>
+  </div>
+
+</aside>
+
+<script is:inline>
+  function setupSidebarTabs() {
+    var tabAirports = document.getElementById('sidebar-tab-airports');
+    var tabTutorials = document.getElementById('sidebar-tab-tutorials');
+    var listAirports = document.getElementById('sidebar-list-airports');
+    var listTutorials = document.getElementById('sidebar-list-tutorials');
+
+    if (!tabAirports || !tabTutorials || !listAirports || !listTutorials) return;
+
+    tabAirports.onclick = function() {
+      tabAirports.className = 'sidebar-tab-btn flex items-center gap-1.5 text-indigo-600 dark:text-sky-400 border-b-2 border-indigo-600 dark:border-sky-400 pb-1 -mb-[13px] cursor-pointer font-bold';
+      tabTutorials.className = 'sidebar-tab-btn flex items-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white pb-1 -mb-[13px] cursor-pointer';
+
+      listTutorials.classList.add('hidden');
+      listTutorials.style.display = 'none';
+      listAirports.classList.remove('hidden');
+      listAirports.style.display = 'block';
+    };
+
+    tabTutorials.onclick = function() {
+      tabTutorials.className = 'sidebar-tab-btn flex items-center gap-1.5 text-indigo-600 dark:text-sky-400 border-b-2 border-indigo-600 dark:border-sky-400 pb-1 -mb-[13px] cursor-pointer font-bold';
+      tabAirports.className = 'sidebar-tab-btn flex items-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white pb-1 -mb-[13px] cursor-pointer';
+
+      listAirports.classList.add('hidden');
+      listAirports.style.display = 'none';
+      listTutorials.classList.remove('hidden');
+      listTutorials.style.display = 'block';
+    };
+
+    // Copy button
+    document.querySelectorAll('.copy-coupon-btn').forEach(function(btn) {
+      btn.onclick = function(e) {
+        e.preventDefault();
+        var code = btn.getAttribute('data-coupon') || 'sd88';
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(code).then(function() {
+            var oldHtml = btn.innerHTML;
+            btn.innerHTML = '<span>已复制!</span>';
+            setTimeout(function() { btn.innerHTML = oldHtml; }, 2000);
+          });
+        }
+      };
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupSidebarTabs);
+  } else {
+    setupSidebarTabs();
+  }
+  document.addEventListener('astro:page-load', setupSidebarTabs);
+</script>
+
