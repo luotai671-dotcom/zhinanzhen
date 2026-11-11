@@ -33,5 +33,4 @@ jobs:
           echo "IndexNow Key File verified in dist/"
 
       - name: Submit URLs to IndexNow
-        run: node scripts/indexnow-submit.cjs
-
+        run: node scripts/indexnow-submit.cjs || true

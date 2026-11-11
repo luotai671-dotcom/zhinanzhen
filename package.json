@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build && node scripts/fix-relative-paths.cjs && node scripts/indexnow-submit.cjs",
+    "build": "astro build && node scripts/fix-relative-paths.cjs",
     "indexnow": "node scripts/indexnow-submit.cjs",
     "preview": "astro preview",
     "astro": "astro"
