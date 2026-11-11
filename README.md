@@ -1,131 +1,136 @@
-# 🧭 机场指南针 (AirportCompass) - 2026 顶级机场评测与专线导航博客
+# 🧭 网络指南针 (NetworkCompass) - 现代网络性能评测与边缘加速导航平台
 
-> **基于 Astro 4.x + Tailwind CSS 构建的极速、高权重、卡片式现代风格机场评测与佣金转化博客。针对 Google 与 Bing 算法深度定制 Technical SEO、GEO/AEO 实体建模与高转化率（CRO）体系。**
+> **基于 Astro 4.x + Tailwind CSS 构建的极速、合规、现代化静态技术博客与性能评测系统。内置全套 Technical SEO、IndexNow 实时索引推送、外链 302 临时隔离中枢及结构化数据规范。**
 
 ---
 
-## 🌟 核心架构与核心指标
+## 🌟 核心特性与技术亮点
 
-- **⚡ 极致性能 (Core Web Vitals 100/100)**: Astro 4.x 全静态生成 (SSG)，默认零客户端 JavaScript，关键微交互（优惠码复制、客户端多维筛选）采用轻量原生交互，极速 TTFB 与 LCP。
-- **🔍 顶级技术 SEO (Technical SEO)**:
-  - 自动输出 Google / Bing 标准的双层 Sitemap（`sitemap-index.xml` + `sitemap-0.xml`），带权重优先级与每日/每周轮更配置。
-  - 完善的 Canonical 自指 URL、Hreflang 多语言/地区标头、OpenGraph 与 Twitter Cards 宽屏大图协议。
-  - 规范的 `robots.txt`，对 Googlebot、Bingbot 友好放行，严格屏蔽 `/go/` 链接防死链和权重稀释。
-  - 全站自动生成标准 RSS Feed (`/rss.xml`)，加速外部聚合与爬虫收录。
+- **⚡ 极致加载性能 (Core Web Vitals 100/100)**: 
+  - 基于 Astro 4.x 全静态站点生成 (SSG)，默认零客户端 JavaScript 运行时。
+  - 核心交互（如数据检索、分类筛选）采用轻量现代化原生逻辑，极速首字节时间 (TTFB) 与最大内容绘制 (LCP)。
+- **🔍 搜索引擎合规与 Technical SEO 最佳实践**:
+  - **规范化站点地图**: 自动生成符合 Google 与 Bing 标准的双层 Sitemap（`sitemap-index.xml` + `sitemap-0.xml`），带权重优先级与更新周期策略。
+  - **IndexNow 自动推送**: 集成 32 位验证密钥与构建后自动化脚本，内容发布后秒级主动向 IndexNow 协议提交全站 URL 更新。
+  - **精准 Meta 与社交卡片**: 完备的 Canonical 规范网址、多语言/地域标头、OpenGraph 与 Twitter Cards 宽屏大图协议。
+  - **合规 robots.txt**: 保持全站基础开放（`Allow: /`），避免触发搜索引擎站长工具误报拦截，由页面级标头与 HTTP 响应头完成精准索引控制。
 - **🤖 GEO & AEO (Generative Engine Optimization)**:
-  - 部署标准 `/llms.txt`，专供 ChatGPT、Perplexity、Claude、Bing Copilot 等 AI 搜索引擎解析精准结构化数据，占据 AI 搜索推荐第一位。
-  - 采用清晰的对比表格、Semantic HTML5 与高信息密度格式，精准命中 Google 精选摘要（Featured Snippets）。
+  - 部署符合标准的 `/llms.txt`，供现代化 AI 搜索引擎（ChatGPT Search、Perplexity、Claude 等）高效抓取精准技术摘要。
+  - 采用清晰的语义化对比表格与 Semantic HTML5 架构，最大化提高精选摘要（Featured Snippets）命中率。
 - **📊 Schema.org 权威实体建模**:
-  - `Product` + `Review` + `AggregateRating` + `Offer`（机场评测专属富媒体摘要，展示星级、评测数、优惠价格）。
-  - `FAQPage`（在搜索结果中直接展开常见问题手风琴，独占更大搜索结果可视面积）。
-  - `ItemList`（专线、ChatGPT、平价等聚合榜单结构化数据）。
-  - `BreadcrumbList`（谷歌面包屑路径分层显示）。
-  - `WebSite` + `Organization`（强化 Google EEAT 品牌权威与作者可信度）。
-- **💰 数字营销与高佣金转化引擎 (CRO)**:
-  - **专属优惠码一键复制**: 点击优惠码按钮自动写入系统剪贴板，并触发优雅的悬浮 Toast 提示。
-  - **防权重泄漏重定向中枢 (`/go/[slug]`)**: 统一中转外部 Affiliate 推广链接，自动设置 `noindex, nofollow, noarchive` 和 `rel="nofollow sponsored noopener"`，保护主站域名权重，同时展示过渡品牌页与优惠码兜底。
-  - **多维动态分类与排序**: 纯前端毫秒级过滤（IEPL专线、ChatGPT解锁、4K流媒体、平价月付、游戏低延迟、按量计费），按综合排名或价格实时排序。
-  - **移动端底部悬浮转化条**: 在评测详情页中，移动端固定展示品牌、起步价、优惠码及直达官网高亮 CTA 按钮。
+  - 完整集成 `Product`、`Review`、`AggregateRating`、`FAQPage`、`ItemList`、`BreadcrumbList`、`WebSite` 与 `Organization` 结构化数据，提升品牌专业度与内容可信度。
+- **🛡️ 外链 302 隔离与合规中枢**:
+  - **安全临时跳转中枢 (`/go/[slug]` 与 `/go.html`)**: 统一中转外部出站链接，头部严格注入 `noindex, nofollow, noarchive, nosnippet` 标头。
+  - **多平台规则适配**: 内置 Cloudflare Pages / Netlify 专用的 `_redirects` 配置及 VPS / 宝塔专用的 `nginx-redirects.conf` 配置。
+  - **强制合规安全属性**: 外部出站链接均严格附加 `rel="nofollow sponsored noopener noreferrer"` 与 `target="_blank"`。
 
 ---
 
 ## 📁 目录结构
 
 ```text
+├── .github/
+│   └── workflows/
+│       └── deploy.yml          # GitHub Actions 自动化构建与 IndexNow 推送工作流
 ├── public/
-│   ├── favicon.svg             # 极客指南针矢量图标
-│   ├── llms.txt                # AI / LLM 搜索引擎专用知识库入口 (GEO/AEO)
+│   ├── favicon.svg             # 矢量网站图标
+│   ├── go.html                 # 客户端安全跳转承接页 (严格 noindex 标头)
+│   ├── llms.txt                # AI / LLM 搜索引擎专用知识库入口
+│   ├── _headers                # Cloudflare Pages 安全标头配置
+│   ├── _redirects              # Cloudflare / Netlify 302 临时重定向规则
+│   └── nginx-redirects.conf    # Nginx 302 临时重定向与 X-Robots-Tag 规则
 ├── src/
-│   ├── consts.ts               # 站点元数据、SEO 配置、EEAT 作者信息与导航
+│   ├── consts.ts               # 站点元数据、SEO 配置与全局社交链接
 │   ├── content/
-│   │   ├── config.ts           # Astro 4 Content Collections 强类型 Zod 校验定义
-│   │   ├── airports/           # 机场深度评测实测数据与 Markdown 详情
-│   │   │   ├── tag-internet.md # 👑 TAG Internet (全球节点霸主，90+国家)
-│   │   │   ├── wgetcloud.md    # 💎 WgetCloud (企业级BGP多线容灾，零抖动)
-│   │   │   ├── kuaigou-cloud.md# ⚡ 快狗云 (超高性价比IEPL专线，月付15起)
-│   │   │   ├── flyingbird.md   # 🚀 飞鸟云 (4K/8K超清流媒体与AI深度优化)
-│   │   │   ├── yuyu-cloud.md   # 🎮 悠悠云 (Hysteria2/TUIC电竞游戏低延迟)
-│   │   │   └── miaona-cloud.md # 🐱 喵奈云 (不限时永久按量计费备用)
-│   │   └── blog/               # 高权重 SEO 获客教程与避坑文章
-│   │       ├── 2026-airport-selection-guide.md # 专线/中继/直连深度科普
-│   │       ├── clash-verge-rev-tutorial.md     # Clash Verge Rev 保姆级配置
-│   │       └── chatgpt-access-denied-fix.md    # ChatGPT 报错与原生IP解决
+│   │   ├── config.ts           # Astro Content Collections 强类型 Zod 校验定义
+│   │   ├── airports/           # 网络服务商性能测试报告与参数详情 (Markdown)
+│   │   └── blog/               # 技术配置教程、协议深度解析与网络优化文章 (Markdown)
 │   ├── components/
-│   │   ├── SEOHead.astro       # 核心 SEO/JSON-LD/Meta/OG 生成器
-│   │   ├── Header.astro        # 现代卡片风吸顶导航与转化 CTA
-│   │   ├── Footer.astro        # 完善的合规声明、EEAT资质与分类链接
-│   │   ├── HeroSection.astro   # 极客风格 Hero 与权威背书指标
-│   │   ├── AirportCard.astro   # 卡片式机场核心组件 (带排名光晕、优惠码复制、测速标签)
-│   │   ├── ComparisonTable.astro # 快速对比矩阵表格 (命中 Google 快速摘要)
-│   │   ├── FilterBar.astro     # 客户端轻量极速多维筛选工具条
-│   │   └── Breadcrumbs.astro   # 语义化面包屑与结构化数据
+│   │   ├── SEOHead.astro       # SEO Meta / JSON-LD / OG 核心组件
+│   │   ├── Navbar.astro        # 顶栏导航与深浅色模式切换
+│   │   ├── Footer.astro        # 页脚合规声明与权威评测说明
+│   │   ├── HeroSection.astro   # 首页核心性能指标展示组件
+│   │   ├── AirportCard.astro   # 性能评测卡片组件
+│   │   ├── ComparisonTable.astro # 性能对比总表组件
+│   │   └── SearchModal.astro   # 客户端文档与评测快速检索弹窗
 │   ├── layouts/
-│   │   ├── BaseLayout.astro    # 基础全局骨架与剪贴板全局 Toast
-│   │   ├── ReviewLayout.astro  # 机场评测详情专属布局 (带优缺点、参数侧边栏、移动端悬浮条)
-│   │   └── BlogLayout.astro    # 教程知识库专属阅读布局 (带内嵌高转化推广卡片)
+│   │   ├── BaseLayout.astro    # 全局通用页面骨架
+│   │   ├── ReviewLayout.astro  # 服务商评测专属详情布局
+│   │   └── BlogLayout.astro    # 技术教程专属布局
 │   └── pages/
-│       ├── index.astro         # 博客主页
-│       ├── airports/index.astro# 全站机场库与多维筛选
-│       ├── airports/[slug].astro # 动态机场深度评测页
-│       ├── blog/index.astro    # 知识库教程列表
-│       ├── blog/[slug].astro   # 动态教程详情页
-│       ├── rankings/
-│       │   ├── iepl-airports.astro    # 专题页: 2026顶级IEPL专线机场
-│       │   ├── chatgpt-airports.astro # 专题页: ChatGPT原生住宅IP机场
-│       │   └── cheap-airports.astro   # 专题页: 便宜高性价比平价机场
-│       ├── go/[slug].astro     # 302/JS 权重隔离重定向跳转中枢
+│       ├── index.astro         # 站点主页
+│       ├── airports/           # 性能评测聚合页与动态详情路由
+│       ├── blog/               # 技术文章聚合页与动态详情路由
+│       ├── clients/            # 客户端工具推荐与配置指南
+│       ├── coupons/            # 优惠资讯与活动专区
+│       ├── rankings/           # 各类专线与性能榜单专栏
+│       ├── warnings/           # 服务商运行状态与风险监控预警
+│       ├── wiki/               # 知识百科与网络协议原理解析
+│       ├── go/[slug].astro     # 动态 302 隔离跳转路由
 │       ├── robots.txt.ts       # 动态 robots.txt
-│       └── rss.xml.ts          # 自动化全量 RSS 输出
-├── astro.config.mjs            # Astro 4 与 Tailwind、Sitemap 核心配置
-├── tailwind.config.mjs         # Tailwind 现代暗黑极客主题色系
+│       └── rss.xml.ts          # 自动化全站 RSS 输出
+├── scripts/
+│   ├── check-links.cjs         # 全站死链健康度检测脚本
+│   ├── fix-relative-paths.cjs  # 离线与在线双环境兼容后处理脚本
+│   └── indexnow-submit.cjs     # IndexNow 自动化提交脚本
+├── astro.config.mjs            # Astro 4 与 Tailwind、Sitemap 核心配置文件
+├── tailwind.config.mjs         # Tailwind CSS 主题配置
 └── package.json
 ```
 
 ---
 
-## 🚀 启动与构建
+## 🚀 启动与构建指南
 
-### 1. 开发调试
+### 1. 安装依赖
+```bash
+npm install
+```
+
+### 2. 开发调试
 ```bash
 npm run dev
 ```
-打开 `http://localhost:4321` 即可在本地实时预览与调试。
+启动本地开发服务器，在浏览器打开 `http://localhost:4321` 即可实时预览并进行调试。
 
-### 2. 生成全静态文件 (SSG)
+### 3. 生成全静态文件 (SSG)
 ```bash
 npm run build
 ```
-编译产物位于 `dist/` 目录中，可直接拖拽部署至任意静态云托管服务。
+执行完整编译流程：
+1. Astro 静态渲染 HTML 与 CSS；
+2. 自动生成 `sitemap.xml` 与 `robots.txt`；
+3. 执行 `scripts/fix-relative-paths.cjs` 规范化外链安全属性；
+4. 执行 `scripts/indexnow-submit.cjs` 自动向 IndexNow 提交更新。
 
-### 3. 本地预览构建产物
+编译产物位于 `dist/` 目录，支持直接部署或本地双击离线预览。
+
+### 4. 链接健康度检测
 ```bash
-npm run preview
+npm run build
+node scripts/check-links.cjs
 ```
+自动遍历 `dist/` 中的所有页面并检测内部相对路径有效性，确保零死链交付。
 
 ---
 
-## 🌐 推荐部署平台
+## 🌐 推荐部署方式
 
-该项目为 100% 静态纯静态生成（SSG），极其推荐部署到全球 CDN 边缘节点，享受全球 20ms 内极速响应：
+本项目为标准 Jamstack 全静态架构，支持零配置托管于全球主流边缘 CDN：
 
-1. **Cloudflare Pages (首选推荐)**:
-   - Framework preset: `Astro`
-   - Build command: `npm run build`
-   - Build output directory: `dist`
-   - 全球 Anycast CDN + 免费 SSL + 终生防 DDoS。
-2. **Vercel**:
-   - 一键连接 GitHub 仓库，自动检测 Astro 4 并完成构建。
-3. **Netlify**:
-   - 直接推送至主分支即可自动发布。
+1. **Cloudflare Pages (推荐)**:
+   - 框架预设 (Framework preset): `Astro`
+   - 构建命令 (Build command): `npm run build`
+   - 构建产物目录 (Build output directory): `dist`
+   - 自动识别根目录 `_redirects` 与 `_headers`。
+2. **Vercel / Netlify**:
+   - 关联 GitHub 仓库即可实现自动化部署与持续交付。
+3. **自建 Nginx / VPS / 宝塔面板**:
+   - 将 `dist/` 目录内容上传至网站根目录；
+   - 在 Nginx `server` 块中通过 `include /path/to/nginx-redirects.conf;` 引入安全重定向配置。
 
 ---
 
-## 📈 推广转化与内容维护指南
+## 📄 开源与免责声明
 
-1. **添加新的机场评测**:
-   在 `src/content/airports/` 目录下新建一个 `.md` 文件（如 `my-airport.md`），填充 frontmatter 属性（`startingPrice`, `coupon`, `affiliateSlug`, `affiliateTargetUrl` 等）及正文实测数据，重新运行 `npm run build` 即可自动同步生成评测页、跳转路由与对比矩阵。
-2. **修改推广链接与返佣中继**:
-   在对应机场 `.md` 的 `affiliateTargetUrl` 中直接修改推广地址，前台所有的直达按钮会自动通过 `/go/[affiliateSlug]` 进行无损跳转。
-3. **新增教程文章**:
-   在 `src/content/blog/` 下直接编写 Markdown，系统将自动加入站点地图与 RSS 订阅源中。
-
+本项目遵循开源规范构建，所展示的测速数据与配置教程仅供网络工程技术交流与性能基准参考。请在使用网络服务时严格遵守当地法律法规。
