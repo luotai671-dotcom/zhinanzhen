@@ -14,7 +14,7 @@ function robustSitemap() {
     hooks: {
       'astro:build:done': async ({ dir, pages }) => {
         const outDir = fileURLToPath(dir);
-        const siteUrl = 'https://jichangcompass.com';
+        const siteUrl = 'https://jichangznz.blog';
         const now = new Date().toISOString();
 
         // 过滤合规页面：排除 /go/ 推广跳转页、404、纯文本及 xml 接口
@@ -68,7 +68,7 @@ function robustSitemap() {
 }
 
 export default defineConfig({
-  site: 'https://jichangcompass.com',
+  site: 'https://jichangznz.blog',
   integrations: [
     tailwind({
       applyBaseStyles: false,

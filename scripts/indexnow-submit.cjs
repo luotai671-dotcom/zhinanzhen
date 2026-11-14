@@ -7,7 +7,7 @@ const path = require('path');
 const https = require('https');
 
 const API_KEY = '41889b18d1b395e76872a144ecb15050';
-const HOST = 'jichangcompass.com';
+const HOST = 'jichangznz.blog';
 const KEY_LOCATION = `https://${HOST}/${API_KEY}.txt`;
 const DIST_DIR = path.join(__dirname, '..', 'dist');
 

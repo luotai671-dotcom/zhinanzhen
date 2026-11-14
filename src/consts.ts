@@ -2,7 +2,7 @@
 export const SITE_CONFIG = {
   name: '机场指南针',
   englishName: 'AirportCompass',
-  siteUrl: 'https://jichangcompass.com',
+  siteUrl: 'https://jichangznz.blog',
   titleSuffix: ' - 机场指南针 | 2026顶级机场推荐与评测导航',
   defaultTitle: '2026顶级机场推荐与评测导航 | 稳定IEPL专线·ChatGPT解锁·4K秒开',
   defaultDescription: '专注2026全网优质SS/V2Ray/Trojan/Hysteria2机场节点深度实测。提供晚高峰千兆测速、原生IP流媒体/ChatGPT解锁矩阵、独家限时优惠码与新手Clash/Sing-box订阅配置教程。',
@@ -13,13 +13,13 @@ export const SITE_CONFIG = {
   ],
   author: {
     name: '机场极客实验室 (Compass Tech Lab)',
-    url: 'https://jichangcompass.com/about',
-    avatar: 'https://jichangcompass.com/avatar.webp',
+    url: 'https://jichangznz.blog/about',
+    avatar: 'https://jichangznz.blog/avatar.webp',
     description: '深耕网络穿透、跨境专线架构、BGP拓扑及网络协议优化8年，累计实测超过200+主流机场服务商。',
   },
   publisher: {
     name: '机场指南针评测网',
-    logo: 'https://jichangcompass.com/logo.png',
+    logo: 'https://jichangznz.blog/logo.png',
   },
   social: {
     telegramChannel: 'https://t.me/shandianjiaoliu',
