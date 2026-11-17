@@ -98,4 +98,10 @@ if (fs.existsSync(distIndex)) {
   fs.writeFileSync(path.join(__dirname, '..', 'index.html'), rootContent, 'utf8');
 }
 
+// Also sync robots.txt to root directory
+const distRobots = path.join(distDir, 'robots.txt');
+if (fs.existsSync(distRobots)) {
+  fs.copyFileSync(distRobots, path.join(__dirname, '..', 'robots.txt'));
+}
+
 console.log('Successfully patched all HTML files with robust relative paths and AFF compliance (rel=nofollow sponsored noopener noreferrer)!');
