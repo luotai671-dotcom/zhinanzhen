@@ -79,29 +79,32 @@ htmlFiles.forEach((filePath) => {
   fs.writeFileSync(filePath, content, 'utf8');
 });
 
-// Also create root index.html matching dist/index.html with ./dist/ prefix
-const distIndex = path.join(distDir, 'index.html');
-if (fs.existsSync(distIndex)) {
-  let rootContent = fs.readFileSync(distIndex, 'utf8')
-    .replaceAll('href="./_astro/', 'href="./dist/_astro/')
-    .replaceAll('src="./_astro/', 'src="./dist/_astro/')
-    .replaceAll('href="./favicon.svg"', 'href="./dist/favicon.svg"')
-    .replaceAll('href="./wiki/', 'href="./dist/wiki/')
-    .replaceAll('href="./clients/', 'href="./dist/clients/')
-    .replaceAll('href="./warnings/', 'href="./dist/warnings/')
-    .replaceAll('href="./coupons/', 'href="./dist/coupons/')
-    .replaceAll('href="./airports/', 'href="./dist/airports/')
-    .replaceAll('href="./go/', 'href="./dist/go/')
-    .replaceAll('href="./blog/', 'href="./dist/blog/')
-    .replaceAll('href="./rankings/', 'href="./dist/rankings/');
+// 4. 同步全量静态产物到根目录（确保无论托管平台从 dist 目录还是根目录部署，CSS、JS 与页面均 100% 正常渲染）
+const foldersToSync = ['_astro', 'airports', 'blog', 'clients', 'coupons', 'go', 'rankings', 'warnings', 'wiki'];
+foldersToSync.forEach((folder) => {
+  const src = path.join(distDir, folder);
+  const dest = path.join(__dirname, '..', folder);
+  if (fs.existsSync(src)) {
+    fs.cpSync(src, dest, { recursive: true, force: true });
+  }
+});
 
-  fs.writeFileSync(path.join(__dirname, '..', 'index.html'), rootContent, 'utf8');
-}
+const filesToSync = [
+  'index.html',
+  'robots.txt',
+  'sitemap-0.xml',
+  'sitemap-index.xml',
+  'sitemap.xml',
+  'rss.xml',
+  'favicon.svg',
+  'site.webmanifest',
+];
+filesToSync.forEach((file) => {
+  const src = path.join(distDir, file);
+  const dest = path.join(__dirname, '..', file);
+  if (fs.existsSync(src)) {
+    fs.copyFileSync(src, dest);
+  }
+});
 
-// Also sync robots.txt to root directory
-const distRobots = path.join(distDir, 'robots.txt');
-if (fs.existsSync(distRobots)) {
-  fs.copyFileSync(distRobots, path.join(__dirname, '..', 'robots.txt'));
-}
-
-console.log('Successfully patched all HTML files with robust relative paths and AFF compliance (rel=nofollow sponsored noopener noreferrer)!');
+console.log('Successfully patched all HTML files with robust relative paths, AFF compliance, and full root-level assets synchronization!');

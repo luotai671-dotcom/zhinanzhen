@@ -1,0 +1,17 @@
+{
+  "name": "机场指南针 - 2026顶级机场推荐与评测导航",
+  "short_name": "机场指南针",
+  "description": "专注2026全网优质SS/V2Ray/Trojan/Hysteria2机场节点深度实测与晚高峰测速。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#090d16",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
+
