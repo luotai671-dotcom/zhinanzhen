@@ -32,8 +32,10 @@ htmlFiles.forEach((filePath) => {
 
   // 1. Fix asset links
   content = content
-    .replace(/href="\/_astro\//g, `href="${prefix}_astro/`)
-    .replace(/src="\/_astro\//g, `src="${prefix}_astro/`)
+    .replace(/href="\/_astro\//g, `href="${prefix}assets/`)
+    .replace(/src="\/_astro\//g, `src="${prefix}assets/`)
+    .replace(/href="\/assets\//g, `href="${prefix}assets/`)
+    .replace(/src="\/assets\//g, `src="${prefix}assets/`)
     .replace(/href="\/favicon\.svg"/g, `href="${prefix}favicon.svg"`);
 
   // 2. Fix navigation links so file:// works seamlessly
@@ -80,7 +82,7 @@ htmlFiles.forEach((filePath) => {
 });
 
 // 4. 同步全量静态产物到根目录（确保无论托管平台从 dist 目录还是根目录部署，CSS、JS 与页面均 100% 正常渲染）
-const foldersToSync = ['_astro', 'airports', 'blog', 'clients', 'coupons', 'go', 'rankings', 'warnings', 'wiki'];
+const foldersToSync = ['assets', '_astro', 'airports', 'blog', 'clients', 'coupons', 'go', 'rankings', 'warnings', 'wiki'];
 foldersToSync.forEach((folder) => {
   const src = path.join(distDir, folder);
   const dest = path.join(__dirname, '..', folder);

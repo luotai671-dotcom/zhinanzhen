@@ -69,6 +69,9 @@ function robustSitemap() {
 
 export default defineConfig({
   site: 'https://jichangznz.blog',
+  build: {
+    assets: 'assets',
+  },
   integrations: [
     tailwind({
       applyBaseStyles: false,
